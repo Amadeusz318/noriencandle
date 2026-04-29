@@ -2,135 +2,122 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NORIEN BERLIN | Olfactory Cartography</title>
+    <title>NORIEN BERLIN | Map Precision</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;400;600&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #fcfaf7; color: #1a1a1a; font-family: 'Inter', sans-serif; }
+        body { background-color: #fcfaf7; color: #1a1a1a; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
-        /* Tło z Twoimi kropkami */
-        .bg-grid-dots {
+        .bg-dots {
             background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px);
             background-size: 32px 32px;
         }
 
-        /* Stylistyka ścieżek mapy */
+        /* Precyzyjne ścieżki */
         .district-path {
             fill: transparent;
             stroke: #1a1a1a;
-            stroke-width: 1.2;
-            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            stroke-width: 1;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
             transform-origin: center;
             transform-box: fill-box;
         }
 
-        /* Hover - Kolory z projektów pudełek */
-        .group-mitte:hover .district-path { fill: #b35a2d; stroke: #b35a2d; } /* Copper/Orange */
-        .group-prenzl:hover .district-path { fill: #8a7b8e; stroke: #8a7b8e; } /* Lavender/Gray */
-        .group-kreuzberg:hover .district-path { fill: #005f63; stroke: #005f63; } /* Teal/Deep Sea */
-        .group-neukolln:hover .district-path { fill: #631b2b; stroke: #631b2b; } /* Burgundy */
-
-        /* Efekt podniesienia dzielnicy */
-        .district-group:hover .district-path {
-            transform: translateY(-20px) scale(1.05);
-            filter: drop-shadow(0 25px 15px rgba(0,0,0,0.15));
-            stroke-width: 0.5;
+        /* Outline miasta - Realna skala */
+        .berlin-border {
+            fill: none;
+            stroke: #e5e5e5;
+            stroke-width: 1.5;
+            stroke-dasharray: 4 4; /* Delikatna przerywana linia dla technicznego looku */
         }
 
-        .district-label {
-            font-size: 9px;
+        /* Interakcja i kolory Norien */
+        .group-mitte:hover .district-path { fill: #b35a2d; stroke: #b35a2d; }
+        .group-prenzl:hover .district-path { fill: #8a7b8e; stroke: #8a7b8e; }
+        .group-kreuzberg:hover .district-path { fill: #005f63; stroke: #005f63; }
+        .group-neukolln:hover .district-path { fill: #631b2b; stroke: #631b2b; }
+
+        .district-group:hover .district-path {
+            transform: translateY(-15px) scale(1.03);
+            filter: drop-shadow(0 20px 10px rgba(0,0,0,0.1));
+        }
+
+        .label {
+            font-size: 7px;
             font-weight: 600;
             letter-spacing: 0.3em;
             fill: #1a1a1a;
-            opacity: 0.4;
-            transition: all 0.6s ease;
+            opacity: 0; /* Ukryte, pojawiają się na hover */
+            transition: 0.4s;
             pointer-events: none;
             text-anchor: middle;
         }
 
-        .district-group:hover .district-label {
-            opacity: 1;
-            fill: #ffffff;
-            transform: translateY(-20px);
-        }
-
-        .fade-in { animation: fadeIn 1.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .district-group:hover .label { opacity: 1; fill: #fff; transform: translateY(-15px); }
     </style>
 </head>
-<body class="antialiased">
+<body class="bg-dots">
 
-    <!-- HERO SECTION -->
-    <header class="h-[70vh] flex flex-col justify-center items-center text-center px-6 relative bg-grid-dots">
-        <div class="fade-in">
-            <p class="text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60">Exclusive Souvenir from Berlin</p>
-            <h1 class="text-6xl md:text-9xl font-thin tracking-tighter mb-10 leading-none">Olfactory <br> <span class="italic">Cartography.</span></h1>
-            <p class="max-w-xl mx-auto text-sm md:text-base font-light leading-relaxed opacity-70">
-                Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.
-            </p>
-        </div>
-    </header>
-
-    <!-- MAP SECTION -->
-    <section id="map-explore" class="py-24 bg-white border-y border-gray-100 bg-grid-dots">
-        <div class="container mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+    <section class="min-h-screen flex items-center justify-center py-20 px-6">
+        <div class="max-w-7xl w-full grid lg:grid-cols-2 gap-16 items-center">
             
-            <!-- INTERAKTYWNE SVG - POPRAWIONE KSZTAŁTY -->
-            <div class="relative flex items-center justify-center">
-                <svg viewBox="0 0 800 800" class="w-full max-w-[600px] h-auto overflow-visible">
+            <!-- MAPA ZGODNA ZE SKALĄ -->
+            <div class="relative w-full aspect-square flex items-center justify-center">
+                <svg viewBox="0 0 1000 1000" class="w-full h-full overflow-visible">
                     
-                    <!-- Obrys ogólny Berlina (Subtelne tło) -->
-                    <path d="M250,150 L400,120 L600,180 L720,350 L650,650 L400,750 L150,650 L80,400 Z" fill="none" stroke="#eeeeee" stroke-width="2" />
+                    <!-- REALISTYCZNA GRANICA BERLINA (Outline miasta) -->
+                    <path class="berlin-border" d="M350,150 L500,100 L650,130 L850,250 L920,450 L850,750 L650,880 L400,920 L150,850 L50,600 L80,350 L200,200 Z" />
 
-                    <!-- MITTE (Centrum) - Realistyczna topografia -->
+                    <!-- SKUPISKO DZIELNIC (Centralne) -->
+                    <!-- MITTE -->
                     <g class="district-group group-mitte">
-                        <path class="district-path" d="M305,325 L350,310 L410,335 L435,420 L385,470 L300,455 L280,390 Z" />
-                        <text x="350" y="395" class="district-label">MITTE</text>
+                        <path class="district-path" d="M420,410 L510,390 L560,450 L530,530 L440,540 L410,480 Z" />
+                        <text x="475" y="475" class="label">MITTE</text>
                     </g>
 
-                    <!-- PRENZLAUER BERG (Sąsiad Mitte od Płn-Wsch) -->
+                    <!-- PRENZLAUER BERG -->
                     <g class="district-group group-prenzl">
-                        <path class="district-path" d="M410,335 L520,260 L585,320 L540,430 L435,420 Z" />
-                        <text x="510" y="360" class="district-label text-[7px]">PRENZL. BERG</text>
+                        <path class="district-path" d="M510,390 L580,310 L680,360 L630,470 L560,450 Z" />
+                        <text x="600" y="400" class="label">PRENZL. BERG</text>
                     </g>
 
-                    <!-- KREUZBERG (Sąsiad Mitte od Południa) -->
+                    <!-- KREUZBERG -->
                     <g class="district-group group-kreuzberg">
-                        <path class="district-path" d="M385,470 L435,420 L540,430 L560,530 L480,580 L400,560 Z" />
-                        <text x="470" y="505" class="district-label">KREUZBERG</text>
+                        <path class="district-path" d="M440,540 L530,530 L630,470 L680,550 L610,630 L490,620 Z" />
+                        <text x="560" y="560" class="label">KREUZBERG</text>
                     </g>
 
-                    <!-- NEUKÖLLN (Sąsiad Kreuzberga od Południowego Wschodu) -->
+                    <!-- NEUKÖLLN -->
                     <g class="district-group group-neukolln">
-                        <path class="district-path" d="M480,580 L560,530 L650,560 L620,740 L480,720 L440,640 Z" />
-                        <text x="545" y="660" class="district-label">NEUKÖLLN</text>
+                        <path class="district-path" d="M490,620 L610,630 L680,680 L640,850 L500,820 L460,740 Z" />
+                        <text x="570" y="730" class="label">NEUKÖLLN</text>
                     </g>
-
                 </svg>
             </div>
-            
-            <div class="space-y-10 pl-0 lg:pl-10">
-                <div class="space-y-4">
-                    <h2 class="text-xs tracking-[0.5em] uppercase opacity-40 font-bold">The Urban Guide</h2>
-                    <h3 class="text-4xl md:text-6xl font-extralight tracking-tight leading-tight">Twoja dzielnica. <br>Twój zapachowy paszport.</h3>
-                    <p class="text-gray-500 font-light text-base leading-relaxed max-w-md">
-                        Nasze kompozycje pełnią rolę przewodników. Najedź na mapę, aby aktywować archiwum danej dzielnicy – odkryjesz nuty zapachowe, które oddają jej architekturę i charakter.
+
+            <!-- TREŚĆ -->
+            <div class="space-y-12">
+                <div class="space-y-6">
+                    <p class="text-[10px] tracking-[0.5em] uppercase opacity-40">The Urban Guide</p>
+                    <h2 class="text-6xl font-extralight tracking-tighter leading-[0.95]">Twoja dzielnica.<br><span class="italic">Twój zapach.</span></h2>
+                    <p class="text-gray-500 font-light text-lg leading-relaxed max-w-md">
+                        Kształty odzwierciedlają realne granice topograficzne Berlina. Wybierz obszar, aby odkryć jego sensoryczny zapis. Każdy kolor odpowiada unikalnej identyfikacji wizualnej naszych edycji.
                     </p>
                 </div>
                 
-                <div class="pt-10 border-t border-gray-100 flex gap-12">
+                <div class="grid grid-cols-2 gap-10 border-t border-gray-100 pt-10">
                     <div>
-                        <span class="block text-3xl font-extralight italic">12</span>
-                        <span class="text-[9px] uppercase tracking-widest opacity-40">Dzielnic</span>
+                        <span class="block text-4xl font-extralight">12</span>
+                        <span class="text-[9px] uppercase tracking-widest opacity-40">Dzielnic Berlina</span>
                     </div>
                     <div>
-                        <span class="block text-3xl font-extralight italic">160g</span>
+                        <span class="block text-4xl font-extralight">160g</span>
                         <span class="text-[9px] uppercase tracking-widest opacity-40">Wosk roślinny</span>
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 
