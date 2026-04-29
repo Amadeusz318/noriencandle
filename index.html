@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -35,17 +34,43 @@
             z-index: 1000;
         }
 
+        /* Animacja podskakiwania dla dzielnic na mapie */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .district-group {
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .district-group:hover {
+            animation: float 2s ease-in-out infinite;
+        }
+
         .district-path { 
             fill: transparent; 
             stroke: #4a2c2a; 
             stroke-width: 0.8; 
-            cursor: pointer; 
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
         }
-        .district-path:hover { 
+
+        .district-group:hover .district-path { 
             fill: #4a2c2a; 
-            fill-opacity: 0.15; 
+            fill-opacity: 0.1; 
             stroke-width: 1.5; 
+        }
+
+        .district-text {
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .district-group:hover .district-text {
+            fill-opacity: 1;
+            font-weight: 600;
         }
         
         .fade-in { animation: fadeIn 1.5s ease-out; }
@@ -58,7 +83,6 @@
         .lang-btn:hover { opacity: 1; }
         .lang-btn.active { opacity: 1; font-weight: 600; border-bottom: 1px solid currentColor; }
 
-        /* Mobilny Slider dla produktów */
         @media (max-width: 768px) {
             .mobile-scroll {
                 display: flex;
@@ -88,8 +112,6 @@
             <button onclick="changeLang('pl')" class="lang-btn active" id="btn-pl">PL</button>
             <button onclick="changeLang('en')" class="lang-btn" id="btn-en">EN</button>
             <button onclick="changeLang('de')" class="lang-btn" id="btn-de">DE</button>
-            <button onclick="changeLang('fr')" class="lang-btn" id="btn-fr">FR</button>
-            <button onclick="changeLang('es')" class="lang-btn" id="btn-es">ES</button>
         </div>
 
         <div class="hidden lg:flex gap-12 text-[10px] tracking-widest uppercase font-light">
@@ -111,27 +133,32 @@
         <a href="#map-explore" id="scroll-text" class="absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
     </section>
 
+    <!-- SEKCHJA MAPY -->
     <section id="map-explore" class="py-24 md:py-32 bg-white relative overflow-hidden">
         <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16 md:gap-24 items-center">
-            <div class="map-container relative scale-110 md:scale-100">
+            <div class="map-container relative scale-110 md:scale-125">
                 <svg viewBox="0 0 500 450" class="w-full h-auto overflow-visible">
-                    <a href="#prod-prenzlauer">
+                    <!-- PRENZLAUER BERG -->
+                    <a href="#prod-prenzlauer" class="district-group">
                         <path class="district-path" d="M260 40 L350 30 L400 110 L280 140 Z" />
-                        <text x="295" y="85" class="text-[8px] uppercase tracking-widest fill-norien-mapLine opacity-40 pointer-events-none">Prenzl. Berg</text>
+                        <text x="295" y="85" class="district-text text-[8px] uppercase tracking-widest fill-norien-mapLine opacity-40">Prenzl. Berg</text>
                     </a>
-                    <a href="#prod-mitte">
+                    <!-- MITTE -->
+                    <a href="#prod-mitte" class="district-group">
                         <path class="district-path" d="M180 150 L280 140 L310 230 L210 250 Z" />
-                        <text x="225" y="195" class="text-[8px] uppercase tracking-widest fill-norien-mapLine opacity-40 pointer-events-none font-bold">Mitte</text>
+                        <text x="225" y="195" class="district-text text-[8px] uppercase tracking-widest fill-norien-mapLine opacity-40 font-bold">Mitte</text>
                     </a>
-                    <a href="#prod-kreuzberg">
+                    <!-- KREUZBERG -->
+                    <a href="#prod-kreuzberg" class="district-group">
                         <path class="district-path" d="M210 250 L310 230 L360 300 L250 330 Z" />
-                        <text x="250" y="285" class="text-[8px] uppercase tracking-widest fill-norien-mapLine opacity-40 pointer-events-none">Kreuzberg</text>
+                        <text x="250" y="285" class="district-text text-[8px] uppercase tracking-widest fill-norien-mapLine opacity-40">Kreuzberg</text>
                     </a>
-                    <a href="#prod-neukoln">
+                    <!-- NEUKÖLLN -->
+                    <a href="#prod-neukoln" class="district-group">
                         <path class="district-path" d="M310 230 L410 220 L450 350 L360 300 Z" />
-                        <text x="360" y="275" class="text-[8px] uppercase tracking-widest fill-norien-mapLine opacity-40 pointer-events-none">Neukölln</text>
+                        <text x="360" y="275" class="district-text text-[8px] uppercase tracking-widest fill-norien-mapLine opacity-40">Neukölln</text>
                     </a>
-                    <circle cx="215" cy="190" r="2.5" fill="#4a2c2a" /> </svg>
+                </svg>
                 <div class="absolute top-0 left-0 text-[8px] tracking-widest opacity-20 uppercase font-bold">Berlin Topographic Grid v.4.02</div>
             </div>
             
@@ -139,31 +166,33 @@
                 <h2 id="guide-sub" class="text-xs tracking-ultra uppercase opacity-50 font-bold">The Urban Guide</h2>
                 <h3 id="guide-title" class="text-3xl md:text-4xl font-extralight leading-snug">Twoja dzielnica. <br> Twój zapachowy paszport.</h3>
                 <p id="guide-desc" class="text-norien-text/70 leading-relaxed font-light text-sm md:text-base">
-                    Nasze kompozycje pełnią rolę przewodników. Neukölln nie pachnie tylko dymem – pachnie historią przemian, nocnym powietrzem przy kanale i surowym betonem.
+                    Nasze kompozycje pełnią rolę przewodników. Każdy rejon ma swoją unikalną mapę drogową zapisaną w wosku.
                 </p>
                 <div class="pt-6 border-t border-norien-dark/10">
-                    <p id="guide-action" class="text-[10px] tracking-widest uppercase opacity-40">Wybierz obszar na mapie, aby poznać archiwum.</p>
+                    <p id="guide-action" class="text-[10px] tracking-widest uppercase opacity-40">Kliknij na mapę, aby przejść do archiwum dzielnicy.</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ARCHIWUM PRODUKTÓW -->
     <section id="archives" class="py-24 md:py-32 px-6 overflow-hidden">
         <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             
+            <!-- MITTE -->
             <div id="prod-mitte" class="group relative bg-norien-canvas p-10 md:p-12 border border-norien-dark/5 md:border-transparent hover:border-norien-dark transition-all duration-700">
                 <div class="mb-12 md:mb-16 flex flex-col items-center text-center">
                     <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 01</p>
-                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm">
+                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm transition-transform group-hover:scale-105">
                         <div>
                             <h4 class="text-2xl md:text-3xl font-extralight tracking-ultra mb-6 md:mb-8">MITTE</h4>
                             <div class="h-px w-10 md:w-12 bg-norien-dark mx-auto mb-6 md:mb-8 opacity-20"></div>
-                            <p class="text-[8px] tracking-widest leading-loose uppercase">Palo Santo / Bergamot<br>Ancient Cedar</p>
+                            <p class="text-[8px] tracking-widest leading-loose uppercase">Lavender / Myrrh<br>Suede</p>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
+                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Everything meets here."</p>
                     <div class="flex justify-between items-center pt-4">
                         <span class="text-sm font-light">€ 55.00</span>
                         <span class="text-[10px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
@@ -171,19 +200,20 @@
                 </div>
             </div>
 
+            <!-- PRENZLAUER BERG -->
             <div id="prod-prenzlauer" class="group relative bg-norien-canvas p-10 md:p-12 border border-norien-dark/5 md:border-transparent hover:border-norien-dark transition-all duration-700">
                 <div class="mb-12 md:mb-16 flex flex-col items-center text-center">
                     <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 02</p>
-                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm">
+                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm transition-transform group-hover:scale-105">
                         <div>
                             <h4 class="text-xl md:text-2xl font-extralight tracking-ultra mb-6 md:mb-8 uppercase">Prenzl. Berg</h4>
                             <div class="h-px w-10 md:w-12 bg-norien-dark mx-auto mb-6 md:mb-8 opacity-20"></div>
-                            <p class="text-[8px] tracking-widest leading-loose uppercase">Moss / Pine<br>Cold Air</p>
+                            <p class="text-[8px] tracking-widest leading-loose uppercase">Lemon / Jasmine<br>Sandalwood</p>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
+                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Everything feels in place."</p>
                     <div class="flex justify-between items-center pt-4">
                         <span class="text-sm font-light">€ 55.00</span>
                         <span class="text-[10px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
@@ -191,19 +221,20 @@
                 </div>
             </div>
 
+            <!-- KREUZBERG -->
             <div id="prod-kreuzberg" class="group relative bg-norien-canvas p-10 md:p-12 border border-norien-dark/5 md:border-transparent hover:border-norien-dark transition-all duration-700">
                 <div class="mb-12 md:mb-16 flex flex-col items-center text-center">
                     <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 36</p>
-                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm">
+                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm transition-transform group-hover:scale-105">
                         <div>
                             <h4 class="text-xl md:text-2xl font-extralight tracking-ultra mb-6 md:mb-8 uppercase">Kreuzberg</h4>
                             <div class="h-px w-10 md:w-12 bg-norien-dark mx-auto mb-6 md:mb-8 opacity-20"></div>
-                            <p class="text-[8px] tracking-widest leading-loose uppercase">Sandalwood / Smoke<br>Leather</p>
+                            <p class="text-[8px] tracking-widest leading-loose uppercase">Bergamot / Patchouli<br>Vetiver</p>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
+                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"You move with it."</p>
                     <div class="flex justify-between items-center pt-4">
                         <span class="text-sm font-light">€ 55.00</span>
                         <span class="text-[10px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
@@ -211,14 +242,15 @@
                 </div>
             </div>
 
+            <!-- NEUKÖLLN -->
             <div id="prod-neukoln" class="group relative bg-norien-canvas p-10 md:p-12 border border-norien-dark/5 md:border-transparent hover:border-norien-dark transition-all duration-700">
                 <div class="mb-12 md:mb-16 flex flex-col items-center text-center">
                     <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 03</p>
-                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm">
+                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm transition-transform group-hover:scale-105">
                         <div>
                             <h4 class="text-2xl md:text-3xl font-extralight tracking-ultra mb-6 md:mb-8">NEUKÖLLN</h4>
                             <div class="h-px w-10 md:w-12 bg-norien-dark mx-auto mb-6 md:mb-8 opacity-20"></div>
-                            <p class="text-[8px] tracking-widest leading-loose uppercase">Tobacco / Night Air<br>Urban Resin</p>
+                            <p class="text-[8px] tracking-widest leading-loose uppercase">Cardamom / Myrtle<br>Amber</p>
                         </div>
                     </div>
                 </div>
@@ -234,11 +266,12 @@
         </div>
     </section>
 
+    <!-- MANIFEST -->
     <section id="manifesto" class="py-32 md:py-40 bg-norien-dark text-white text-center px-6">
         <div class="max-w-4xl mx-auto space-y-12">
             <h2 id="manifesto-sub" class="text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
             <p id="manifesto-text" class="text-2xl md:text-5xl font-thin leading-tight">
-                Nasze kompozycje powstają w berlińskim atelier. Używamy wosku sojowego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.
+                Nasze kompozycje powstają w berlińskim atelier. Używamy wosku rzepakowo-kokosowego jako czystego nośnika dla esencji, które definiują architekturę miasta.
             </p>
             <div class="pt-8 md:pt-12">
                 <div class="inline-block border border-white/20 px-8 md:px-12 py-5 md:py-6 text-[9px] md:text-[10px] tracking-ultra uppercase opacity-60">
@@ -254,7 +287,7 @@
             <a href="#" class="hover:opacity-100 transition">Instagram</a>
             <a href="#" class="hover:opacity-100 transition">Privacy</a>
         </div>
-        <div>Berlin-Mitte, GER</div>
+        <div>Berlin, GER</div>
     </footer>
 
     <script>
@@ -269,10 +302,10 @@
                 heroDesc: "Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.",
                 guideSub: "The Urban Guide",
                 guideTitle: "Twoja dzielnica. <br> Twój zapachowy paszport.",
-                guideDesc: "Nasze kompozycje pełnią rolę przewodników. Neukölln nie pachnie tylko dymem – pachnie historią przemian, nocnym powietrzem przy kanale i surowym betonem. Mitte to sterylność galerii i zapach starych parkietów.",
-                guideAction: "Wybierz obszar na mapie, aby poznać archiwum.",
+                guideDesc: "Nasze kompozycje pełnią rolę przewodników. Każdy rejon ma swoją unikalną mapę drogową zapisaną w wosku.",
+                guideAction: "Kliknij na mapę, aby przejść do archiwum dzielnicy.",
                 manifestoSub: "The Studio",
-                manifestoText: "Nasze kompozycje powstają w berlińskim atelier. Używamy wosku sojowego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta."
+                manifestoText: "Nasze kompozycje powstają w berlińskim atelier. Używamy wosku rzepakowo-kokosowego jako czystego nośnika dla esencji, które definiują architekturę miasta."
             },
             en: {
                 navMap: "The Map",
@@ -284,10 +317,10 @@
                 heroDesc: "We don't sell candles. We archive Berlin's identity. Each scent represents geographic coordinates and an emotional record of a specific district.",
                 guideSub: "The Urban Guide",
                 guideTitle: "Your district. <br> Your olfactory passport.",
-                guideDesc: "Our compositions serve as guides. Neukölln doesn't just smell like smoke – it smells like the history of change, night air by the canal, and raw concrete. Mitte is the sterility of galleries and the scent of old floors.",
-                guideAction: "Select an area on the map to explore the archive.",
+                guideDesc: "Our compositions serve as guides. Each region has its own unique roadmap written in wax.",
+                guideAction: "Click on the map to go to the district archive.",
                 manifestoSub: "The Studio",
-                manifestoText: "Our compositions are created in our Berlin atelier. We use soy wax as a clean carrier for rare essences that define the city's architecture."
+                manifestoText: "Our compositions are created in our Berlin atelier. We use rapeseed and coconut wax as a clean carrier for rare essences that define the city's architecture."
             },
             de: {
                 navMap: "Karte",
@@ -299,40 +332,10 @@
                 heroDesc: "Wir verkaufen keine Kerzen. Wir archivieren die Identität Berlins. Jeder Duft ist eine geografische Koordinate und eine emotionale Aufzeichnung eines Viertels.",
                 guideSub: "The Urban Guide",
                 guideTitle: "Dein Viertel. <br> Dein Geruchspass.",
-                guideDesc: "Unsere Kompositionen dienen als Wegweiser. Neukölln riecht nicht nur nach Rauch – es riecht nach der Geschichte des Wandels, Nachtluft am Kanal und rohem Beton. Mitte ist die Sterilität der Galerien und der Duft alter Parkettböden.",
-                guideAction: "Wähle einen Bereich auf der Karte aus, um das Archiv zu erkunden.",
+                guideDesc: "Unsere Kompositionen dienen als Wegweiser. Jede Region hat ihren eigenen einzigartigen Fahrplan, der in Wachs geschrieben steht.",
+                guideAction: "Klicken Sie auf die Karte, um zum Bezirksarchiv zu gelangen.",
                 manifestoSub: "Das Studio",
-                manifestoText: "Unsere Kompositionen entstehen in unserem Berliner Atelier. Wir verwenden Sojawachs als reinen Träger für seltene Essenzen, die die Architektur der Stadt definieren."
-            },
-            fr: {
-                navMap: "La Carte",
-                navArchives: "Archives",
-                navManifesto: "Manifeste",
-                navCart: "PANIER (0)",
-                scrollText: "Faire défiler",
-                heroSub: "Souvenir Exclusif de Berlin",
-                heroDesc: "Nous ne vendons pas de bougies. Nous archivons l'identité de Berlin. Chaque parfum est une coordonnée géographique et un enregistrement émotionnel d'un quartier.",
-                guideSub: "The Urban Guide",
-                guideTitle: "Votre quartier. <br> Votre passeport olfactif.",
-                guideDesc: "Nos compositions servent de guides. Neukölln ne sent pas seulement la fumée – il sent l'histoire du changement, l'air nocturne au bord du canal et le béton brut. Mitte est la stérilité des galeries et l'odeur des parquets anciens.",
-                guideAction: "Sélectionnez une zone sur la carte pour explorer les archives.",
-                manifestoSub: "Le Studio",
-                manifestoText: "Nos compositions sont créées dans notre atelier berlinois. Nous utilisons la cire de soja comme support pur pour des essences rares qui définissent l'architecture de la ville."
-            },
-            es: {
-                navMap: "El Mapa",
-                navArchives: "Archivos",
-                navManifesto: "Manifiesto",
-                navCart: "CARRITO (0)",
-                scrollText: "Desplazar para explorar",
-                heroSub: "Recuerdo Exclusivo de Berlín",
-                heroDesc: "No vendemos velas. Archivamos la identidad de Berlín. Cada aroma es una coordenada geográfica y un registro emocional de un distrito específico.",
-                guideSub: "The Urban Guide",
-                guideTitle: "Tu distrito. <br> Tu pasaporte olfativo.",
-                guideDesc: "Nuestras composiciones sirven de guía. Neukölln no solo huele a humo: huele a historia de cambios, aire nocturno junto al canal y hormigón bruto. Mitte es la esterilidad de las galerías y el olor de los parqués antiguos.",
-                guideAction: "Selecciona un área en el mapa para explorar el archivo.",
-                manifestoSub: "El Estudio",
-                manifestoText: "Nuestras composiciones se crean en nuestro taller de Berlín. Utilizamos cera de soja como soporte puro para esencias raras que definen la arquitectura de la ciudad."
+                manifestoText: "Unsere Kompositionen entstehen in unserem Berliner Atelier. Wir verwenden Raps- und Kokoswachs als reinen Träger für seltene Essenzen, die die Architektur der Stadt definieren."
             }
         };
 
@@ -342,7 +345,6 @@
             document.getElementById('nav-manifesto').innerText = translations[lang].navManifesto;
             document.getElementById('nav-cart').innerText = translations[lang].navCart;
             document.getElementById('scroll-text').innerText = translations[lang].scrollText;
-
             document.getElementById('hero-sub').innerText = translations[lang].heroSub;
             document.getElementById('hero-desc').innerText = translations[lang].heroDesc;
             document.getElementById('guide-sub').innerText = translations[lang].guideSub;
