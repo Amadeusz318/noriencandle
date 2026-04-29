@@ -4,205 +4,216 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Norien Berlin</title>
+<title>NORIEN BERLIN</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap" rel="stylesheet">
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Inter', 'sans-serif'] },
+      colors: {
+        norien: {
+          dark: '#0f0f0f',
+          canvas: '#fcfaf7',
+          mapLine: '#4a2c2a'
+        }
+      }
+    }
+  }
+}
+</script>
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  background:#f8f7f4;
-  color:#111;
-}
-
-/* HEADER */
-
-header {
-  position:fixed;
-  top:40px;
-  left:60px;
-  font-size:12px;
-  letter-spacing:0.4em;
-  z-index:10;
-}
-
-.cart {
-  position:fixed;
-  top:40px;
-  right:60px;
-  font-size:11px;
-  letter-spacing:0.2em;
-  opacity:0.6;
-}
+body::-webkit-scrollbar { width: 4px; }
+body::-webkit-scrollbar-thumb { background: #0f0f0f; }
 
 /* HERO */
-
-.hero {
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.hero-title {
+  font-size: clamp(56px, 9vw, 120px);
+  font-weight: 200;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
 }
 
-.hero-inner {
-  width:90%;
-  max-width:1200px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:120px;
+/* subtle product hover */
+.product:hover {
+  transform: translateY(-4px);
 }
 
-.hero img { width:100%; }
-
-.hero-text {
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
+/* map */
+.district-path {
+  fill: transparent;
+  stroke: #4a2c2a;
+  stroke-width: 0.8;
+  transition: 0.4s;
 }
 
-.hero-text h1 {
-  font-size:64px;
-  font-weight:300;
+.district-path:hover {
+  fill: #4a2c2a;
+  fill-opacity: 0.12;
 }
 
-.hero-text p {
-  margin-top:20px;
-  font-size:12px;
-  letter-spacing:0.2em;
-  opacity:0.5;
+/* mobile */
+@media (max-width:768px){
+  .mobile-scroll {
+    display:flex;
+    overflow-x:auto;
+    gap:1rem;
+  }
+  .mobile-scroll > div {
+    min-width:85vw;
+  }
 }
-
-/* DISTRICT */
-
-.district {
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.district-inner {
-  width:90%;
-  max-width:1200px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:120px;
-}
-
-.district:nth-child(even) .district-inner {
-  direction:rtl;
-}
-
-.district img { width:100%; }
-
-.district-text {
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-.district-text h2 {
-  font-size:48px;
-  font-weight:300;
-}
-
-.district-text span {
-  margin-top:10px;
-  font-size:11px;
-  letter-spacing:0.3em;
-  opacity:0.5;
-}
-
-/* BUY */
-
-.buy {
-  margin-top:40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.price {
-  font-size:14px;
-}
-
-.buy button {
-  background:none;
-  border:none;
-  border-bottom:1px solid #111;
-  font-size:11px;
-  letter-spacing:0.3em;
-  cursor:pointer;
-  opacity:0.6;
-}
-
-.buy button:hover {
-  opacity:1;
-}
-
 </style>
 </head>
 
-<body>
+<body class="bg-norien-canvas text-norien-dark font-sans antialiased">
 
-<header>NORIEN</header>
-<div class="cart">CART (0)</div>
+<!-- NAV -->
+<nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
 
-<section class="hero">
-  <div class="hero-inner">
-    <img src="https://images.unsplash.com/photo-1603006905393-c2a9d68a6d9b?q=80&w=1200">
-    <div class="hero-text">
-      <h1>Charlottenburg</h1>
-      <p>soft geometry · late afternoon · stillness</p>
-    </div>
+  <div class="tracking-[0.5em] uppercase text-sm">Norien</div>
+
+  <div class="text-[10px] tracking-[0.3em] opacity-50">
+    CART (0)
   </div>
+
+</nav>
+
+<!-- HERO -->
+<section class="h-screen flex items-center justify-center text-center px-6">
+
+  <h1 class="hero-title">
+    Olfactory <br><span class="italic">Cartography.</span>
+  </h1>
+
 </section>
 
-<section class="district">
-  <div class="district-inner">
-    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200">
-    <div class="district-text">
-      <h2>Mitte</h2>
-      <span>palo santo · cedar · silence</span>
+<!-- MAP -->
+<section class="py-32 bg-white">
 
-      <div class="buy">
-        <div class="price">€55</div>
-        <button>Add to archive</button>
-      </div>
-    </div>
-  </div>
+<div class="container mx-auto px-6 grid md:grid-cols-2 gap-24 items-center">
+
+<div>
+<svg viewBox="0 0 500 450" class="w-full">
+
+<a href="#mitte">
+<path class="district-path" d="M180 150 L280 140 L310 230 L210 250 Z" />
+</a>
+
+<a href="#kreuzberg">
+<path class="district-path" d="M210 250 L310 230 L360 300 L250 330 Z" />
+</a>
+
+<a href="#neukoln">
+<path class="district-path" d="M310 230 L410 220 L450 350 L360 300 Z" />
+</a>
+
+</svg>
+</div>
+
+<div class="max-w-md">
+<p class="text-xs tracking-[0.4em] uppercase opacity-40 mb-6">
+Urban Archive
+</p>
+
+<h2 class="text-3xl font-light leading-snug">
+Each scent is a spatial memory.
+</h2>
+</div>
+
+</div>
 </section>
 
-<section class="district">
-  <div class="district-inner">
-    <img src="https://images.unsplash.com/photo-1600573472550-8090b5e0745e?q=80&w=1200">
-    <div class="district-text">
-      <h2>Kreuzberg</h2>
-      <span>smoke · leather · tension</span>
+<!-- PRODUCTS -->
+<section class="py-32 px-6">
 
-      <div class="buy">
-        <div class="price">€55</div>
-        <button>Add to archive</button>
-      </div>
-    </div>
-  </div>
+<div class="mobile-scroll md:grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+
+<!-- PRODUCT -->
+<div id="mitte" class="product p-10 border border-black/5">
+
+<p class="text-[10px] tracking-[0.4em] opacity-30 mb-6">
+Archive 01
+</p>
+
+<h3 class="text-2xl font-light mb-6">
+MITTE
+</h3>
+
+<p class="text-[10px] tracking-[0.3em] opacity-50 mb-10">
+palo santo · cedar · silence
+</p>
+
+<div class="flex justify-between text-sm">
+<span>€55</span>
+<span class="opacity-50">Add</span>
+</div>
+
+</div>
+
+<!-- PRODUCT -->
+<div id="kreuzberg" class="product p-10 border border-black/5">
+
+<p class="text-[10px] tracking-[0.4em] opacity-30 mb-6">
+Archive 02
+</p>
+
+<h3 class="text-2xl font-light mb-6">
+KREUZBERG
+</h3>
+
+<p class="text-[10px] tracking-[0.3em] opacity-50 mb-10">
+smoke · leather · tension
+</p>
+
+<div class="flex justify-between text-sm">
+<span>€55</span>
+<span class="opacity-50">Add</span>
+</div>
+
+</div>
+
+<!-- PRODUCT -->
+<div id="neukoln" class="product p-10 border border-black/5">
+
+<p class="text-[10px] tracking-[0.4em] opacity-30 mb-6">
+Archive 03
+</p>
+
+<h3 class="text-2xl font-light mb-6">
+NEUKÖLLN
+</h3>
+
+<p class="text-[10px] tracking-[0.3em] opacity-50 mb-10">
+night air · resin · raw
+</p>
+
+<div class="flex justify-between text-sm">
+<span>€55</span>
+<span class="opacity-50">Add</span>
+</div>
+
+</div>
+
+</div>
 </section>
 
-<section class="district">
-  <div class="district-inner">
-    <img src="https://images.unsplash.com/photo-1600585154203-8d5bbbf5b8c5?q=80&w=1200">
-    <div class="district-text">
-      <h2>Neukölln</h2>
-      <span>night air · resin · raw</span>
+<!-- MANIFESTO -->
+<section class="py-40 bg-norien-dark text-white text-center px-6">
 
-      <div class="buy">
-        <div class="price">€55</div>
-        <button>Add to archive</button>
-      </div>
-    </div>
-  </div>
+<p class="text-3xl md:text-5xl font-thin max-w-3xl mx-auto leading-tight">
+Created in Berlin.  
+Minimal form.  
+Controlled atmosphere.
+</p>
+
 </section>
 
 </body>
