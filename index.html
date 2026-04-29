@@ -2,103 +2,104 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>NORIEN | Berlin Urban Archive</title>
+    <title>NORIEN | Berlin Map Precision</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #fcfaf7; color: #1a1a1a; font-family: 'Inter', sans-serif; }
+        body { background-color: #fcfaf7; color: #1a1a1a; font-family: 'Inter', sans-serif; overflow: hidden; }
         .bg-dots { background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px); background-size: 40px 40px; }
 
-        /* Stylizacja pasywnych dzielnic (tło miasta) */
-        .dist-passive { fill: none; stroke: #e5e5e5; stroke-width: 0.8; }
-        .label-passive { font-size: 5px; fill: #d1d1d1; text-anchor: middle; letter-spacing: 0.1em; pointer-events: none; }
+        /* Mapa - tło pasywne (8 dzielnic) */
+        .dist-bg { fill: none; stroke: #e0e0e0; stroke-width: 0.5; }
+        .label-bg { font-size: 4.5px; fill: #d1d1d1; text-anchor: middle; letter-spacing: 0.1em; pointer-events: none; text-transform: uppercase; }
 
-        /* Aktywne bloki - Stan IDLE (Czarny) */
+        /* Aktywne klocki - Stan IDLE (Czerń) */
         .dist-active { 
             fill: #0d0d0d; 
-            stroke-width: 2; 
+            stroke: #0d0d0d;
+            stroke-width: 1; 
             cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-origin: center;
-            transform-box: fill-box;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .label-active { 
-            font-size: 6px; font-weight: 600; letter-spacing: 0.2em; fill: #ffffff; 
+            font-size: 5px; font-weight: 600; letter-spacing: 0.2em; fill: #ffffff; 
             text-anchor: middle; pointer-events: none; transition: 0.3s;
         }
 
-        /* Hover - Mocny, nasycony kolor (bez przezroczystości) */
-        .group-mitte:hover .dist-active { fill: #b35a2d; stroke: #b35a2d; transform: scale(1.03); }
-        .group-prenzl:hover .dist-active { fill: #8a7b8e; stroke: #8a7b8e; transform: scale(1.03); }
-        .group-kreuzberg:hover .dist-active { fill: #005f63; stroke: #005f63; transform: scale(1.03); }
-        .group-neukolln:hover .dist-active { fill: #631b2b; stroke: #631b2b; transform: scale(1.03); }
+        /* Hover - Solidny, nasycony kolor i obwoluta */
+        .group-mitte:hover .dist-active { fill: #b35a2d; stroke: #b35a2d; }
+        .group-prenzl:hover .dist-active { fill: #8a7b8e; stroke: #8a7b8e; }
+        .group-kreuzberg:hover .dist-active { fill: #005f63; stroke: #005f63; }
+        .group-neukolln:hover .dist-active { fill: #631b2b; stroke: #631b2b; }
 
-        .active-group:hover .label-active { transform: scale(1.1); }
-
-        /* Kafelek Popup */
+        /* Kafelek Popup (Design kafelkowy) */
         #popup {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 100; width: 400px; background: white; border-radius: 0; box-shadow: 0 40px 100px rgba(0,0,0,0.15);
+            display: none; position: fixed; top: 50%; right: 10%; transform: translateY(-50%);
+            z-index: 100; width: 360px; background: white; border-radius: 0;
+            box-shadow: 20px 20px 60px rgba(0,0,0,0.05);
         }
-        #popup.visible { display: block; }
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(252, 250, 247, 0.9); z-index: 90; backdrop-filter: blur(8px); }
+        #popup.visible { display: block; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-50%) translateX(30px); } to { opacity: 1; transform: translateY(-50%) translateX(0); } }
     </style>
 </head>
-<body class="bg-dots min-h-screen flex items-center justify-center p-10">
+<body class="bg-dots min-h-screen flex items-center">
 
-    <div class="max-w-[1600px] w-full grid lg:grid-cols-12 gap-16 items-center">
+    <div class="w-full grid lg:grid-cols-12 gap-0 items-center">
         
-        <!-- MAPA SVG (12 Dzielnic) -->
-        <div class="lg:col-span-8">
+        <!-- MAPA SVG (Skala 1:1 z mapą administracyjną) -->
+        <div class="lg:col-span-8 px-10">
             <svg viewBox="0 0 1000 800" class="w-full h-auto overflow-visible">
                 
-                <!-- PASYWNE (Dopełnienie skali miasta) -->
-                <g id="city-tissue">
-                    <path class="dist-passive" d="M100,300 L250,250 L350,320 L300,500 L150,550 Z" /> <text x="210" y="410" class="label-passive">Spandau</text>
-                    <path class="dist-passive" d="M300,80 L480,100 L500,200 L450,320 L320,320 Z" /> <text x="390" y="200" class="label-passive">Reinickendorf</text>
-                    <path class="dist-passive" d="M350,420 L450,450 L480,550 L420,780 L300,720 L250,500 Z" /> <text x="360" y="600" class="label-passive">Temp.-Schön.</text>
-                    <path class="dist-passive" d="M650,320 L800,300 L880,450 L680,550 L620,430 Z" /> <text x="740" y="390" class="label-passive">Lichtenberg</text>
-                    <path class="dist-passive" d="M680,550 L880,450 L950,550 L900,780 L650,650 L580,580 Z" /> <text x="790" y="650" class="label-passive">Treptow-Köp.</text>
-                </g>
+                <!-- ZACHÓD I PÓŁNOC -->
+                <path class="dist-bg" d="M50,350 L180,280 L280,320 L260,520 L120,600 L40,480 Z" /> <text x="130" y="450" class="label-bg">Spandau</text>
+                <path class="dist-bg" d="M280,120 L450,100 L500,200 L450,320 L300,320 L250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
+                <path class="dist-bg" d="M450,100 L620,130 L680,250 L640,350 L450,320 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
+                <path class="dist-bg" d="M260,520 L350,450 L320,320 L280,320 L180,280 L260,520 Z" /> <text x="250" y="410" class="label-bg">Charl.-Wilm.</text>
 
-                <!-- TWOJE 4 PRODUKTY (Mocna Czerń -> Mocny Kolor) -->
+                <!-- POŁUDNIE I WSCHÓD -->
+                <path class="dist-bg" d="M640,350 L750,320 L820,450 L650,550 L600,450 Z" /> <text x="710" y="400" class="label-bg">Lichtenberg</text>
+                <path class="dist-bg" d="M350,450 L430,480 L460,550 L430,650 L450,800 L320,750 L260,520 Z" /> <text x="360" y="620" class="label-bg">Temp.-Schön.</text>
+                <path class="dist-bg" d="M120,600 L260,520 L320,750 L280,850 L100,800 Z" /> <text x="190" y="720" class="label-bg">Steglitz-Zehl.</text>
+                <path class="dist-bg" d="M650,550 L820,450 L950,550 L900,780 L620,650 L550,580 Z" /> <text x="780" y="650" class="label-bg">Treptow-Köp.</text>
+
+                <!-- AKTYWNE 4 (Czarne bloki w skali centrum) -->
                 <!-- Mitte -->
                 <g class="active-group group-mitte" onclick="openPopup('mitte')">
-                    <path class="dist-active" d="M320,320 L450,320 L500,420 L430,450 L350,420 Z" />
-                    <text x="410" y="380" class="label-active">MITTE</text>
+                    <path class="dist-active" d="M320,320 L450,320 L480,420 L430,450 L350,420 Z" />
+                    <text x="395" y="380" class="label-active">MITTE</text>
                 </g>
 
-                <!-- Prenzlauer Berg -->
+                <!-- Prenzlauer Berg (Część Pankow) -->
                 <g class="active-group group-prenzl" onclick="openPopup('prenzl')">
-                    <path class="dist-active" d="M450,320 L650,320 L620,430 L500,420 Z" />
-                    <text x="545" y="380" class="label-active">PRENZL. BERG</text>
+                    <path class="dist-active" d="M450,320 L640,350 L600,450 L480,420 Z" />
+                    <text x="540" y="390" class="label-active">PRENZL. BERG</text>
                 </g>
 
                 <!-- Kreuzberg -->
                 <g class="active-group group-kreuzberg" onclick="openPopup('kreuz')">
-                    <path class="dist-active" d="M430,450 L500,420 L620,430 L680,550 L580,580 L480,550 Z" />
-                    <text x="550" y="505" class="label-active">KREUZBERG</text>
+                    <path class="dist-active" d="M430,450 L480,420 L600,450 L650,550 L550,580 L460,550 Z" />
+                    <text x="540" y="510" class="label-active">KREUZBERG</text>
                 </g>
 
-                <!-- Neukölln -->
+                <!-- Neukölln (Realny, wąski kształt) -->
                 <g class="active-group group-neukolln" onclick="openPopup('neukolln')">
-                    <path class="dist-active" d="M480,550 L580,580 L650,650 L600,850 L450,800 L420,780 L480,650 Z" />
-                    <text x="540" y="720" class="label-active">NEUKÖLLN</text>
+                    <path class="dist-active" d="M460,550 L550,580 L620,650 L580,850 L450,800 L430,650 Z" />
+                    <text x="530" y="720" class="label-active">NEUKÖLLN</text>
                 </g>
 
             </svg>
         </div>
 
-        <!-- TREŚĆ -->
-        <div class="lg:col-span-4 pl-10 space-y-10">
-            <header class="space-y-4">
+        <!-- TEKST -->
+        <div class="lg:col-span-4 pr-20 space-y-12">
+            <div class="space-y-4">
                 <p class="text-[10px] tracking-[0.5em] uppercase opacity-40 font-bold">The Urban Guide</p>
                 <h1 class="text-7xl font-extralight tracking-tighter leading-none">Olfactory<br><span class="italic">Cartography.</span></h1>
-            </header>
-            <p class="text-gray-400 font-light text-xl leading-relaxed">
-                Każdy blok na mapie to realna tkanka Berlina. Aktywne obszary to nasze archiwalne zapisy zapachowe.
+            </div>
+            <p class="text-gray-400 font-light text-xl leading-relaxed max-w-sm">
+                Każdy blok to realna tkanka Berlina. Aktywne obszary (czarne) to nasze archiwalne zapisy zapachowe. Wybierz dzielnicę, by poznać jej kod.
             </p>
-            <div class="grid grid-cols-2 gap-10 border-t border-gray-200 pt-10">
+            <div class="flex gap-16 border-t border-gray-100 pt-10">
                 <div><span class="block text-4xl font-extralight">12</span><span class="text-[9px] uppercase tracking-widest opacity-40">Bezirke</span></div>
                 <div><span class="block text-4xl font-extralight">04</span><span class="text-[9px] uppercase tracking-widest opacity-40">Archives</span></div>
             </div>
@@ -106,26 +107,25 @@
     </div>
 
     <!-- POPUP KAFELEK -->
-    <div class="overlay" id="overlay" onclick="closePopup()"></div>
     <div id="popup">
-        <div id="p-header" class="h-64 w-full flex items-center justify-center text-white">
-            <h2 id="p-title" class="text-4xl font-light tracking-widest uppercase">Mitte</h2>
+        <div id="p-header" class="h-48 w-full flex items-center justify-center text-white">
+            <h2 id="p-title" class="text-3xl font-light tracking-widest uppercase"></h2>
         </div>
-        <div class="p-12 space-y-8">
-            <p id="p-desc" class="text-gray-500 font-light leading-relaxed"></p>
-            <div class="flex justify-between items-center border-t border-gray-100 pt-10">
-                <span class="text-2xl font-light">45.00 EUR</span>
-                <button class="bg-black text-white text-[10px] px-10 py-5 tracking-[0.2em] uppercase hover:bg-zinc-800 transition">Do Koszyka</button>
+        <div class="p-10 space-y-6">
+            <p id="p-desc" class="text-gray-500 font-light text-sm leading-relaxed"></p>
+            <div class="flex justify-between items-center pt-6 border-t border-gray-100">
+                <span class="text-xl font-light">45.00 EUR</span>
+                <button class="bg-black text-white text-[9px] px-8 py-4 tracking-[0.2em] uppercase hover:bg-zinc-800 transition">Do Koszyka</button>
             </div>
         </div>
     </div>
 
     <script>
         const data = {
-            mitte: { title: '01 Mitte', color: '#b35a2d', desc: 'Miedź, beton i szafran. Esencja centrum miasta zamknięta w wosku.' },
-            prenzl: { title: '02 Prenzlauer Berg', color: '#8a7b8e', desc: 'Lawenda i grafit. Poranek na Kollwitzplatz w archiwum zapachu.' },
-            kreuz: { title: '03 Kreuzberg', color: '#005f63', desc: 'Sól morska i czarna herbata. Noc nad kanałem Landwehr.' },
-            neukolln: { title: '36 Neukölln', color: '#631b2b', desc: 'Dymny oud i przyprawy. Wielokulturowe serce Berlina.' }
+            mitte: { title: '01 Mitte', color: '#b35a2d', desc: 'Miedź, beton i szafran. Esencja centrum miasta.' },
+            prenzl: { title: '02 Prenzlauer Berg', color: '#8a7b8e', desc: 'Lawenda i grafit. Poranek na Kollwitzplatz.' },
+            kreuz: { title: '03 Kreuzberg', color: '#005f63', desc: 'Sól morska i czarna herbata. Noc nad kanałem.' },
+            neukolln: { title: '36 Neukölln', color: '#631b2b', desc: 'Dymny oud i przyprawy. Serce ulicy.' }
         };
 
         function openPopup(id) {
@@ -134,13 +134,9 @@
             document.getElementById('p-desc').innerText = p.desc;
             document.getElementById('p-header').style.backgroundColor = p.color;
             document.getElementById('popup').classList.add('visible');
-            document.getElementById('overlay').style.display = 'block';
         }
 
-        function closePopup() {
-            document.getElementById('popup').classList.remove('visible');
-            document.getElementById('overlay').style.display = 'none';
-        }
+        window.onclick = function(event) { if (event.target == document.body) document.getElementById('popup').classList.remove('visible'); }
     </script>
 </body>
 </html>
