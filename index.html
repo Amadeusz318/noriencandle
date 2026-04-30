@@ -25,17 +25,14 @@
         }
     </script>
     <style>
-        /* Ukrywamy systemowy scrollbar dla czystej, galeryjnej estetyki */
         ::-webkit-scrollbar { display: none; }
         html { -ms-overflow-style: none; scrollbar-width: none; }
-        
         body { overflow-x: hidden; background-color: #fcfaf7; }
 
         @media (pointer: fine) {
             body, a, button, input, select { cursor: none !important; }
         }
 
-        /* CUSTOM CURSOR */
         .custom-cursor {
             position: fixed; top: 0; left: 0; width: 10px; height: 10px;
             background-color: #0f0f0f; border-radius: 50%;
@@ -200,10 +197,8 @@
     <!-- SEKCJA 2: MAPA -->
     <section id="map-explore" class="h-[100dvh] w-full snap-start snap-always flex flex-col justify-center bg-white relative overflow-hidden bg-dots border-y border-gray-100 pt-20">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
                 <div class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[8px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
-                
                 <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible">
                     <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
                     <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
@@ -587,7 +582,12 @@
             }
         }
 
-        function updateCartItemQty(productId, delta) {
+        // --- ZMIANA ILOŚCI W SAMYM KOSZYKU Z BLOKADĄ PROPAGACJI ---
+        function updateCartItemQty(e, productId, delta) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation(); // Blokuje przekazanie kliknięcia do tła!
+            }
             if (cartState[productId]) {
                 cartState[productId] += delta;
                 if (cartState[productId] <= 0) {
@@ -616,6 +616,7 @@
                 totalPrice += qty * 55;
                 let product = mapProducts[id];
 
+                // Ważne: Przekazujemy event jako parametr 'event' z poziomu atrybutu onclick
                 itemsContainer.innerHTML += `
                     <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
                         <div>
@@ -624,9 +625,9 @@
                         </div>
                         <div class="flex items-center gap-4">
                             <div class="flex items-center gap-2 text-[10px] opacity-40 hover:opacity-100 transition">
-                                <button class="px-1 outline-none nav-hover" onclick="updateCartItemQty('${id}', -1)">-</button>
+                                <button class="px-1 outline-none nav-hover" onclick="updateCartItemQty(event, '${id}', -1)">-</button>
                                 <span class="w-3 text-center">${qty}</span>
-                                <button class="px-1 outline-none nav-hover" onclick="updateCartItemQty('${id}', 1)">+</button>
+                                <button class="px-1 outline-none nav-hover" onclick="updateCartItemQty(event, '${id}', 1)">+</button>
                             </div>
                             <span class="text-sm font-light w-14 text-right">€ ${(qty * 55).toFixed(2)}</span>
                         </div>
