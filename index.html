@@ -46,19 +46,23 @@
             transition: background-color 0.2s ease, border-color 0.2s ease; 
         }
         .custom-cursor.hover-state {
-            background-color: transparent;
+            background-color: transparent; 
             border-color: #fff; 
         }
 
-        /* MIKRO-INTERAKCJE DLA PLUSA I MINUSA */
-        .qty-btn {
-            display: inline-block;
-            padding: 0 8px; /* Większy, niewidoczny hitbox ułatwiający kliknięcie */
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease;
+        /* 1. KINOWE WEJŚCIE TEKSTU (HERO) */
+        .text-reveal { 
+            opacity: 0; 
+            transform: translateY(40px); 
+            animation: textReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
         }
-        .qty-btn:hover {
-            transform: scale(1.6); /* Płynne i wyraźne powiększenie po najechaniu */
-            font-weight: 600;
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.6s; }
+        .delay-3 { animation-delay: 1.0s; }
+        .delay-4 { animation-delay: 1.4s; }
+        
+        @keyframes textReveal { 
+            to { opacity: 1; transform: translateY(0); } 
         }
 
         nav { 
@@ -66,25 +70,40 @@
             backdrop-filter: blur(12px); 
             border-bottom: 1px solid rgba(15, 15, 15, 0.05);
             z-index: 1000;
+            opacity: 0;
+            animation: fadeInNav 2s ease forwards 1s;
         }
+        @keyframes fadeInNav { to { opacity: 1; } }
 
-        .fade-in { animation: fadeIn 1.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 768px) {
-            .mobile-scroll {
-                display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
-                gap: 1rem; padding-bottom: 1rem; -webkit-overflow-scrolling: touch;
-            }
-            .mobile-scroll > div { min-width: 85vw; scroll-snap-align: center; }
-            .mobile-scroll::-webkit-scrollbar { display: none; }
-        }
-
-        .bg-dots {
+        /* 2. WARSTWOWA MAPA (OBSERVER) */
+        #map-explore { position: relative; }
+        /* Tło w kropki z opóźnieniem */
+        #map-explore::before {
+            content: ''; position: absolute; inset: 0;
             background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px);
             background-size: 36px 36px;
+            opacity: 0; z-index: 0;
+            transition: opacity 2s ease 0.3s;
         }
-        #map-svg { transition: all 0.5s ease; max-height: 65vh; }
+        #map-explore.map-revealed::before { opacity: 1; }
+
+        /* Elementy mapy animowane z JS */
+        .map-layer { 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.95); 
+            transform-origin: center;
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        .map-revealed .map-layer { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+        }
+        .delay-map-1 { transition-delay: 0.8s; } /* Szare dzielnice */
+        .delay-map-2 { transition-delay: 1.4s; } /* Kolorowe dzielnice */
+        .delay-map-3 { transition-delay: 1.8s; } /* Tekst obok mapy */
+
+        #map-svg { transition: all 0.5s ease; max-height: 65vh; position: relative; z-index: 2; }
+        
         .district-bg { fill: transparent; stroke: #e8e8e8; stroke-width: 0.8; transition: opacity 0.5s ease; }
         .label-bg { font-size: 11px; fill: #1a1a1a; opacity: 0.15; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
         #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.05; }
@@ -123,6 +142,27 @@
         .active-group.is-selected[data-id="kreuz"] .active-path { fill: rgba(0, 95, 99, 0.15); }
         .active-group.is-selected[data-id="neukolln"] .active-path { fill: rgba(99, 27, 43, 0.15); }
         .active-group.is-selected .label-active { transform: translateY(-8px); opacity: 1; }
+
+        /* 3. PŁYNĄCY WOSK (CRAFT SECTION) */
+        .wax-flow-bg {
+            position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(270deg, #111111, #2b170e, #002d2f, #36291a, #111111);
+            background-size: 800% 800%;
+            animation: flowWax 25s ease infinite;
+            opacity: 0.85; /* Przepuszcza trochę oryginalnego zdjęcia spodem */
+            mix-blend-mode: multiply;
+        }
+        @keyframes flowWax {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .qty-btn {
+            display: inline-block; padding: 0 8px; 
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease;
+        }
+        .qty-btn:hover { transform: scale(1.6); font-weight: 600; }
 
         .drawer-panel {
             position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh;
@@ -206,52 +246,63 @@
     </nav>
 
     <!-- SEKCJA 1: HERO -->
-    <section id="hero" class="h-[100dvh] w-full snap-start snap-always flex flex-col justify-center items-center text-center px-6 relative">
-        <div class="z-10 fade-in">
-            <p id="hero-sub" class="text-[9px] md:text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60">Exclusive Souvenir from Berlin</p>
-            <h1 class="text-5xl md:text-8xl font-thin tracking-tighter mb-10 leading-tight">Olfactory <br> <span class="italic">Cartography.</span></h1>
-            <p id="hero-desc" class="max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed opacity-80">
+    <section id="hero" class="h-[100dvh] w-full snap-start snap-always flex flex-col justify-center items-center text-center px-6 relative overflow-hidden">
+        <div class="z-10">
+            <p id="hero-sub" class="text-[9px] md:text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Exclusive Souvenir from Berlin</p>
+            <!-- Tytuł rozbity dla płynnej kaskady -->
+            <h1 class="text-5xl md:text-8xl font-thin tracking-tighter mb-10 leading-tight">
+                <span class="block text-reveal delay-2">Olfactory</span>
+                <span class="block text-reveal delay-3 italic">Cartography.</span>
+            </h1>
+            <p id="hero-desc" class="max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed opacity-80 text-reveal delay-4">
                 Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.
             </p>
         </div>
-        <a href="#map-explore" id="hero-scroll" class="nav-hover absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
+        <a href="#map-explore" id="hero-scroll" class="nav-hover absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40 text-reveal delay-4">Przewiń by odkryć</a>
     </section>
 
-    <!-- SEKCJA 2: MAPA -->
-    <section id="map-explore" class="h-[100dvh] w-full snap-start snap-always flex flex-col justify-center bg-white relative overflow-hidden bg-dots border-y border-gray-100 pt-20">
-        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+    <!-- SEKCJA 2: MAPA (Teraz z animacją na wejście) -->
+    <section id="map-explore" class="h-[100dvh] w-full snap-start snap-always flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 pt-20">
+        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
                 <div id="map-mobile-hint" class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[8px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
+                
                 <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible">
-                    <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
-                    <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
-                    <path class="district-bg" d="M 50,350 L 180,280 L 260,520 L 120,600 L 40,480 Z" /> <text x="130" y="450" class="label-bg">Spandau</text>
-                    <path class="district-bg" d="M 260,520 L 340,460 L 280,390 L 320,320 L 250,220 L 180,280 Z" /> <text x="250" y="410" class="label-bg">Charl.-Wilm.</text>
-                    <path class="district-bg" d="M 120,600 L 260,520 L 320,750 L 280,850 L 100,800 Z" /> <text x="190" y="720" class="label-bg">Steglitz-Zehl.</text>
-                    <path class="district-bg" d="M 340,460 L 430,480 L 460,550 L 430,650 L 450,800 L 320,750 L 260,520 Z" /> <text x="350" y="620" class="label-bg">Temp.-Schön.</text>
-                    <path class="district-bg" d="M 640,350 L 750,320 L 820,450 L 650,550 L 600,450 Z" /> <text x="710" y="410" class="label-bg">Lichtenberg</text>
-                    <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z" /> <text x="780" y="650" class="label-bg">Treptow-Köp.</text>
+                    <!-- WARSTWA 1: Szare tła bazowe -->
+                    <g class="map-layer delay-map-1">
+                        <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
+                        <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
+                        <path class="district-bg" d="M 50,350 L 180,280 L 260,520 L 120,600 L 40,480 Z" /> <text x="130" y="450" class="label-bg">Spandau</text>
+                        <path class="district-bg" d="M 260,520 L 340,460 L 280,390 L 320,320 L 250,220 L 180,280 Z" /> <text x="250" y="410" class="label-bg">Charl.-Wilm.</text>
+                        <path class="district-bg" d="M 120,600 L 260,520 L 320,750 L 280,850 L 100,800 Z" /> <text x="190" y="720" class="label-bg">Steglitz-Zehl.</text>
+                        <path class="district-bg" d="M 340,460 L 430,480 L 460,550 L 430,650 L 450,800 L 320,750 L 260,520 Z" /> <text x="350" y="620" class="label-bg">Temp.-Schön.</text>
+                        <path class="district-bg" d="M 640,350 L 750,320 L 820,450 L 650,550 L 600,450 Z" /> <text x="710" y="410" class="label-bg">Lichtenberg</text>
+                        <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z" /> <text x="780" y="650" class="label-bg">Treptow-Köp.</text>
+                    </g>
 
-                    <g class="active-group" data-id="mitte" onclick="showDrawer('mitte')">
-                        <path class="active-path path-mitte nav-hover" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
-                        <text x="390" y="405" class="label-active text-mitte">MITTE</text>
-                    </g>
-                    <g class="active-group" data-id="prenzl" onclick="showDrawer('prenzl')">
-                        <path class="active-path path-prenzl nav-hover" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
-                        <text x="545" y="395" class="label-active text-prenzl">PRENZL. BERG</text>
-                    </g>
-                    <g class="active-group" data-id="kreuz" onclick="showDrawer('kreuz')">
-                        <path class="active-path path-kreuz nav-hover" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
-                        <text x="540" y="515" class="label-active text-kreuz">KREUZBERG</text>
-                    </g>
-                    <g class="active-group" data-id="neukolln" onclick="showDrawer('neukolln')">
-                        <path class="active-path path-neukolln nav-hover" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
-                        <text x="530" y="710" class="label-active text-neukolln">NEUKÖLLN</text>
+                    <!-- WARSTWA 2: Kolorowe, interaktywne dzielnice -->
+                    <g class="map-layer delay-map-2">
+                        <g class="active-group" data-id="mitte" onclick="showDrawer('mitte')">
+                            <path class="active-path path-mitte nav-hover" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
+                            <text x="390" y="405" class="label-active text-mitte">MITTE</text>
+                        </g>
+                        <g class="active-group" data-id="prenzl" onclick="showDrawer('prenzl')">
+                            <path class="active-path path-prenzl nav-hover" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
+                            <text x="545" y="395" class="label-active text-prenzl">PRENZL. BERG</text>
+                        </g>
+                        <g class="active-group" data-id="kreuz" onclick="showDrawer('kreuz')">
+                            <path class="active-path path-kreuz nav-hover" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
+                            <text x="540" y="515" class="label-active text-kreuz">KREUZBERG</text>
+                        </g>
+                        <g class="active-group" data-id="neukolln" onclick="showDrawer('neukolln')">
+                            <path class="active-path path-neukolln nav-hover" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
+                            <text x="530" y="710" class="label-active text-neukolln">NEUKÖLLN</text>
+                        </g>
                     </g>
                 </svg>
             </div>
             
-            <div class="space-y-6 md:col-span-5 lg:col-span-4 lg:pl-6 xl:pr-12">
+            <div class="space-y-6 md:col-span-5 lg:col-span-4 lg:pl-6 xl:pr-12 map-layer delay-map-3">
                 <h2 id="guide-sub" class="text-[10px] tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
                 <h3 id="guide-title" class="text-3xl lg:text-4xl font-extralight leading-tight">Twoja dzielnica. <br> Twój zapach.</h3>
                 <p id="guide-desc" class="text-norien-text/70 leading-relaxed font-light text-xs md:text-sm text-gray-500">
@@ -264,11 +315,14 @@
         </div>
     </section>
 
-    <!-- SEKCJA 3: THE CRAFT / RZEMIOSŁO -->
-    <section id="the-craft" class="h-[100dvh] w-full snap-start snap-always relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-norien-dark text-white">
+    <!-- SEKCJA 3: THE CRAFT / PŁYNĄCY WOSK -->
+    <section id="the-craft" class="h-[100dvh] w-full snap-start snap-always relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white">
+        <!-- Tło zdjęcia -->
         <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="w-full h-full object-cover opacity-40 filter brightness-50 contrast-125">
+            <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="w-full h-full object-cover opacity-30 filter grayscale">
         </div>
+        <!-- Kolorowy, pływający gradient "wosku" nałożony na zdjęcie -->
+        <div class="wax-flow-bg"></div>
         
         <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center pointer-events-none">
             <p id="craft-sub" class="text-[10px] tracking-[0.6em] uppercase mb-12 opacity-60" style="font-family: 'Montserrat', sans-serif;">The Craft</p>
@@ -549,6 +603,7 @@
 
     <!-- SKRYPTY -->
     <script>
+        // --- CUSTOM CURSOR ---
         const cursor = document.getElementById('custom-cursor');
         if (window.matchMedia("(pointer: fine)").matches) {
             document.addEventListener('mousemove', e => {
@@ -561,6 +616,21 @@
             });
         }
 
+        // --- OBSERVER DLA MAPY (POJAWIANIE SIĘ WARSTW) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const mapSection = document.getElementById('map-explore');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        mapSection.classList.add('map-revealed');
+                    }
+                });
+            }, { threshold: 0.3 }); // Odpali się gdy 30% mapy wejdzie na ekran
+            
+            observer.observe(mapSection);
+        });
+
+        // --- TRANSLACJE (I18N) ---
         let currentLang = 'pl';
         
         const translations = {
@@ -579,7 +649,7 @@
                 manifestoText: "Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.",
                 manifestoBadge: "Designed for Galleries & Concept Stores",
                 newsTitle: "Join the Archive", newsDesc: "Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.",
-                newsInput: "Twój adres e-mail", footerCopy: "© 2026 Norien Berlin — Olfactory Archives",
+                newsInput: "Twój adres e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`,
                 btnAcquire: "Acquire", btnAdded: "Added", 
                 cartEmpty: "Twój koszyk jest pusty.", cartShipping: "Wysyłka", cartFree: "Gratis",
                 checkoutBack: "Wróć do sklepu", checkoutOrderSum: "Order Summary", checkoutDue: "Total due",
@@ -602,7 +672,7 @@
                 manifestoText: "Our compositions are created in our Berlin atelier. We use plant wax as a clean carrier for rare essences that define the city's architecture.",
                 manifestoBadge: "Designed for Galleries & Concept Stores",
                 newsTitle: "Join the Archive", newsDesc: "Receive private notes from our lab and early access to limited fragrance editions.",
-                newsInput: "Your email address", footerCopy: "© 2026 Norien Berlin — Olfactory Archives",
+                newsInput: "Your email address", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`,
                 btnAcquire: "Acquire", btnAdded: "Added", 
                 cartEmpty: "Your cart is empty.", cartShipping: "Shipping", cartFree: "Free",
                 checkoutBack: "Back to store", checkoutOrderSum: "Order Summary", checkoutDue: "Total due",
@@ -625,7 +695,7 @@
                 manifestoText: "Unsere Kompositionen entstehen im Berliner Atelier. Wir verwenden Pflanzenwachs als reinen Träger für seltene Essenzen.",
                 manifestoBadge: "Designed for Galleries & Concept Stores",
                 newsTitle: "Join the Archive", newsDesc: "Erhalte private Notizen aus unserem Labor und frühen Zugang zu limitierten Editionen.",
-                newsInput: "Deine E-Mail Adresse", footerCopy: "© 2026 Norien Berlin — Olfactory Archives",
+                newsInput: "Deine E-Mail Adresse", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`,
                 btnAcquire: "Kaufen", btnAdded: "Hinzugefügt", 
                 cartEmpty: "Dein Warenkorb ist leer.", cartShipping: "Versand", cartFree: "Kostenlos",
                 checkoutBack: "Zurück zum Shop", checkoutOrderSum: "Bestellübersicht", checkoutDue: "Gesamtsumme",
@@ -648,7 +718,7 @@
                 manifestoText: "Nos compositions sont créées dans notre atelier berlinois. Nous utilisons la cire végétale comme support pur pour des essences rares.",
                 manifestoBadge: "Designed for Galleries & Concept Stores",
                 newsTitle: "Join the Archive", newsDesc: "Recevez des notes privées de notre laboratoire et un accès anticipé aux éditions limitées.",
-                newsInput: "Votre adresse e-mail", footerCopy: "© 2026 Norien Berlin — Olfactory Archives",
+                newsInput: "Votre adresse e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`,
                 btnAcquire: "Acquérir", btnAdded: "Ajouté", 
                 cartEmpty: "Votre panier est vide.", cartShipping: "Livraison", cartFree: "Gratuit",
                 checkoutBack: "Retour à la boutique", checkoutOrderSum: "Résumé de la commande", checkoutDue: "Total à payer",
@@ -671,7 +741,7 @@
                 manifestoText: "Nuestras composiciones se crean en nuestro taller de Berlín. Utilizamos cera vegetal como soporte puro para esencias raras.",
                 manifestoBadge: "Designed for Galleries & Concept Stores",
                 newsTitle: "Join the Archive", newsDesc: "Recibe notas privadas de nuestro laboratorio y acceso anticipado a ediciones limitadas.",
-                newsInput: "Tu correo electrónico", footerCopy: "© 2026 Norien Berlin — Olfactory Archives",
+                newsInput: "Tu correo electrónico", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`,
                 btnAcquire: "Adquirir", btnAdded: "Añadido", 
                 cartEmpty: "Tu carrito está vacío.", cartShipping: "Envío", cartFree: "Gratis",
                 checkoutBack: "Volver a la tienda", checkoutOrderSum: "Resumen del pedido", checkoutDue: "Total a pagar",
