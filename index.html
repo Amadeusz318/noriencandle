@@ -33,20 +33,22 @@
             body, a, button, input, select { cursor: none !important; }
         }
 
+        /* CUSTOM CURSOR - NAPRAWIONY (Stały rozmiar + Kameleon) */
         .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 10px; height: 10px;
-            background-color: #fff;
+            position: fixed; top: 0; left: 0; 
+            width: 12px; height: 12px; /* Stały, mały rozmiar */
+            background-color: #fff; /* Baza dla kameleona, daje głęboką czerń na białym tle */
             border-radius: 50%;
             pointer-events: none; z-index: 9999;
             transform: translate(-50%, -50%);
             border: 1px solid transparent;
-            mix-blend-mode: difference; 
-            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+            mix-blend-mode: difference; /* Magiczna właściwość inwersji kolorów */
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
         }
         .custom-cursor.hover-state {
-            width: 40px; height: 40px;
-            background-color: transparent;
-            border-color: #fff;
+            background-color: transparent; /* Środek staje się przezroczysty */
+            border-color: #fff; /* Pojawia się cieniutka obwódka */
+            transform: translate(-50%, -50%) scale(1.3); /* Bardzo dyskretne powiększenie (tylko o 3px) */
         }
 
         nav { 
@@ -67,10 +69,6 @@
             .mobile-scroll > div { min-width: 85vw; scroll-snap-align: center; }
             .mobile-scroll::-webkit-scrollbar { display: none; }
         }
-
-        .lang-btn { transition: all 0.3s; opacity: 0.3; padding-bottom: 2px; }
-        .lang-btn:hover { opacity: 0.8; }
-        .lang-btn.active { opacity: 1; font-weight: 600; border-bottom: 1px solid currentColor; }
 
         .bg-dots {
             background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px);
@@ -160,6 +158,10 @@
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; margin: 0; 
         }
+        
+        .lang-btn { transition: all 0.3s; opacity: 0.3; padding-bottom: 2px; }
+        .lang-btn:hover { opacity: 0.8; }
+        .lang-btn.active { opacity: 1; font-weight: 600; border-bottom: 1px solid currentColor; }
     </style>
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
@@ -182,7 +184,6 @@
         </div>
         
         <div class="flex items-center gap-6 md:gap-10">
-            <!-- Języki na urządzeniach desktopowych -->
             <div class="hidden md:flex gap-3 text-[8px] tracking-widest uppercase">
                 <button onclick="changeLang('pl')" class="lang-btn active nav-hover lang-pl">PL</button>
                 <button onclick="changeLang('en')" class="lang-btn nav-hover lang-en">EN</button>
@@ -398,7 +399,6 @@
         <footer class="py-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10">
             <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
             
-            <!-- Mobilny selektor języków w stopce (na małych ekranach) -->
             <div class="flex md:hidden gap-3 text-[8px] tracking-widest uppercase">
                 <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
                 <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
@@ -537,7 +537,6 @@
         </div>
     </div>
 
-    <!-- SKRYPTY -->
     <script>
         // --- CUSTOM CURSOR ---
         const cursor = document.getElementById('custom-cursor');
@@ -700,7 +699,6 @@
             document.getElementById('news-input').placeholder = t.newsInput;
             document.getElementById('footer-copy').innerText = t.footerCopy;
 
-            // Formularz checkoutu
             document.getElementById('cart-title').innerText = t.cartWord;
             document.getElementById('cart-shipping').innerText = t.cartShipping;
             document.getElementById('cart-shipping-val').innerText = t.cartFree;
@@ -722,14 +720,12 @@
             document.querySelectorAll('.btn-checkout').forEach(el => el.innerText = 'CHECKOUT');
             document.querySelectorAll('.btn-acquire').forEach(el => el.innerText = t.btnAcquire);
 
-            // Klasy przycisków
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.lang-' + lang).forEach(btn => btn.classList.add('active'));
 
-            renderCart(); // Przerenderuj żeby odświeżyć słowo KOSZYK/CART
+            renderCart(); 
         }
 
-        // --- BAZA PRODUKTÓW ---
         const mapProducts = {
             mitte: { id: 'mitte', title: 'MITTE', sub: 'Archive No. 01', color: '#b35a2d', coords: '52°31\'12.0"N 13°24\'18.0"E', notes: 'Lavender / Myrrh / Suede', desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy.', image: 'mitte.png' },
             prenzl: { id: 'prenzl', title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E', notes: 'Lemon / Jasmine / Sandalwood', desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą.', image: 'prenzlauer.png' },
@@ -844,6 +840,13 @@
             navCartEl.innerText = `${t.cartWord} (${totalItems})`;
             totalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
             checkoutTotalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
+            
+            if (window.matchMedia("(pointer: fine)").matches) {
+                document.querySelectorAll('#cart-items .nav-hover').forEach(el => {
+                    el.addEventListener('mouseenter', () => cursor.classList.add('hover-state'));
+                    el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state'));
+                });
+            }
         }
 
         function openCart(e) {
@@ -877,10 +880,7 @@
             document.getElementById('drawer-subtitle').innerText = p.sub;
             document.getElementById('drawer-coords').innerText = p.coords;
             document.getElementById('drawer-notes').innerHTML = p.notes;
-            
-            // Hack for multilang descriptions in drawer (simplified for demo)
             document.getElementById('drawer-desc').innerText = translations[currentLang].heroDesc; 
-            
             document.getElementById('drawer-top-line').style.backgroundColor = p.color;
             document.getElementById('drawer-qty').innerText = '1';
 
@@ -942,7 +942,6 @@
             }
         });
 
-        // Initialize translations on load
         changeLang('pl');
 
     </script>
