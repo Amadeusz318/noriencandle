@@ -3,861 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NORIEN BERLIN | Olfactory Cartography</title>
+    <title>NORIEN BERLIN | Premium Olfactory</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <!-- Biblioteki GSAP i Lenis do animacji SCROLLYTELLINGU -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        norien: {
-                            gold: '#b88b4a',
-                            dark: '#0f0f0f',
-                            canvas: '#fcfaf7',
-                            mapLine: '#4a2c2a'
-                        }
-                    },
-                    letterSpacing: { 'ultra': '0.5em', 'micro': '0.2em' }
-                }
-            }
-        }
-    </script>
     <style>
         ::-webkit-scrollbar { display: none; }
-        html { -ms-overflow-style: none; scrollbar-width: none; }
-        body { background-color: #fcfaf7; overflow-x: hidden; }
+        body { background-color: #fcfaf7; overflow-x: hidden; font-family: 'Inter', sans-serif; }
 
-        @media (pointer: fine) {
-            body, a, button, input, select { cursor: none !important; }
+        /* KINOWY EFEKT SZKŁA */
+        .glass-vessel {
+            background: linear-gradient(105deg, #1a0f0a 0%, #3d2217 25%, #5c3426 50%, #3d2217 75%, #1a0f0a 100%);
+            box-shadow: 
+                inset 0 0 50px rgba(0,0,0,0.8),
+                inset 20px 0 40px rgba(255,255,255,0.05),
+                0 30px 60px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 10;
         }
 
-        #preloader {
-            position: fixed; inset: 0; background-color: #fcfaf7; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        /* WARSTWA ODBLASKU (Nad woskiem) */
+        .glass-reflection {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, 
+                transparent 10%, 
+                rgba(255,255,255,0.1) 20%, 
+                rgba(255,255,255,0.2) 25%, 
+                transparent 30%,
+                transparent 70%,
+                rgba(255,255,255,0.1) 85%,
+                transparent 100%);
+            pointer-events: none;
+            z-index: 30; /* Bardzo ważne - nad woskiem i etykietą */
         }
 
-        .noise-overlay {
-            position: fixed; inset: 0; z-index: 9998; pointer-events: none; opacity: 0.04;
-            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        /* WOSK (Wewnątrz słoika) */
+        #wax-pour {
+            background: #f4e9d9;
+            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.05);
+            filter: blur(0.5px);
+            z-index: 15;
+            position: absolute;
+            bottom: 15px; /* Nad dnem słoika */
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        .magnetic { transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1); display: inline-block; }
-
-        .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 10px; height: 10px; 
-            background-color: #fff; border-radius: 50%; pointer-events: none; z-index: 9999;
-            transform: translate(-50%, -50%); border: 1px solid transparent; mix-blend-mode: difference; 
-            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, border-color 0.2s ease; 
-            will-change: transform;
-        }
-        .custom-cursor.hover-state { background-color: transparent; border-color: rgba(255, 255, 255, 0.5); width: 28px; height: 28px; }
-
-        .text-reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1); }
-        .is-revealed .text-reveal { opacity: 1; transform: translateY(0); }
-        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; }
-        .delay-3 { transition-delay: 0.3s; } .delay-4 { transition-delay: 0.4s; }
-
-        nav { background-color: rgba(252, 250, 247, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(15, 15, 15, 0.05); z-index: 1000; opacity: 0; animation: fadeInNav 2s ease forwards 1s; }
-        @keyframes fadeInNav { to { opacity: 1; } }
-
-        @media (max-width: 768px) {
-            .mobile-scroll { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; padding-bottom: 1rem; -webkit-overflow-scrolling: touch; }
-            .mobile-scroll > div { min-width: 85vw; scroll-snap-align: center; }
-            .mobile-scroll::-webkit-scrollbar { display: none; }
+        /* BIAŁE PUDEŁKO */
+        .premium-box {
+            background: #ffffff;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.07);
+            border: 1px solid rgba(0,0,0,0.03);
         }
 
-        #map-explore::before {
-            content: ''; position: absolute; inset: 0;
-            background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px);
-            background-size: 36px 36px; opacity: 0; z-index: 0; transition: opacity 1.5s ease;
-        }
-        #map-explore.is-revealed::before { opacity: 1; }
-        
-        .map-layer { opacity: 0; transform: translateY(30px) scale(0.95); transform-origin: center; transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1); }
-        .is-revealed .map-layer { opacity: 1; transform: translateY(0) scale(1); }
-        .delay-map-1 { transition-delay: 0.1s; } .delay-map-2 { transition-delay: 0.25s; } .delay-map-3 { transition-delay: 0.4s; } 
-
-        #map-svg { transition: all 0.5s ease; max-height: 65vh; position: relative; z-index: 2; }
-        .district-bg { fill: transparent; stroke: #e8e8e8; stroke-width: 0.8; transition: opacity 0.5s ease; }
-        .label-bg { font-size: 11px; fill: #1a1a1a; opacity: 0.15; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
-        #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.05; }
-        .active-group { transition: opacity 0.5s ease; }
-        .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), fill 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; }
-        
-        .path-mitte { stroke: #b35a2d; } .path-prenzl { stroke: #8a7b8e; }
-        .path-kreuz { stroke: #005f63; } .path-neukolln { stroke: #631b2b; }
-        .label-active { font-size: 13px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.8; transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1); text-anchor: middle; pointer-events: none; }
-        .text-mitte { fill: #b35a2d; } .text-prenzl { fill: #8a7b8e; }
-        .text-kreuz { fill: #005f63; } .text-neukolln { fill: #631b2b; }
-
-        .active-group:hover .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.1)); }
-        .active-group:hover .label-active { transform: translateY(-8px); opacity: 1; }
-        .active-group.is-selected[data-id="mitte"] .active-path { fill: rgba(179, 90, 45, 0.15); }
-
-        .wax-flow-bg {
-            position: absolute; inset: 0; z-index: 1;
-            background: linear-gradient(270deg, #111111, #2b170e, #002d2f, #36291a, #111111);
-            background-size: 800% 800%; animation: flowWax 25s ease infinite; opacity: 0.85; mix-blend-mode: multiply;
-        }
-        @keyframes flowWax { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        .qty-btn { display: inline-block; padding: 0 8px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease; opacity: 0.6; }
-        .qty-btn:hover { transform: scale(1.4); opacity: 1; }
-
-        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh; background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06); z-index: 1050; transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; }
-        .drawer-panel.open { transform: translateX(0); }
-        .drawer-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: #0f0f0f; opacity: 0.4; transition: opacity 0.3s; z-index: 10; }
-        .drawer-close:hover { opacity: 1; }
-        .drawer-inner { overflow-y: auto; flex-grow: 1; padding: 4rem 2rem 2rem 2rem; display: flex; flex-direction: column; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
-        .drawer-inner.loaded { opacity: 1; transform: translateY(0); }
-
-        #checkout-overlay { position: fixed; inset: 0; background-color: #fcfaf7; z-index: 2000; transform: translateY(100%); transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1); display: flex; }
-        #checkout-overlay.open { transform: translateY(0); }
-        .input-minimal { width: 100%; border-bottom: 1px solid rgba(15,15,15,0.2); padding: 10px 0; font-size: 12px; font-weight: 300; outline: none; transition: border-color 0.3s; background: transparent; }
-        .input-minimal:focus { border-color: #0f0f0f; }
-        
-        .archive-card { opacity: 0; }
-
-        /* FOTOREALISTYCZNE STYLE DLA SCROLLYTELLINGU (SZKŁO, WOSK, PUDEŁKO) */
-        .glass-highlight {
-            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 30%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.15) 70%, transparent 100%);
-        }
-        
-        .white-box-shadow {
-            box-shadow: 0 30px 60px rgba(0,0,0,0.08), 0 10px 20px rgba(0,0,0,0.03), inset 0 2px 10px rgba(255,255,255,1);
+        .label-text {
+            color: white;
+            mix-blend-mode: normal;
+            z-index: 25;
         }
     </style>
 </head>
-<body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
+<body>
 
-    <div id="preloader">
-        <div class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light">Loading Archives</div>
-        <div id="loader-perc" class="text-4xl md:text-6xl font-thin tracking-widest text-norien-dark">0%</div>
-    </div>
-
-    <div class="noise-overlay"></div>
-    <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
-
-    <nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
-        <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover magnetic">
-            <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.25rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
-            <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 9px; letter-spacing: 0.23em; margin-top: 0.45rem; margin-right: -0.23em; color: #555;">BERLIN</span>
-        </a>
-
-        <div class="hidden lg:flex gap-10 text-[10px] tracking-widest uppercase font-light ml-8">
-            <div class="magnetic"><a href="#map-explore" id="nav-map" class="hover:opacity-50 transition nav-hover">Mapa</a></div>
-            <div class="magnetic"><a href="#the-craft" id="nav-craft" class="hover:opacity-50 transition nav-hover">Rzemiosło</a></div>
-            <div class="magnetic"><a href="#archives" id="nav-archives" class="hover:opacity-50 transition nav-hover">Archiwum</a></div>
-            <div class="magnetic"><a href="#manifesto" id="nav-manifesto" class="hover:opacity-50 transition nav-hover">Manifest</a></div>
-        </div>
-        
-        <div class="flex items-center gap-6 md:gap-10">
-            <div class="hidden md:flex gap-3 text-[8px] tracking-widest uppercase">
-                <div class="magnetic"><button onclick="changeLang('pl')" class="lang-btn active nav-hover lang-pl">PL</button></div>
-                <div class="magnetic"><button onclick="changeLang('en')" class="lang-btn nav-hover lang-en">EN</button></div>
-                <div class="magnetic"><button onclick="changeLang('de')" class="lang-btn nav-hover lang-de">DE</button></div>
-            </div>
-            <div class="magnetic"><div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap nav-hover cursor-pointer" onclick="openCart(event)">KOSZYK (0)</div></div>
-        </div>
-    </nav>
-
-    <section id="hero" class="observe-section min-h-[100vh] w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden py-32">
-        <div class="z-10">
-            <p id="hero-sub" class="text-[9px] md:text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Exclusive Souvenir from Berlin</p>
-            <h1 class="text-5xl md:text-8xl font-thin tracking-tighter mb-10 leading-tight">
-                <span class="block text-reveal delay-2">Olfactory</span>
-                <span class="block text-reveal delay-3 italic">Cartography.</span>
-            </h1>
-            <p id="hero-desc" class="max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed opacity-80 text-reveal delay-4">
-                Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.
-            </p>
-        </div>
-        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4">
-            <a href="#map-explore" id="hero-scroll" class="nav-hover text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
-        </div>
+    <!-- SEKCYJNY PRELOADER DLA PŁYNNOŚCI -->
+    <section class="h-screen flex items-center justify-center">
+        <p class="text-[10px] tracking-widest uppercase opacity-40">Scrolluj, aby stworzyć</p>
     </section>
 
-    <section id="map-explore" class="observe-section min-h-[100vh] w-full flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 py-32">
-        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-            <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
-                <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible">
-                    <g class="map-layer delay-map-1">
-                        <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
-                        <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
-                        <path class="district-bg" d="M 50,350 L 180,280 L 260,520 L 120,600 L 40,480 Z" /> <text x="130" y="450" class="label-bg">Spandau</text>
-                        <path class="district-bg" d="M 260,520 L 340,460 L 280,390 L 320,320 L 250,220 L 180,280 Z" /> <text x="250" y="410" class="label-bg">Charl.-Wilm.</text>
-                        <path class="district-bg" d="M 120,600 L 260,520 L 320,750 L 280,850 L 100,800 Z" /> <text x="190" y="720" class="label-bg">Steglitz-Zehl.</text>
-                        <path class="district-bg" d="M 340,460 L 430,480 L 460,550 L 430,650 L 450,800 L 320,750 L 260,520 Z" /> <text x="350" y="620" class="label-bg">Temp.-Schön.</text>
-                        <path class="district-bg" d="M 640,350 L 750,320 L 820,450 L 650,550 L 600,450 Z" /> <text x="710" y="410" class="label-bg">Lichtenberg</text>
-                        <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z" /> <text x="780" y="650" class="label-bg">Treptow-Köp.</text>
-                    </g>
-                    <g class="map-layer delay-map-2">
-                        <g class="active-group" data-id="mitte" onclick="showDrawer('mitte')">
-                            <path class="active-path path-mitte nav-hover" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
-                            <text x="390" y="405" class="label-active text-mitte">MITTE</text>
-                        </g>
-                        <g class="active-group" data-id="prenzl" onclick="showDrawer('prenzl')">
-                            <path class="active-path path-prenzl nav-hover" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
-                            <text x="545" y="395" class="label-active text-prenzl">PRENZL. BERG</text>
-                        </g>
-                        <g class="active-group" data-id="kreuz" onclick="showDrawer('kreuz')">
-                            <path class="active-path path-kreuz nav-hover" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
-                            <text x="540" y="515" class="label-active text-kreuz">KREUZBERG</text>
-                        </g>
-                        <g class="active-group" data-id="neukolln" onclick="showDrawer('neukolln')">
-                            <path class="active-path path-neukolln nav-hover" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
-                            <text x="530" y="710" class="label-active text-neukolln">NEUKÖLLN</text>
-                        </g>
-                    </g>
-                </svg>
-            </div>
-            <div class="space-y-6 md:col-span-5 lg:col-span-4 lg:pl-6 xl:pr-12 map-layer delay-map-3">
-                <h2 id="guide-sub" class="text-[10px] tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
-                <h3 id="guide-title" class="text-3xl lg:text-4xl font-extralight leading-tight">Twoja dzielnica. <br> Twój zapach.</h3>
-                <p id="guide-desc" class="text-norien-text/70 leading-relaxed font-light text-xs md:text-sm text-gray-500">
-                    Nasze kompozycje pełnią rolę przewodników. Najedź na kolorowy obrys, aby aktywować interakcję i poznać sensoryczny kod danej dzielnicy.
-                </p>
-                <div class="pt-4 border-t border-norien-dark/10">
-                    <p id="guide-action" class="text-[9px] tracking-widest uppercase opacity-40 font-semibold">Kliknij na mapę, aby wysunąć detale.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="the-craft" class="observe-section min-h-[100vh] w-full relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white py-32">
-        <div class="absolute inset-0 z-0 overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="craft-bg-img w-full h-[130%] object-cover opacity-30 filter grayscale -translate-y-[15%]">
-        </div>
-        <div class="wax-flow-bg"></div>
-        <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center pointer-events-none">
-            <p id="craft-sub" class="text-[10px] tracking-[0.6em] uppercase mb-12 opacity-60 text-reveal delay-1" style="font-family: 'Montserrat', sans-serif;">The Craft</p>
-            <h2 id="craft-title" class="text-4xl md:text-6xl font-thin mb-10 tracking-wide text-reveal delay-2">Czysta forma.</h2>
-            <div class="h-px w-10 bg-white/20 mx-auto mb-10 text-reveal delay-3"></div>
-            <p id="craft-desc" class="text-sm md:text-base font-light leading-loose opacity-80 max-w-md text-reveal delay-4">
-                Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. Ręcznie zalewane w berlińskim atelier. Zestawione z rzadkimi esencjami, by rezonować bez zakłóceń.
-            </p>
-        </div>
-    </section>
-
-    <!-- FOTOREALISTYCZNY SCROLLYTELLING Z EFEKTEM NALEWANIA -->
-    <section id="story-section" class="relative w-full h-[500vh] bg-norien-canvas">
-        <div class="sticky top-0 w-full h-screen flex flex-col items-center justify-center overflow-hidden">
-            <h2 id="story-headline" class="text-[10px] tracking-ultra uppercase opacity-40 mb-16">Proces Tworzenia</h2>
+    <!-- SCROLLYTELLING SECTION -->
+    <section id="story-section" class="relative w-full h-[500vh]">
+        <div class="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden">
             
-            <div class="relative w-[320px] h-[480px] flex flex-col items-center justify-end perspective-1000">
+            <div class="relative w-[320px] h-[480px] flex items-center justify-center">
                 
-                <!-- Białe, luksusowe pudełko finałowe (Twoje zdjęcie nr 4) -->
-                <div id="story-box" class="absolute bottom-0 w-[300px] h-[400px] bg-[#fcfaf7] opacity-0 transform scale-95 z-30 flex flex-col items-center justify-center text-norien-dark white-box-shadow rounded-[2px]">
-                    <div class="text-[8px] tracking-[0.3em] font-medium uppercase text-center mb-8 opacity-60">Norien Berlin</div>
-                    <div class="text-4xl tracking-[0.25em] font-light text-center">MITTE</div>
-                    <div class="w-8 h-px bg-norien-dark/20 mx-auto mt-8 mb-6"></div>
-                    <div class="text-[8px] tracking-widest uppercase opacity-50">Ready to Ship</div>
+                <!-- 1. PUDEŁKO (Finał) -->
+                <div id="story-box" class="premium-box absolute w-[310px] h-[410px] opacity-0 scale-90 z-50 flex flex-col items-center justify-center p-12">
+                    <p class="text-[8px] tracking-[0.4em] uppercase mb-10 opacity-60">Norien Berlin</p>
+                    <h2 class="text-4xl tracking-[0.2em] font-extralight mb-10">MITTE</h2>
+                    <div class="w-10 h-[1px] bg-black/10 mb-8"></div>
+                    <p class="text-[8px] tracking-widest uppercase opacity-40">Handcrafted in Berlin</p>
                 </div>
-                
-                <!-- Strumień wylewającego się wosku z góry -->
-                <div id="story-stream" class="absolute top-0 left-1/2 -translate-x-1/2 w-[6px] h-0 bg-[#f9eee0] opacity-0 z-0 shadow-[0_0_10px_rgba(249,238,224,0.8)] filter blur-[1px]"></div>
 
-                <!-- Ciemnobrązowy fotorealistyczny słój szklany -->
-                <div id="story-jar" class="relative w-[280px] h-[340px] rounded-b-[18px] rounded-t-[3px] overflow-hidden z-10 flex items-end shadow-2xl" 
-                     style="background: linear-gradient(90deg, rgba(30,15,5,0.95) 0%, rgba(80,35,15,0.7) 15%, rgba(120,55,25,0.4) 50%, rgba(80,35,15,0.7) 85%, rgba(30,15,5,0.95) 100%); 
-                            box-shadow: inset 0 -30px 40px rgba(0,0,0,0.95), inset 25px 0 45px rgba(0,0,0,0.9), inset -25px 0 45px rgba(0,0,0,0.9); 
-                            backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.05);">
+                <!-- 2. SŁOIK (Konstrukcja warstwowa) -->
+                <div id="story-jar" class="glass-vessel w-[280px] h-[340px] rounded-b-[20px] rounded-t-[5px] overflow-hidden">
                     
-                    <!-- Odblask światła na szkle -->
-                    <div class="absolute top-0 left-[15%] w-[8%] h-full glass-highlight skew-x-[-2deg] z-30 mix-blend-screen pointer-events-none"></div>
-
-                    <!-- Wosk wewnątrz (Jasny, kremowy wegański wosk) -->
-                    <div id="story-wax-container" class="absolute bottom-[20px] left-0 w-full h-full flex justify-center items-end z-10">
-                        <!-- Zaczyna jako kropka na środku, rozlewa się i rośnie -->
-                        <div id="story-wax" class="w-[5%] h-[0%] bg-[#f5e6d3] relative rounded-t-[50%] opacity-90 transition-none" style="box-shadow: inset 0 10px 20px rgba(0,0,0,0.15);">
-                            <!-- Bawełniany knot -->
-                            <div id="story-wick" class="absolute -top-[14px] left-1/2 -translate-x-1/2 w-[2px] h-[16px] bg-[#d9d9d9] opacity-0 flex justify-center origin-bottom">
-                                <div class="w-full h-full bg-[repeating-linear-gradient(45deg,transparent,transparent_2px,rgba(0,0,0,0.1)_2px,rgba(0,0,0,0.1)_4px)]"></div>
-                                <div class="absolute -top-[2px] w-[3px] h-[3px] bg-[#333] rounded-full"></div> <!-- Upalona końcówka -->
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Odblaski szkła (Zawsze na górze) -->
+                    <div class="glass-reflection"></div>
                     
-                    <!-- Przezroczysta Etykieta (Szkic nr 5) -->
-                    <div id="story-label" class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] text-white opacity-0 scale-95 z-40 flex flex-col justify-center items-center pointer-events-none">
-                        <div class="text-[8px] tracking-[0.3em] font-semibold uppercase mb-10 opacity-90">Norien Berlin</div>
-                        <div class="text-[48px] tracking-[0.2em] font-light mb-8" style="font-family: 'Montserrat', sans-serif;">MITTE</div>
-                        
-                        <div class="w-full px-6 flex flex-col items-start">
-                            <div class="w-[60px] h-[1.5px] bg-[#a68a64] mb-6"></div> <!-- Złoty akcent -->
-                            <div class="text-[10px] tracking-[0.2em] font-semibold uppercase leading-[2.2] mb-8 text-left">
+                    <!-- Przezroczysta etykieta -->
+                    <div id="story-label" class="label-text absolute inset-0 flex flex-col items-center justify-center opacity-0 py-10">
+                        <p class="text-[7px] tracking-[0.3em] font-semibold uppercase mb-6">Norien Berlin</p>
+                        <h3 class="text-5xl tracking-[0.1em] font-light mb-8">MITTE</h3>
+                        <div class="w-full px-10">
+                            <div class="w-16 h-[1.5px] bg-[#b88b4a] mb-6"></div>
+                            <div class="text-[10px] tracking-[0.2em] font-medium leading-relaxed uppercase">
                                 Lavender<br>Myrrh<br>Suede
                             </div>
-                            <div class="w-[60px] h-[1.5px] bg-white/30 mb-6 hidden"></div>
-                            <div class="text-[10px] tracking-widest font-medium text-left opacity-90">160 G</div>
+                            <div class="mt-8 text-[9px] opacity-80">160 G</div>
                         </div>
                     </div>
+
+                    <!-- WOSK (Dynamiczny) -->
+                    <div id="wax-pour" class="w-[0%] h-[0%] rounded-t-[100%]"></div>
+
+                    <!-- Grube dno słoika -->
+                    <div class="absolute bottom-0 w-full h-[15px] bg-black/40 z-20"></div>
                 </div>
-                
-                <!-- Klasyczne, matowe, czarne wieczko -->
-                <div id="story-lid" class="absolute top-[125px] w-[290px] h-[18px] bg-[#1a1a1a] rounded-t-[3px] opacity-0 -translate-y-20 z-20"
-                     style="box-shadow: inset 0 2px 4px rgba(255,255,255,0.15), 0 15px 30px rgba(0,0,0,0.6);"></div>
+
+                <!-- 3. STRUMIEŃ (Nalewanie) -->
+                <div id="pour-stream" class="absolute top-0 left-1/2 -translate-x-1/2 w-[4px] h-0 bg-[#f4e9d9] z-0 shadow-[0_0_15px_rgba(244,233,217,0.5)]"></div>
+
+                <!-- 4. WIECZKO -->
+                <div id="story-lid" class="absolute top-[60px] w-[290px] h-[15px] bg-[#111] rounded-t-sm z-40 opacity-0 -translate-y-20 shadow-2xl"></div>
+
+                <!-- 5. KNOT -->
+                <div id="story-wick" class="absolute top-[165px] left-1/2 -translate-x-1/2 w-[2px] h-[15px] bg-black opacity-0 z-30"></div>
+
             </div>
         </div>
     </section>
 
-    <!-- RESZTA STRONY POZOSTAJE BEZ ZMIAN -->
-    <section id="archives" class="min-h-[100vh] w-full flex flex-col items-center justify-center px-6 overflow-hidden py-32 border-t border-norien-dark/5">
-        <div class="container mx-auto w-full max-w-[1400px]">
-            <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
-                <!-- Archive Cards (Kod z poprzedniej wiadomości) -->
-                <div class="archive-card group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#b35a2d] transition-all duration-700 flex flex-col nav-hover">
-                    <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 01</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="mitte.png" alt="Mitte" class="w-full h-full object-contain mix-blend-multiply p-2 transform group-hover:scale-110 transition-transform duration-700">
-                        </div>
-                    </div>
-                    <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <span class="text-xs font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10">
-                                <div class="flex items-center text-[10px] border-b border-norien-dark/30 pb-0.5">
-                                    <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-mitte', -1)">-</button>
-                                    <span id="qty-mitte" class="w-4 text-center">1</span>
-                                    <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-mitte', 1)">+</button>
-                                </div>
-                                <div class="magnetic"><span class="btn-acquire text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer nav-hover" onclick="addToCart('mitte', 'qty-mitte', this)">Acquire</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="archive-card group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#8a7b8e] transition-all duration-700 flex flex-col nav-hover">
-                    <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 02</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="prenzlauer.png" alt="Prenzlauer Berg" class="w-full h-full object-contain mix-blend-multiply p-2 transform group-hover:scale-110 transition-transform duration-700">
-                        </div>
-                    </div>
-                    <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <span class="text-xs font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10">
-                                <div class="flex items-center text-[10px] border-b border-norien-dark/30 pb-0.5">
-                                    <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-prenzl', -1)">-</button>
-                                    <span id="qty-prenzl" class="w-4 text-center">1</span>
-                                    <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-prenzl', 1)">+</button>
-                                </div>
-                                <div class="magnetic"><span class="btn-acquire text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer nav-hover" onclick="addToCart('prenzl', 'qty-prenzl', this)">Acquire</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="archive-card group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#005f63] transition-all duration-700 flex flex-col nav-hover">
-                    <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 36</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="kreuzberg.png" alt="Kreuzberg" class="w-full h-full object-contain mix-blend-multiply p-2 transform group-hover:scale-110 transition-transform duration-700">
-                        </div>
-                    </div>
-                    <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <span class="text-xs font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10">
-                                <div class="flex items-center text-[10px] border-b border-norien-dark/30 pb-0.5">
-                                    <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-kreuz', -1)">-</button>
-                                    <span id="qty-kreuz" class="w-4 text-center">1</span>
-                                    <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-kreuz', 1)">+</button>
-                                </div>
-                                <div class="magnetic"><span class="btn-acquire text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer nav-hover" onclick="addToCart('kreuz', 'qty-kreuz', this)">Acquire</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="archive-card group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#631b2b] transition-all duration-700 flex flex-col nav-hover">
-                    <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 03</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="neukolln.png" alt="Neukölln" class="w-full h-full object-contain mix-blend-multiply p-2 transform group-hover:scale-110 transition-transform duration-700">
-                        </div>
-                    </div>
-                    <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Not polished, but real."</p>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <span class="text-xs font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10">
-                                <div class="flex items-center text-[10px] border-b border-norien-dark/30 pb-0.5">
-                                    <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-neukolln', -1)">-</button>
-                                    <span id="qty-neukolln" class="w-4 text-center">1</span>
-                                    <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-neukolln', 1)">+</button>
-                                </div>
-                                <div class="magnetic"><span class="btn-acquire text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer nav-hover" onclick="addToCart('neukolln', 'qty-neukolln', this)">Acquire</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <section class="h-screen flex items-center justify-center">
+        <p class="text-[10px] tracking-widest uppercase opacity-40">Koniec procesu</p>
     </section>
-
-    <section id="manifesto" class="min-h-[100vh] w-full bg-norien-dark text-white flex flex-col justify-between pt-24 pb-0 relative">
-        <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10 py-20">
-            <div class="max-w-3xl mx-auto space-y-10 text-center">
-                <h2 id="manifesto-sub" class="footer-reveal text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
-                
-                <p id="manifesto-text" class="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight">
-                    Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.
-                </p>
-                
-                <div class="pt-8 footer-reveal">
-                    <div id="manifesto-badge" class="inline-block border border-white/20 px-8 py-5 text-[9px] tracking-ultra uppercase opacity-60">
-                        Designed for Galleries & Concept Stores
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="w-full max-w-xl mx-auto px-6 pb-20 text-center relative z-10 footer-reveal">
-            <p id="news-title" class="text-[10px] tracking-widest uppercase mb-4 opacity-60">Join the Archive</p>
-            <p id="news-desc" class="text-xs font-light opacity-50 mb-6">Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.</p>
-            <div class="flex items-end justify-center border-b border-white/30 pb-2">
-                <input id="news-input" type="email" placeholder="Twój adres e-mail" class="bg-transparent text-xs font-light outline-none text-center text-white placeholder-white/30 w-full nav-hover">
-                <button class="text-[9px] tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4 nav-hover">-></button>
-            </div>
-        </div>
-
-        <footer class="footer-reveal py-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10 mt-auto">
-            <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
-            
-            <div class="flex md:hidden gap-3 text-[8px] tracking-widest uppercase">
-                <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
-                <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
-                <button onclick="changeLang('de')" class="lang-btn lang-de">DE</button>
-            </div>
-
-            <div class="flex gap-10">
-                <a href="#" class="hover:opacity-100 transition nav-hover">Instagram</a>
-                <a href="#" class="hover:opacity-100 transition nav-hover">Privacy</a>
-            </div>
-            <div>Berlin, GER</div>
-        </footer>
-    </section>
-
-    <!-- PANELE -->
-    <div id="side-drawer" class="drawer-panel">
-        <button class="drawer-close nav-hover" onclick="closeDrawer()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
-        <div id="drawer-inner" class="drawer-inner">
-            <div id="drawer-img-container" class="w-full aspect-[4/3] bg-white border border-gray-100 mb-8 relative overflow-hidden shadow-sm flex items-center justify-center p-6">
-                <img id="drawer-image" src="" alt="Norien Candle" class="w-full h-full object-contain mix-blend-multiply opacity-90 transition-opacity duration-500 hidden">
-                <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[9px] uppercase tracking-widest text-gray-300">Loading...</span>
-            </div>
-            <div class="flex-grow">
-                <div class="flex items-center gap-2 mb-4 opacity-40">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <p id="drawer-coords" class="text-[8px] tracking-micro uppercase"></p>
-                </div>
-                <p id="drawer-subtitle" class="text-[9px] tracking-ultra uppercase opacity-40 mb-2"></p>
-                <h3 id="drawer-title" class="text-3xl font-extralight tracking-widest uppercase mb-4 transition-colors duration-500"></h3>
-                <div class="flex items-center gap-4 mb-6">
-                    <div id="drawer-line" class="h-px w-6 transition-colors duration-500"></div>
-                    <p id="drawer-notes" class="text-[9px] tracking-widest uppercase font-semibold"></p>
-                </div>
-                <p id="drawer-desc" class="text-xs font-light leading-relaxed text-gray-600 mb-8"></p>
-            </div>
-            
-            <div class="mt-auto pt-6 border-t border-gray-100 flex justify-between items-center bg-norien-canvas">
-                <span class="text-base font-light">€ 55.00</span>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 relative z-10">
-                        <button class="outline-none nav-hover qty-btn" onclick="changeQty('drawer-qty', -1)">-</button>
-                        <span id="drawer-qty" class="w-4 text-center">1</span>
-                        <button class="outline-none nav-hover qty-btn" onclick="changeQty('drawer-qty', 1)">+</button>
-                    </div>
-                    <button id="drawer-btn-acquire" class="btn-acquire bg-black text-white text-[9px] px-6 py-3 tracking-[0.2em] uppercase hover:bg-gray-800 transition nav-hover relative z-10" onclick="addFromDrawer(this)">ACQUIRE</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="cart-drawer" class="drawer-panel">
-        <button class="drawer-close nav-hover" onclick="closeCart()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <div class="h-1 w-full bg-norien-dark"></div>
-        <div id="cart-inner" class="drawer-inner flex flex-col">
-            <h3 id="cart-title" class="text-2xl font-extralight tracking-widest uppercase mb-10 mt-4">Koszyk</h3>
-            <div id="cart-items" class="flex-grow space-y-6 overflow-y-auto mb-6 pr-2 relative z-10"></div>
-            <div class="mt-auto pt-6 border-t border-gray-100">
-                <div class="flex justify-between items-center mb-2">
-                    <span id="cart-shipping" class="text-[9px] tracking-widest uppercase opacity-50">Wysyłka</span>
-                    <span id="cart-shipping-val" class="text-[9px] tracking-widest uppercase">Gratis</span>
-                </div>
-                <div class="flex justify-between items-center mb-8">
-                    <span id="cart-total-label" class="text-xs tracking-widest uppercase font-semibold">Total</span>
-                    <span id="cart-total" class="text-lg font-light">€ 0.00</span>
-                </div>
-                <button onclick="openCheckout()" class="w-full bg-black text-white text-[10px] py-5 tracking-[0.25em] uppercase hover:bg-gray-800 transition nav-hover relative z-10 btn-checkout">
-                    CHECKOUT
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="checkout-overlay">
-        <button class="absolute top-8 right-10 text-[9px] tracking-widest uppercase opacity-50 hover:opacity-100 transition z-50 nav-hover flex items-center gap-2" onclick="closeCheckout()">
-            <span id="checkout-back">Wróć do sklepu</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <div class="w-full flex flex-col md:flex-row h-full">
-            <div class="w-full md:w-5/12 bg-[#0a0a0a] text-white p-10 md:p-20 flex flex-col justify-center border-r border-white/5">
-                <h3 id="checkout-summary-title" class="text-xs tracking-ultra uppercase opacity-40 mb-12">Order Summary</h3>
-                <div id="checkout-items" class="space-y-6 mb-12 overflow-y-auto pr-4 max-h-[40vh]"></div>
-                <div class="border-t border-white/10 pt-8 mt-auto flex justify-between items-end">
-                    <span id="checkout-due-label" class="text-[9px] tracking-widest uppercase opacity-40">Total due</span>
-                    <span id="checkout-total" class="text-3xl font-thin tracking-widest">€ 0.00</span>
-                </div>
-            </div>
-            <div class="w-full md:w-7/12 bg-white p-10 md:p-20 overflow-y-auto flex flex-col justify-center">
-                <div class="max-w-md w-full mx-auto relative z-10">
-                    <h2 class="text-2xl font-extralight tracking-widest uppercase mb-10 btn-checkout">Checkout</h2>
-                    <form class="space-y-8" onsubmit="event.preventDefault(); alert('Koniec dema płatności. Projekt gotowy!');">
-                        <div>
-                            <p id="check-contact" class="text-[9px] tracking-widest uppercase opacity-40 mb-2">Kontakt</p>
-                            <input id="in-email" type="email" placeholder="Adres e-mail" class="input-minimal nav-hover" required>
-                        </div>
-                        <div>
-                            <p id="check-address" class="text-[9px] tracking-widest uppercase opacity-40 mb-2 mt-8">Adres Dostawy</p>
-                            <div class="space-y-4">
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input id="in-fname" type="text" placeholder="Imię" class="input-minimal nav-hover" required>
-                                    <input id="in-lname" type="text" placeholder="Nazwisko" class="input-minimal nav-hover" required>
-                                </div>
-                                <input id="in-street" type="text" placeholder="Ulica i numer domu" class="input-minimal nav-hover" required>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input id="in-zip" type="text" placeholder="Kod pocztowy" class="input-minimal nav-hover" required>
-                                    <input id="in-city" type="text" placeholder="Miasto" class="input-minimal nav-hover" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <p id="check-payment" class="text-[9px] tracking-widest uppercase opacity-40 mb-2 mt-8">Płatność</p>
-                            <div class="p-4 border border-gray-200 bg-gray-50 flex items-center justify-center opacity-50 mb-8 nav-hover">
-                                <span id="check-sys" class="text-[9px] tracking-widest uppercase">System płatności (Demo)</span>
-                            </div>
-                        </div>
-                        <button id="btn-pay" type="submit" class="w-full bg-black text-white text-[10px] py-5 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-xl nav-hover">
-                            Zapłać i Zamów
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            gestureDirection: 'vertical',
-            smooth: true,
-            mouseMultiplier: 1,
-            touchMultiplier: 2,
-        });
+        gsap.registerPlugin(ScrollTrigger);
 
+        // Lenis - Płynny scroll
+        const lenis = new Lenis();
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time)=>{ lenis.raf(time * 1000) });
-        gsap.ticker.lagSmoothing(0, 0);
 
-        window.addEventListener('load', () => {
-            let perc = 0;
-            const loaderPerc = document.getElementById('loader-perc');
-            const preloader = document.getElementById('preloader');
-            
-            const interval = setInterval(() => {
-                perc += Math.floor(Math.random() * 15) + 5;
-                if (perc >= 100) {
-                    perc = 100;
-                    clearInterval(interval);
-                    loaderPerc.innerText = perc + '%';
-                    
-                    gsap.to(preloader, {
-                        yPercent: -100,
-                        duration: 1.5,
-                        ease: "power4.inOut",
-                        delay: 0.2,
-                        onComplete: () => document.getElementById('hero').classList.add('is-revealed')
-                    });
-                } else {
-                    loaderPerc.innerText = perc + '%';
-                }
-            }, 80);
+        // GŁÓWNA OŚ CZASU (200+ klatek płynności)
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#story-section",
+                start: "top top",
+                end: "+=4000", // Zwiększony dystans dla super płynności
+                scrub: 1,
+                pin: true
+            }
         });
 
-        document.querySelectorAll('.magnetic').forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-            });
-            el.addEventListener('mouseleave', () => el.style.transform = `translate(0px, 0px)`);
-        });
+        tl
+        // 1. Nalewanie (Strumień uderza w dno)
+        .to("#pour-stream", { height: "70%", duration: 1 })
+        .to("#wax-pour", { width: "100%", height: "5%", ease: "power2.out", duration: 0.5 }, "-=0.2")
+        
+        // 2. Wypełnianie (Strumień znika, wosk rośnie)
+        .to("#pour-stream", { opacity: 0, duration: 0.2 })
+        .to("#wax-pour", { 
+            height: "75%", 
+            borderRadius: "0%", 
+            duration: 3, 
+            ease: "none" 
+        })
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-revealed'); });
-            }, { threshold: 0.15 }); 
-            
-            document.querySelectorAll('.observe-section:not(#hero)').forEach(section => observer.observe(section));
+        // 3. Detale (Etykieta i knot)
+        .to("#story-label", { opacity: 1, y: -10, duration: 1.5 })
+        .to("#story-wick", { opacity: 1, y: 10, duration: 0.5 }, "-=1")
 
-            gsap.to(".craft-bg-img", {
-                yPercent: 30, ease: "none",
-                scrollTrigger: { trigger: "#the-craft", start: "top bottom", end: "bottom top", scrub: true }
-            });
-
-            gsap.fromTo(".archive-card", 
-                { y: 80, opacity: 0 }, 
-                { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out", scrollTrigger: { trigger: "#archives", start: "top 65%" } }
-            );
-
-            gsap.fromTo(".footer-reveal",
-                { y: 40, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: "#manifesto", start: "top 60%" } }
-            );
-
-            // ==========================================
-            // KOD SCROLLYTELLINGU: NALEWANIE WOSKU Z KNOTEM
-            // ==========================================
-            let storyTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: "#story-section",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 1,
-                }
-            });
-
-            storyTl
-                // 1. Strumień wosku leci w dół
-                .to("#story-stream", { height: "100%", opacity: 1, duration: 0.5, ease: "power1.in" })
-                // 2. Wosk uderza o dno i rozlewa się na boki
-                .to("#story-wax", { width: "100%", duration: 0.5, ease: "power2.out" })
-                // 3. Po rozlaniu strumień przestaje lecieć z góry
-                .to("#story-stream", { opacity: 0, duration: 0.2 }, "+=0")
-                // 4. Tafla wosku podnosi się w słoiku do góry
-                .to("#story-wax", { height: "70%", duration: 2.5, ease: "power1.inOut" }, "-=0.2")
-                // 5. Z gotowego wosku wynurza się knot
-                .to("#story-wick", { opacity: 1, y: 0, duration: 0.5, ease: "back.out(2)" })
-                // 6. Pokazuje się przezroczysta, naklejana etykieta (sama typografia)
-                .to("#story-label", { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }, "-=0.5")
-                // 7. Opada wieczko
-                .to("#story-lid", { opacity: 1, y: 0, duration: 1.2, ease: "bounce.out" })
-                // 8. Pojawia się białe pudełko (finał ze zdjęcia 4)
-                .to("#story-box", { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" })
-                // 9. Szkło chowa się do eleganckiego białego pudełka
-                .to("#story-jar", { y: 250, opacity: 0, duration: 2, ease: "power2.in" }, "pack")
-                .to("#story-lid", { y: 250, opacity: 0, duration: 2, ease: "power2.in" }, "pack");
-        });
-
-        const cursor = document.getElementById('custom-cursor');
-        if (window.matchMedia("(pointer: fine)").matches) {
-            let xTo = gsap.quickTo(cursor, "x", {duration: 0.15, ease: "power2.out"});
-            let yTo = gsap.quickTo(cursor, "y", {duration: 0.15, ease: "power2.out"});
-
-            window.addEventListener("mousemove", e => { xTo(e.clientX); yTo(e.clientY); });
-
-            document.querySelectorAll('.nav-hover').forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hover-state'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state'));
-            });
-        }
-
-        let currentLang = 'pl';
-        const translations = {
-            pl: { navMap: "Mapa", navCraft: "Rzemiosło", navArchives: "Archiwum", navManifesto: "Manifest", cartWord: "KOSZYK", scrollText: "Przewiń by odkryć", heroSub: "Exclusive Souvenir from Berlin", heroDesc: "Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.", guideHint: "Dotknij dzielnicy", guideSub: "The Urban Guide", guideTitle: "Twoja dzielnica. <br> Twój zapach.", guideDesc: "Nasze kompozycje pełnią rolę przewodników. Najedź na kolorowy obrys, aby aktywować interakcję i poznać sensoryczny kod danej dzielnicy.", guideAction: "Kliknij na mapę, aby wysunąć detale.", craftSub: "The Craft", craftTitle: "Czysta forma.", craftDesc: "Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. Ręcznie zalewane w berlińskim atelier. Zestawione z rzadkimi esencjami, by rezonować bez zakłóceń.", manifestoSub: "The Studio", manifestoText: "Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.", newsInput: "Twój adres e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Twój koszyk jest pusty.", cartShipping: "Wysyłka", cartFree: "Gratis", checkoutBack: "Wróć do sklepu", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Kontakt", inEmail: "Adres e-mail", checkAddress: "Adres Dostawy", inFname: "Imię", inLname: "Nazwisko", inStreet: "Ulica i numer domu", inZip: "Kod pocztowy", inCity: "Miasto", checkPayment: "Płatność", checkSys: "System płatności (Demo)", btnPay: "Zapłać i Zamów" },
-            en: { navMap: "The Map", navCraft: "The Craft", navArchives: "Archives", navManifesto: "Manifesto", cartWord: "CART", scrollText: "Scroll to explore", heroSub: "Exclusive Souvenir from Berlin", heroDesc: "We don't sell candles. We archive Berlin's identity. Each scent represents geographic coordinates and an emotional record of a specific district.", guideHint: "Tap a district", guideSub: "The Urban Guide", guideTitle: "Your district. <br> Your scent.", guideDesc: "Our compositions serve as guides. Hover over the colored outline to activate interaction and discover the sensory code of the district.", guideAction: "Click the map to open details.", craftSub: "The Craft", craftTitle: "Pure form.", craftDesc: "We abandoned paraffin in favor of a vegan rapeseed and coconut wax blend. Hand-poured in our Berlin atelier. Paired with rare essences to resonate without interference.", manifestoSub: "The Studio", manifestoText: "Our compositions are created in our Berlin atelier. We use plant wax as a clean carrier for rare essences that define the city's architecture.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Receive private notes from our lab and early access to limited fragrance editions.", newsInput: "Your email address", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Your cart is empty.", cartShipping: "Shipping", cartFree: "Free", checkoutBack: "Back to store", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Contact", inEmail: "Email address", checkAddress: "Delivery Address", inFname: "First name", inLname: "Last name", inStreet: "Street and house number", inZip: "ZIP code", inCity: "City", checkPayment: "Payment", checkSys: "Payment System (Demo)", btnPay: "Pay & Order" },
-            de: { navMap: "Karte", navCraft: "Handwerk", navArchives: "Archiv", navManifesto: "Manifest", cartWord: "WARENKORB", scrollText: "Scrollen zum Entdecken", heroSub: "Exklusives Souvenir aus Berlin", heroDesc: "Wir verkaufen keine Kerzen. Wir archivieren die Identität Berlins. Jeder Duft ist eine geografische Koordinate und eine emotionale Aufzeichnung.", guideHint: "Bezirk antippen", guideSub: "The Urban Guide", guideTitle: "Dein Viertel. <br> Dein Duft.", guideDesc: "Unsere Kompositionen dienen als Wegweiser. Fahre über die farbige Kontur, um die Interaktion zu aktivieren und den sensorischen Code zu entdecken.", guideAction: "Auf die Karte klicken für Details.", craftSub: "The Craft", craftTitle: "Reine Form.", craftDesc: "Wir verzichten auf Paraffin zugunsten einer veganen Raps- und Kokoswachsmischung. Handgegossen im Berliner Atelier.", manifestoSub: "Das Studio", manifestoText: "Unsere Kompositionen entstehen im Berliner Atelier. Wir verwenden Pflanzenwachs als reinen Träger für seltene Essenzen.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Erhalte private Notizen aus unserem Labor und frühen Zugang zu limitierten Editionen.", newsInput: "Deine E-Mail Adresse", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Kaufen", btnAdded: "Hinzugefügt", cartEmpty: "Dein Warenkorb ist leer.", cartShipping: "Versand", cartFree: "Kostenlos", checkoutBack: "Zurück zum Shop", checkoutOrderSum: "Bestellübersicht", checkoutDue: "Gesamtsumme", checkContact: "Kontakt", inEmail: "E-Mail-Adresse", checkAddress: "Lieferadresse", inFname: "Vorname", inLname: "Nachname", inStreet: "Straße und Hausnummer", inZip: "PLZ", inCity: "Stadt", checkPayment: "Zahlung", checkSys: "Zahlungssystem (Demo)", btnPay: "Zahlen & Bestellen" }
-        };
-
-        function splitAndAnimateText() {
-            const el = document.getElementById('manifesto-text');
-            const text = translations[currentLang].manifestoText;
-            el.innerHTML = '';
-            
-            text.split(' ').forEach(word => {
-                const wrap = document.createElement('span'); wrap.className = 'inline-block overflow-hidden align-top mr-[0.25em]';
-                const inner = document.createElement('span'); inner.className = 'inline-block manifesto-word transform translate-y-[100%] opacity-0';
-                inner.innerText = word; wrap.appendChild(inner); el.appendChild(wrap);
-            });
-
-            gsap.to(".manifesto-word", { y: "0%", opacity: 1, duration: 0.8, stagger: 0.03, ease: "power4.out", scrollTrigger: { trigger: "#manifesto", start: "top 70%" } });
-        }
-
-        function changeLang(lang) {
-            currentLang = lang;
-            const t = translations[lang] || translations['en'];
-            
-            document.getElementById('nav-map').innerText = t.navMap; document.getElementById('nav-craft').innerText = t.navCraft; document.getElementById('nav-archives').innerText = t.navArchives; document.getElementById('nav-manifesto').innerText = t.navManifesto; document.getElementById('hero-scroll').innerText = t.scrollText; document.getElementById('hero-sub').innerText = t.heroSub; document.getElementById('hero-desc').innerText = t.heroDesc; document.getElementById('map-mobile-hint').innerText = t.guideHint; document.getElementById('guide-sub').innerText = t.guideSub; document.getElementById('guide-title').innerHTML = t.guideTitle; document.getElementById('guide-desc').innerText = t.guideDesc; document.getElementById('guide-action').innerText = t.guideAction; document.getElementById('craft-sub').innerText = t.craftSub; document.getElementById('craft-title').innerText = t.craftTitle; document.getElementById('craft-desc').innerText = t.craftDesc; document.getElementById('manifesto-sub').innerText = t.manifestoSub; document.getElementById('manifesto-badge').innerText = t.manifestoBadge; document.getElementById('news-title').innerText = t.newsTitle; document.getElementById('news-desc').innerText = t.newsDesc; document.getElementById('news-input').placeholder = t.newsInput; document.getElementById('footer-copy').innerText = t.footerCopy; document.getElementById('cart-title').innerText = t.cartWord; document.getElementById('cart-shipping').innerText = t.cartShipping; document.getElementById('cart-shipping-val').innerText = t.cartFree; document.getElementById('checkout-back').innerText = t.checkoutBack; document.getElementById('checkout-summary-title').innerText = t.checkoutOrderSum; document.getElementById('checkout-due-label').innerText = t.checkoutDue; document.getElementById('check-contact').innerText = t.checkContact; document.getElementById('in-email').placeholder = t.inEmail; document.getElementById('check-address').innerText = t.checkAddress; document.getElementById('in-fname').placeholder = t.inFname; document.getElementById('in-lname').placeholder = t.inLname; document.getElementById('in-street').placeholder = t.inStreet; document.getElementById('in-zip').placeholder = t.inZip; document.getElementById('in-city').placeholder = t.inCity; document.getElementById('check-payment').innerText = t.checkPayment; document.getElementById('check-sys').innerText = t.checkSys; document.getElementById('btn-pay').innerText = t.btnPay;
-            
-            document.querySelectorAll('.btn-checkout').forEach(el => el.innerText = 'CHECKOUT');
-            document.querySelectorAll('.btn-acquire').forEach(el => el.innerText = t.btnAcquire);
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.lang-' + lang).forEach(btn => btn.classList.add('active'));
-
-            splitAndAnimateText(); renderCart(); 
-        }
-
-        const mapProducts = {
-            mitte: { id: 'mitte', title: 'MITTE', sub: 'Archive No. 01', color: '#b35a2d', coords: '52°31\'12.0"N 13°24\'18.0"E', notes: 'Lavender / Myrrh / Suede', desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy.', image: 'mitte.png' },
-            prenzl: { id: 'prenzl', title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E', notes: 'Lemon / Jasmine / Sandalwood', desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą.', image: 'prenzlauer.png' },
-            kreuz: { id: 'kreuz', title: 'KREUZBERG', sub: 'Archive No. 36', color: '#005f63', coords: '52°29\'56.0"N 13°23\'20.0"E', notes: 'Bergamot / Patchouli / Vetiver', desc: 'Energia kanałów i nocne powietrze. Mocny i nieustępliwy.', image: 'kreuzberg.png' },
-            neukolln: { id: 'neukolln', title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E', notes: 'Cardamom / Myrtle / Amber', desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy.', image: 'neukolln.png' }
-        };
-
-        let currentActiveId = ''; let cartState = {}; 
-
-        function changeQty(elementId, delta) {
-            let el = document.getElementById(elementId); let current = parseInt(el.innerText); let newVal = current + delta;
-            if(newVal < 1) newVal = 1; if(newVal > 99) newVal = 99; el.innerText = newVal;
-        }
-
-        function addToCart(productId, qtyElementId, btnElement) {
-            let qty = parseInt(document.getElementById(qtyElementId).innerText);
-            if (!cartState[productId]) cartState[productId] = 0; cartState[productId] += qty;
-            
-            document.getElementById(qtyElementId).innerText = '1'; btnElement.style.opacity = '0.3';
-            setTimeout(() => { btnElement.innerText = translations[currentLang].btnAdded || "Added"; btnElement.style.opacity = '1'; }, 150);
-            setTimeout(() => {
-                btnElement.style.opacity = '0.3';
-                setTimeout(() => { btnElement.innerText = translations[currentLang].btnAcquire || "Acquire"; btnElement.style.opacity = '1'; }, 150);
-            }, 1200);
-            renderCart();
-        }
-
-        function addFromDrawer(btn) { if (currentActiveId) addToCart(currentActiveId, 'drawer-qty', btn); }
-
-        function updateCartItemQty(e, productId, delta) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            if (cartState[productId]) {
-                cartState[productId] += delta; if (cartState[productId] <= 0) delete cartState[productId];
-                renderCart();
-            }
-        }
-
-        function renderCart() {
-            const itemsContainer = document.getElementById('cart-items'); const checkoutItemsContainer = document.getElementById('checkout-items');
-            const totalEl = document.getElementById('cart-total'); const checkoutTotalEl = document.getElementById('checkout-total');
-            const navCartEl = document.getElementById('nav-cart'); const t = translations[currentLang] || translations['en'];
-            
-            itemsContainer.innerHTML = ''; checkoutItemsContainer.innerHTML = ''; let totalItems = 0; let totalPrice = 0;
-
-            for (let id in cartState) {
-                let qty = cartState[id]; totalItems += qty; totalPrice += qty * 55; let product = mapProducts[id];
-                itemsContainer.innerHTML += `
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
-                        <div>
-                            <h4 class="text-sm tracking-widest uppercase">${product.title}</h4>
-                            <p class="text-[8px] tracking-widest uppercase opacity-40">${product.sub}</p>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="flex items-center gap-2 text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
-                                <button class="outline-none nav-hover qty-btn" onclick="updateCartItemQty(event, '${id}', -1)">-</button>
-                                <span class="w-4 text-center">${qty}</span>
-                                <button class="outline-none nav-hover qty-btn" onclick="updateCartItemQty(event, '${id}', 1)">+</button>
-                            </div>
-                            <span class="text-sm font-light w-14 text-right">€ ${(qty * 55).toFixed(2)}</span>
-                        </div>
-                    </div>`;
-                checkoutItemsContainer.innerHTML += `
-                    <div class="flex justify-between items-center border-b border-white/10 pb-4 relative z-10">
-                        <div>
-                            <h4 class="text-sm tracking-widest uppercase">${product.title} <span class="text-xs opacity-50 ml-2">x${qty}</span></h4>
-                            <p class="text-[8px] tracking-widest uppercase opacity-40">${product.sub}</p>
-                        </div>
-                        <span class="text-sm font-light">€ ${(qty * 55).toFixed(2)}</span>
-                    </div>`;
-            }
-
-            if (totalItems === 0) {
-                itemsContainer.innerHTML = `<p class="text-xs font-light opacity-50 italic cart-empty-msg">${t.cartEmpty}</p>`;
-                checkoutItemsContainer.innerHTML = `<p class="text-xs font-light opacity-50 italic">${t.cartEmpty}</p>`;
-            }
-
-            navCartEl.innerText = `${t.cartWord} (${totalItems})`; totalEl.innerText = `€ ${totalPrice.toFixed(2)}`; checkoutTotalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
-            
-            if (window.matchMedia("(pointer: fine)").matches) {
-                document.querySelectorAll('#cart-items .nav-hover').forEach(el => {
-                    el.addEventListener('mouseenter', () => cursor.classList.add('hover-state'));
-                    el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state'));
-                });
-            }
-        }
-
-        function openCart(e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            closeDrawer(); lenis.stop(); document.getElementById('cart-drawer').classList.add('open');
-            setTimeout(() => document.getElementById('cart-inner').classList.add('loaded'), 10);
-        }
-
-        function closeCart() { lenis.start(); document.getElementById('cart-drawer').classList.remove('open'); document.getElementById('cart-inner').classList.remove('loaded'); }
-
-        function openCheckout() {
-            if (Object.keys(cartState).length === 0) { alert(translations[currentLang].cartEmpty); return; }
-            closeCart(); lenis.stop(); document.getElementById('checkout-overlay').classList.add('open');
-        }
-
-        function closeCheckout() { lenis.start(); document.getElementById('checkout-overlay').classList.remove('open'); }
-
-        function updateDrawerUI(p) {
-            document.getElementById('drawer-title').innerText = p.title; document.getElementById('drawer-title').style.color = p.color;
-            document.getElementById('drawer-subtitle').innerText = p.sub; document.getElementById('drawer-coords').innerText = p.coords;
-            document.getElementById('drawer-notes').innerHTML = p.notes; document.getElementById('drawer-desc').innerText = translations[currentLang].heroDesc; 
-            document.getElementById('drawer-top-line').style.backgroundColor = p.color; document.getElementById('drawer-qty').innerText = '1';
-
-            const imgEl = document.getElementById('drawer-image'); imgEl.src = p.image;
-            imgEl.onload = () => { imgEl.classList.remove('hidden'); document.getElementById('drawer-placeholder').classList.add('hidden'); };
-        }
-
-        const mapSvg = document.getElementById('map-svg');
-
-        function showDrawer(id) {
-            const drawer = document.getElementById('side-drawer'); const inner = document.getElementById('drawer-inner'); const p = mapProducts[id];
-            closeCart(); mapSvg.classList.add('is-focused');
-            document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected'));
-            document.querySelector(`.active-group[data-id="${id}"]`).classList.add('is-selected');
-
-            if (drawer.classList.contains('open')) {
-                if (currentActiveId === id) return;
-                inner.classList.remove('loaded'); setTimeout(() => { updateDrawerUI(p); inner.classList.add('loaded'); }, 300); 
-            } else { updateDrawerUI(p); drawer.classList.add('open'); setTimeout(() => { inner.classList.add('loaded'); }, 200); }
-            currentActiveId = id;
-        }
-
-        function closeDrawer() {
-            document.getElementById('side-drawer').classList.remove('open'); document.getElementById('drawer-inner').classList.remove('loaded');
-            mapSvg.classList.remove('is-focused'); document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected')); currentActiveId = '';
-        }
-
-        document.addEventListener('click', function(event) {
-            const drawer = document.getElementById('side-drawer'); const cartDrawer = document.getElementById('cart-drawer'); const checkoutOverlay = document.getElementById('checkout-overlay');
-            if (drawer && drawer.classList.contains('open')) { if (!drawer.contains(event.target) && !event.target.closest('.active-group')) closeDrawer(); }
-            if (cartDrawer && cartDrawer.classList.contains('open')) { if (!cartDrawer.contains(event.target) && !event.target.closest('#nav-cart') && !checkoutOverlay.classList.contains('open')) closeCart(); }
-        });
-
-        changeLang('pl');
+        // 4. Zamknięcie
+        .to("#story-lid", { opacity: 1, y: 10, duration: 1 })
+        
+        // 5. Pakowanie (Słoik wchodzi do pudełka)
+        .to("#story-jar", { scale: 0.8, opacity: 0, duration: 1.5, delay: 0.5 })
+        .to("#story-lid", { scale: 0.8, opacity: 0, duration: 1.5 }, "-=1.5")
+        .to("#story-box", { opacity: 1, scale: 1, duration: 2 }, "-=1");
 
     </script>
 </body>
