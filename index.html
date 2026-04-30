@@ -13,7 +13,7 @@
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         norien: {
-                            gold: '#b88b4a', /* Przywrócony oryginalny kolor złota */
+                            gold: '#b88b4a',
                             dark: '#0f0f0f',
                             canvas: '#fcfaf7',
                             mapLine: '#4a2c2a'
@@ -92,14 +92,14 @@
 
         #map-svg { transition: all 0.5s ease; max-height: 65vh; position: relative; z-index: 2; }
         .district-bg { fill: transparent; stroke: #e8e8e8; stroke-width: 0.8; transition: opacity 0.5s ease; }
-        .label-bg { font-size: 11px; fill: #1a1a1a; opacity: 0.15; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
+        .label-bg { font-size: 13px; fill: #1a1a1a; opacity: 0.15; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
         #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.05; }
         .active-group { transition: opacity 0.5s ease; }
         .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s ease, fill 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; }
         
         .path-mitte { stroke: #b35a2d; } .path-prenzl { stroke: #8a7b8e; }
         .path-kreuz { stroke: #005f63; } .path-neukolln { stroke: #631b2b; }
-        .label-active { font-size: 13px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.8; transition: transform 0.4s ease; text-anchor: middle; pointer-events: none; }
+        .label-active { font-size: 15px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.8; transition: transform 0.4s ease; text-anchor: middle; pointer-events: none; }
         .text-mitte { fill: #b35a2d; } .text-prenzl { fill: #8a7b8e; }
         .text-kreuz { fill: #005f63; } .text-neukolln { fill: #631b2b; }
 
@@ -137,7 +137,7 @@
         .qty-btn { display: inline-block; padding: 0 8px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease; }
         .qty-btn:hover { transform: scale(1.6); font-weight: 600; }
 
-        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh; background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06); z-index: 1050; transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
+        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 380px; height: 100vh; background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06); z-index: 1050; transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
         .drawer-panel.open { transform: translateX(0); }
         .drawer-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: #0f0f0f; opacity: 0.4; transition: opacity 0.3s; z-index: 10; }
         .drawer-close:hover { opacity: 1; }
@@ -148,7 +148,7 @@
 
         #checkout-overlay { position: fixed; inset: 0; background-color: #fcfaf7; z-index: 2000; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; }
         #checkout-overlay.open { transform: translateY(0); }
-        .input-minimal { width: 100%; border-bottom: 1px solid rgba(15,15,15,0.2); padding: 10px 10px; font-size: 12px; font-weight: 300; outline: none; transition: all 0.3s; background: transparent; }
+        .input-minimal { width: 100%; border-bottom: 1px solid rgba(15,15,15,0.2); padding: 12px 10px; font-size: 14px; font-weight: 300; outline: none; transition: all 0.3s; background: transparent; }
         .input-minimal:hover, .input-minimal:focus { border-color: #0f0f0f; background-color: rgba(15,15,15,0.02); }
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
@@ -160,21 +160,20 @@
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
 
     <div id="preloader">
-        <div class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light">Loading Archives</div>
+        <div class="text-[11px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light">Loading Archives</div>
         <div id="loader-perc" class="text-4xl md:text-6xl font-thin tracking-widest text-norien-dark">0%</div>
     </div>
 
     <div class="noise-overlay"></div>
-
     <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
 
     <nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
-        <a href="#hero" class="flex flex-col nav-hover magnetic pt-1">
-            <span class="text-lg md:text-xl font-extralight tracking-ultra uppercase leading-none text-norien-dark">Norien</span>
-            <span class="text-[8px] md:text-[9px] tracking-[0.4em] uppercase opacity-50 text-norien-dark mt-1">Berlin</span>
+        <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover magnetic">
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.35rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 11px; letter-spacing: 0.23em; margin-top: 0.45rem; margin-right: -0.23em; color: #555;">BERLIN</span>
         </a>
 
-        <div class="hidden lg:flex gap-10 text-[10px] tracking-widest uppercase font-light ml-8">
+        <div class="hidden lg:flex gap-10 text-xs tracking-widest uppercase font-light ml-8">
             <div class="magnetic"><a href="#map-explore" id="nav-map" class="hover:opacity-50 transition nav-hover">Mapa</a></div>
             <div class="magnetic"><a href="#the-craft" id="nav-craft" class="hover:opacity-50 transition nav-hover">Rzemiosło</a></div>
             <div class="magnetic"><a href="#archives" id="nav-archives" class="hover:opacity-50 transition nav-hover">Archiwum</a></div>
@@ -182,35 +181,35 @@
         </div>
         
         <div class="flex items-center gap-6 md:gap-10">
-            <div class="hidden md:flex gap-3 text-[8px] tracking-widest uppercase">
+            <div class="hidden md:flex gap-4 text-[10px] tracking-widest uppercase">
                 <div class="magnetic"><button onclick="changeLang('pl')" class="lang-btn active nav-hover lang-pl">PL</button></div>
                 <div class="magnetic"><button onclick="changeLang('en')" class="lang-btn nav-hover lang-en">EN</button></div>
                 <div class="magnetic"><button onclick="changeLang('de')" class="lang-btn nav-hover lang-de">DE</button></div>
             </div>
-            <div class="magnetic"><div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap nav-hover cursor-pointer" onclick="openCart(event)">KOSZYK (0)</div></div>
+            <div class="magnetic"><div id="nav-cart" class="text-[11px] md:text-xs tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap nav-hover cursor-pointer" onclick="openCart(event)">KOSZYK (0)</div></div>
         </div>
     </nav>
 
     <section id="hero" class="observe-section h-[100dvh] w-full snap-start snap-always flex flex-col justify-center items-center text-center px-6 relative overflow-hidden">
         <div class="z-10">
-            <p id="hero-sub" class="text-[9px] md:text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Exclusive Souvenir from Berlin</p>
+            <p id="hero-sub" class="text-[11px] md:text-xs tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Exclusive Souvenir from Berlin</p>
             <h1 class="text-5xl md:text-8xl font-thin tracking-tighter mb-10 leading-tight">
                 <span class="block text-reveal delay-2">Olfactory</span>
                 <span class="block text-reveal delay-3 italic">Cartography.</span>
             </h1>
-            <p id="hero-desc" class="max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed opacity-80 text-reveal delay-4">
+            <p id="hero-desc" class="max-w-xl mx-auto text-lg md:text-xl font-light leading-relaxed opacity-80 text-reveal delay-4">
                 Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.
             </p>
         </div>
         <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4">
-            <a href="#map-explore" id="hero-scroll" class="nav-hover text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
+            <a href="#map-explore" id="hero-scroll" class="nav-hover text-[11px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
         </div>
     </section>
 
     <section id="map-explore" class="observe-section h-[100dvh] w-full snap-start snap-always flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 pt-20">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
-                <div id="map-mobile-hint" class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[8px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
+                <div id="map-mobile-hint" class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[10px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
                 
                 <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible">
                     <g class="map-layer delay-map-1">
@@ -246,13 +245,13 @@
             </div>
             
             <div class="space-y-6 md:col-span-5 lg:col-span-4 lg:pl-6 xl:pr-12 map-layer delay-map-3">
-                <h2 id="guide-sub" class="text-[10px] tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
+                <h2 id="guide-sub" class="text-xs tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
                 <h3 id="guide-title" class="text-3xl lg:text-4xl font-extralight leading-tight">Twoja dzielnica. <br> Twój zapachowy paszport.</h3>
-                <p id="guide-desc" class="text-norien-text/70 leading-relaxed font-light text-xs md:text-sm text-gray-500">
+                <p id="guide-desc" class="text-norien-text/70 leading-relaxed font-light text-sm md:text-base text-gray-500">
                     Nasze kompozycje pełnią rolę przewodników. Neukölln nie pachnie tylko dymem – pachnie historią przemian, nocnym powietrzem przy kanale i surowym betonem. Mitte to sterylność galerii i zapach starych parkietów.
                 </p>
                 <div class="pt-4 border-t border-norien-dark/10">
-                    <p id="guide-action" class="text-[9px] tracking-widest uppercase opacity-40 font-semibold">Wybierz obszar na mapie, aby poznać archiwum.</p>
+                    <p id="guide-action" class="text-[11px] tracking-widest uppercase opacity-40 font-semibold">Wybierz obszar na mapie, aby poznać archiwum.</p>
                 </div>
             </div>
         </div>
@@ -262,10 +261,10 @@
         <div class="wax-liquid-bg"></div>
         
         <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center pointer-events-none">
-            <p id="craft-sub" class="text-[10px] tracking-[0.6em] uppercase mb-12 opacity-60 text-reveal delay-1" style="font-family: 'Montserrat', sans-serif;">The Craft</p>
+            <p id="craft-sub" class="text-xs tracking-[0.6em] uppercase mb-12 opacity-60 text-reveal delay-1" style="font-family: 'Montserrat', sans-serif;">The Craft</p>
             <h2 id="craft-title" class="text-4xl md:text-6xl font-thin mb-10 tracking-wide text-reveal delay-2">Czysta forma.</h2>
             <div class="h-px w-10 bg-white/20 mx-auto mb-10 text-reveal delay-3"></div>
-            <p id="craft-desc" class="text-sm md:text-base font-light leading-loose opacity-80 max-w-md text-reveal delay-4">
+            <p id="craft-desc" class="text-base md:text-lg font-light leading-loose opacity-80 max-w-md text-reveal delay-4">
                 Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. Ręcznie zalewane w berlińskim atelier. Zestawione z rzadkimi esencjami, by rezonować bez zakłóceń.
             </p>
         </div>
@@ -277,22 +276,22 @@
                 
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-1">
                     <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 01</p>
+                        <p class="text-[10px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 01</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
                             <img src="mitte.png" alt="Mitte" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <span class="text-xs font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10">
-                                <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                        <p class="text-[11px] md:text-xs leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
+                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-50">
+                            <span class="text-sm md:text-base font-light">€ 55.00</span>
+                            <div class="flex items-center gap-3 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                                <div class="flex items-center text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-mitte', -1)">-</button>
-                                    <span id="qty-mitte" class="w-4 text-center">1</span>
+                                    <span id="qty-mitte" class="w-5 text-center">1</span>
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-mitte', 1)">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[9px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('mitte', 'qty-mitte', this)">Acquire</button></div>
+                                <div class="magnetic"><button class="btn-acquire text-[11px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('mitte', 'qty-mitte', this)">Acquire</button></div>
                             </div>
                         </div>
                     </div>
@@ -300,22 +299,22 @@
 
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-2">
                     <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 02</p>
+                        <p class="text-[10px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 02</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
                             <img src="prenzlauer.png" alt="Prenzlauer Berg" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <span class="text-xs font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10">
-                                <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                        <p class="text-[11px] md:text-xs leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
+                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-50">
+                            <span class="text-sm md:text-base font-light">€ 55.00</span>
+                            <div class="flex items-center gap-3 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                                <div class="flex items-center text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-prenzl', -1)">-</button>
-                                    <span id="qty-prenzl" class="w-4 text-center">1</span>
+                                    <span id="qty-prenzl" class="w-5 text-center">1</span>
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-prenzl', 1)">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[9px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('prenzl', 'qty-prenzl', this)">Acquire</button></div>
+                                <div class="magnetic"><button class="btn-acquire text-[11px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('prenzl', 'qty-prenzl', this)">Acquire</button></div>
                             </div>
                         </div>
                     </div>
@@ -323,22 +322,22 @@
 
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-3">
                     <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 36</p>
+                        <p class="text-[10px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 36</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
                             <img src="kreuzberg.png" alt="Kreuzberg" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <span class="text-xs font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10">
-                                <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                        <p class="text-[11px] md:text-xs leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
+                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-50">
+                            <span class="text-sm md:text-base font-light">€ 55.00</span>
+                            <div class="flex items-center gap-3 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                                <div class="flex items-center text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-kreuz', -1)">-</button>
-                                    <span id="qty-kreuz" class="w-4 text-center">1</span>
+                                    <span id="qty-kreuz" class="w-5 text-center">1</span>
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-kreuz', 1)">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[9px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('kreuz', 'qty-kreuz', this)">Acquire</button></div>
+                                <div class="magnetic"><button class="btn-acquire text-[11px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('kreuz', 'qty-kreuz', this)">Acquire</button></div>
                             </div>
                         </div>
                     </div>
@@ -346,22 +345,22 @@
 
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-4">
                     <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 03</p>
+                        <p class="text-[10px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 03</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
                             <img src="neukolln.png" alt="Neukölln" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Not polished, but real."</p>
-                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <span class="text-xs font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10">
-                                <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                        <p class="text-[11px] md:text-xs leading-relaxed font-light uppercase italic opacity-60 text-center">"Not polished, but real."</p>
+                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-50">
+                            <span class="text-sm md:text-base font-light">€ 55.00</span>
+                            <div class="flex items-center gap-3 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                                <div class="flex items-center text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-neukolln', -1)">-</button>
-                                    <span id="qty-neukolln" class="w-4 text-center">1</span>
+                                    <span id="qty-neukolln" class="w-5 text-center">1</span>
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-neukolln', 1)">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[9px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('neukolln', 'qty-neukolln', this)">Acquire</button></div>
+                                <div class="magnetic"><button class="btn-acquire text-[11px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('neukolln', 'qty-neukolln', this)">Acquire</button></div>
                             </div>
                         </div>
                     </div>
@@ -374,12 +373,12 @@
     <section id="manifesto" class="observe-section h-[100dvh] w-full snap-start snap-always bg-norien-dark text-white flex flex-col justify-between pt-24 relative">
         <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
-                <h2 id="manifesto-sub" class="text-[10px] tracking-ultra uppercase opacity-40 text-reveal delay-1">The Studio</h2>
+                <h2 id="manifesto-sub" class="text-xs tracking-ultra uppercase opacity-40 text-reveal delay-1">The Studio</h2>
                 <p id="manifesto-text" class="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight text-reveal delay-2">
                     Nasze kompozycje powstają w berlińskim atelier. Używamy wosku sojowego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.
                 </p>
                 <div class="pt-8 text-reveal delay-3">
-                    <div id="manifesto-badge" class="inline-block border border-white/20 px-8 py-5 text-[9px] tracking-ultra uppercase opacity-60">
+                    <div id="manifesto-badge" class="inline-block border border-white/20 px-8 py-5 text-[11px] tracking-ultra uppercase opacity-60">
                         Designed for Galleries & Concept Stores
                     </div>
                 </div>
@@ -387,18 +386,18 @@
         </div>
 
         <div class="w-full max-w-xl mx-auto px-6 pb-12 text-center relative z-10 text-reveal delay-4">
-            <p id="news-title" class="text-[10px] tracking-widest uppercase mb-4 opacity-60">Join the Archive</p>
-            <p id="news-desc" class="text-xs font-light opacity-50 mb-6">Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.</p>
+            <p id="news-title" class="text-xs tracking-widest uppercase mb-4 opacity-60">Join the Archive</p>
+            <p id="news-desc" class="text-sm font-light opacity-50 mb-6">Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.</p>
             <div class="flex items-end justify-center border-b border-white/30 pb-2">
-                <input id="news-input" type="email" placeholder="Twój adres e-mail" class="bg-transparent text-xs font-light outline-none text-center text-white placeholder-white/30 w-full nav-hover">
-                <button class="text-[9px] tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4 nav-hover">-></button>
+                <input id="news-input" type="email" placeholder="Twój adres e-mail" class="bg-transparent text-sm font-light outline-none text-center text-white placeholder-white/30 w-full nav-hover">
+                <button class="text-[11px] tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4 nav-hover">-></button>
             </div>
         </div>
 
-        <footer class="py-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10">
+        <footer class="py-8 px-10 border-t border-white/10 text-[10px] md:text-[11px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10">
             <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
             
-            <div class="flex md:hidden gap-3 text-[8px] tracking-widest uppercase">
+            <div class="flex md:hidden gap-3 text-[10px] tracking-widest uppercase">
                 <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
                 <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
                 <button onclick="changeLang('de')" class="lang-btn lang-de">DE</button>
@@ -414,37 +413,37 @@
 
     <div id="side-drawer" class="drawer-panel">
         <button class="drawer-close nav-hover" onclick="closeDrawer()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
         <div id="drawer-inner" class="drawer-inner">
             <div id="drawer-img-container" class="w-full aspect-[4/3] bg-white border border-gray-100 mb-8 relative overflow-hidden shadow-sm flex items-center justify-center p-6">
                 <img id="drawer-image" src="" alt="Norien Candle" class="w-full h-full object-contain mix-blend-multiply opacity-90 transition-opacity duration-500 hidden">
-                <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[9px] uppercase tracking-widest text-gray-300">Loading...</span>
+                <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[11px] uppercase tracking-widest text-gray-300">Loading...</span>
             </div>
             <div class="flex-grow">
                 <div class="flex items-center gap-2 mb-4 opacity-40">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <p id="drawer-coords" class="text-[8px] tracking-micro uppercase"></p>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <p id="drawer-coords" class="text-[10px] tracking-micro uppercase"></p>
                 </div>
-                <p id="drawer-subtitle" class="text-[9px] tracking-ultra uppercase opacity-40 mb-2"></p>
-                <h3 id="drawer-title" class="text-3xl font-extralight tracking-widest uppercase mb-4 transition-colors duration-500"></h3>
+                <p id="drawer-subtitle" class="text-[11px] tracking-ultra uppercase opacity-40 mb-2"></p>
+                <h3 id="drawer-title" class="text-4xl font-extralight tracking-widest uppercase mb-4 transition-colors duration-500"></h3>
                 <div class="flex items-center gap-4 mb-6">
                     <div id="drawer-line" class="h-px w-6 transition-colors duration-500"></div>
-                    <p id="drawer-notes" class="text-[9px] tracking-widest uppercase font-semibold"></p>
+                    <p id="drawer-notes" class="text-[11px] tracking-widest uppercase font-semibold"></p>
                 </div>
-                <p id="drawer-desc" class="text-xs font-light leading-relaxed text-gray-600 mb-8"></p>
+                <p id="drawer-desc" class="text-sm font-light leading-relaxed text-gray-600 mb-8"></p>
             </div>
             
             <div class="mt-auto pt-6 border-t border-gray-100 flex justify-between items-center bg-norien-canvas">
-                <span class="text-base font-light">€ 55.00</span>
+                <span class="text-lg font-light">€ 55.00</span>
                 <div class="flex items-center gap-4">
-                    <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 relative z-10">
+                    <div class="flex items-center text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 relative z-10">
                         <button class="outline-none nav-hover qty-btn" onclick="changeQty('drawer-qty', -1)">-</button>
-                        <span id="drawer-qty" class="w-4 text-center">1</span>
+                        <span id="drawer-qty" class="w-5 text-center">1</span>
                         <button class="outline-none nav-hover qty-btn" onclick="changeQty('drawer-qty', 1)">+</button>
                     </div>
-                    <button id="drawer-btn-acquire" class="btn-acquire bg-black text-white text-[9px] px-6 py-3 tracking-[0.2em] uppercase hover:bg-gray-800 transition nav-hover relative z-10" onclick="addFromDrawer(this)">ACQUIRE</button>
+                    <button id="drawer-btn-acquire" class="btn-acquire bg-black text-white text-[11px] px-6 py-4 tracking-[0.2em] uppercase hover:bg-gray-800 transition nav-hover relative z-10" onclick="addFromDrawer(this)">ACQUIRE</button>
                 </div>
             </div>
         </div>
@@ -452,22 +451,22 @@
 
     <div id="cart-drawer" class="drawer-panel">
         <button class="drawer-close nav-hover" onclick="closeCart()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div class="h-1 w-full bg-norien-dark"></div>
         <div id="cart-inner" class="drawer-inner flex flex-col">
-            <h3 id="cart-title" class="text-2xl font-extralight tracking-widest uppercase mb-10 mt-4">Koszyk</h3>
+            <h3 id="cart-title" class="text-3xl font-extralight tracking-widest uppercase mb-10 mt-4">Koszyk</h3>
             <div id="cart-items" class="flex-grow space-y-6 overflow-y-auto mb-6 pr-2 relative z-10"></div>
             <div class="mt-auto pt-6 border-t border-gray-100">
                 <div class="flex justify-between items-center mb-2">
-                    <span id="cart-shipping" class="text-[9px] tracking-widest uppercase opacity-50">Wysyłka</span>
-                    <span id="cart-shipping-val" class="text-[9px] tracking-widest uppercase">Gratis</span>
+                    <span id="cart-shipping" class="text-[11px] tracking-widest uppercase opacity-50">Wysyłka</span>
+                    <span id="cart-shipping-val" class="text-[11px] tracking-widest uppercase">Gratis</span>
                 </div>
                 <div class="flex justify-between items-center mb-8">
-                    <span id="cart-total-label" class="text-xs tracking-widest uppercase font-semibold">Total</span>
-                    <span id="cart-total" class="text-lg font-light">€ 0.00</span>
+                    <span id="cart-total-label" class="text-sm tracking-widest uppercase font-semibold">Total</span>
+                    <span id="cart-total" class="text-xl font-light">€ 0.00</span>
                 </div>
-                <button onclick="openCheckout()" class="w-full bg-black text-white text-[10px] py-5 tracking-[0.25em] uppercase hover:bg-gray-800 transition nav-hover relative z-10 btn-checkout">
+                <button onclick="openCheckout()" class="w-full bg-black text-white text-xs py-5 tracking-[0.25em] uppercase hover:bg-gray-800 transition nav-hover relative z-10 btn-checkout">
                     CHECKOUT
                 </button>
             </div>
@@ -475,29 +474,29 @@
     </div>
 
     <div id="checkout-overlay">
-        <button class="absolute top-8 right-10 text-[9px] tracking-widest uppercase opacity-50 hover:opacity-100 transition z-50 nav-hover flex items-center gap-2" onclick="closeCheckout()">
+        <button class="absolute top-8 right-10 text-[11px] tracking-widest uppercase opacity-50 hover:opacity-100 transition z-50 nav-hover flex items-center gap-2" onclick="closeCheckout()">
             <span id="checkout-back">Wróć do sklepu</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div class="w-full flex flex-col md:flex-row h-full">
             <div class="w-full md:w-5/12 bg-[#0a0a0a] text-white p-10 md:p-20 flex flex-col justify-center border-r border-white/5">
                 <h3 id="checkout-summary-title" class="text-xs tracking-ultra uppercase opacity-40 mb-12">Order Summary</h3>
                 <div id="checkout-items" class="space-y-6 mb-12 overflow-y-auto pr-4 max-h-[40vh]"></div>
                 <div class="border-t border-white/10 pt-8 mt-auto flex justify-between items-end">
-                    <span id="checkout-due-label" class="text-[9px] tracking-widest uppercase opacity-40">Total due</span>
-                    <span id="checkout-total" class="text-3xl font-thin tracking-widest">€ 0.00</span>
+                    <span id="checkout-due-label" class="text-[11px] tracking-widest uppercase opacity-40">Total due</span>
+                    <span id="checkout-total" class="text-4xl font-thin tracking-widest">€ 0.00</span>
                 </div>
             </div>
             <div class="w-full md:w-7/12 bg-white p-10 md:p-20 overflow-y-auto flex flex-col justify-center">
                 <div class="max-w-md w-full mx-auto relative z-10">
-                    <h2 class="text-2xl font-extralight tracking-widest uppercase mb-10 btn-checkout">Checkout</h2>
+                    <h2 class="text-3xl font-extralight tracking-widest uppercase mb-10 btn-checkout">Checkout</h2>
                     <form class="space-y-8" onsubmit="event.preventDefault(); alert('Koniec dema płatności. Projekt gotowy!');">
                         <div>
-                            <p id="check-contact" class="text-[9px] tracking-widest uppercase opacity-40 mb-2">Kontakt</p>
+                            <p id="check-contact" class="text-[11px] tracking-widest uppercase opacity-40 mb-2">Kontakt</p>
                             <input id="in-email" type="email" placeholder="Adres e-mail" class="input-minimal nav-hover" required>
                         </div>
                         <div>
-                            <p id="check-address" class="text-[9px] tracking-widest uppercase opacity-40 mb-2 mt-8">Adres Dostawy</p>
+                            <p id="check-address" class="text-[11px] tracking-widest uppercase opacity-40 mb-2 mt-8">Adres Dostawy</p>
                             <div class="space-y-4">
                                 <div class="grid grid-cols-2 gap-4">
                                     <input id="in-fname" type="text" placeholder="Imię" class="input-minimal nav-hover" required>
@@ -511,12 +510,12 @@
                             </div>
                         </div>
                         <div>
-                            <p id="check-payment" class="text-[9px] tracking-widest uppercase opacity-40 mb-2 mt-8">Płatność</p>
+                            <p id="check-payment" class="text-[11px] tracking-widest uppercase opacity-40 mb-2 mt-8">Płatność</p>
                             <div class="p-4 border border-gray-200 bg-gray-50 flex items-center justify-center opacity-50 mb-8 nav-hover">
-                                <span id="check-sys" class="text-[9px] tracking-widest uppercase">System płatności (Demo)</span>
+                                <span id="check-sys" class="text-[11px] tracking-widest uppercase">System płatności (Demo)</span>
                             </div>
                         </div>
-                        <button id="btn-pay" type="submit" class="w-full bg-black text-white text-[10px] py-5 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-xl nav-hover">
+                        <button id="btn-pay" type="submit" class="w-full bg-black text-white text-xs py-5 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-xl nav-hover">
                             Zapłać i Zamów
                         </button>
                     </form>
@@ -674,7 +673,7 @@
         }
 
         const mapProducts = {
-            mitte: { id: 'mitte', title: 'MITTE', sub: 'Archive No. 01', color: '#b35a2d', coords: '52°31\'12.0"N 13°24\'18.0"E', notes: 'Lavender / Myrrh / Suede', desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy.', image: 'mitte.png' },
+            mitte: { id: 'mitte', title: 'MITTE', sub: 'Archive No. 01', color: '#b88b4a', coords: '52°31\'12.0"N 13°24\'18.0"E', notes: 'Lavender / Myrrh / Suede', desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy.', image: 'mitte.png' },
             prenzl: { id: 'prenzl', title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E', notes: 'Lemon / Jasmine / Sandalwood', desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą.', image: 'prenzlauer.png' },
             kreuz: { id: 'kreuz', title: 'KREUZBERG', sub: 'Archive No. 36', color: '#005f63', coords: '52°29\'56.0"N 13°23\'20.0"E', notes: 'Bergamot / Patchouli / Vetiver', desc: 'Energia kanałów i nocne powietrze. Mocny i nieustępliwy.', image: 'kreuzberg.png' },
             neukolln: { id: 'neukolln', title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E', notes: 'Cardamom / Myrtle / Amber', desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy.', image: 'neukolln.png' }
@@ -747,15 +746,15 @@
                     <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
                         <div>
                             <h4 class="text-sm tracking-widest uppercase">${product.title}</h4>
-                            <p class="text-[8px] tracking-widest uppercase opacity-40">${product.sub}</p>
+                            <p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p>
                         </div>
                         <div class="flex items-center gap-4">
-                            <div class="flex items-center gap-2 text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                            <div class="flex items-center gap-2 text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                 <button class="outline-none nav-hover qty-btn" onclick="updateCartItemQty(event, '${id}', -1)">-</button>
                                 <span class="w-4 text-center">${qty}</span>
                                 <button class="outline-none nav-hover qty-btn" onclick="updateCartItemQty(event, '${id}', 1)">+</button>
                             </div>
-                            <span class="text-sm font-light w-14 text-right">€ ${(qty * 55).toFixed(2)}</span>
+                            <span class="text-base font-light w-16 text-right">€ ${(qty * 55).toFixed(2)}</span>
                         </div>
                     </div>`;
 
@@ -763,15 +762,15 @@
                     <div class="flex justify-between items-center border-b border-white/10 pb-4 relative z-10">
                         <div>
                             <h4 class="text-sm tracking-widest uppercase">${product.title} <span class="text-xs opacity-50 ml-2">x${qty}</span></h4>
-                            <p class="text-[8px] tracking-widest uppercase opacity-40">${product.sub}</p>
+                            <p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p>
                         </div>
-                        <span class="text-sm font-light">€ ${(qty * 55).toFixed(2)}</span>
+                        <span class="text-base font-light">€ ${(qty * 55).toFixed(2)}</span>
                     </div>`;
             }
 
             if (totalItems === 0) {
-                itemsContainer.innerHTML = `<p class="text-xs font-light opacity-50 italic cart-empty-msg">${t.cartEmpty}</p>`;
-                checkoutItemsContainer.innerHTML = `<p class="text-xs font-light opacity-50 italic">${t.cartEmpty}</p>`;
+                itemsContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic cart-empty-msg">${t.cartEmpty}</p>`;
+                checkoutItemsContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic">${t.cartEmpty}</p>`;
             }
 
             navCartEl.innerText = `${t.cartWord} (${totalItems})`;
@@ -812,7 +811,7 @@
             document.getElementById('drawer-coords').innerText = p.coords;
             document.getElementById('drawer-notes').innerHTML = p.notes;
             // Opis w szufladzie będzie tłumaczeniem konkretnego produktu:
-            document.getElementById('drawer-desc').innerText = p.desc; // Przypisanie opisu z bazy
+            document.getElementById('drawer-desc').innerText = p.desc; 
             document.getElementById('drawer-top-line').style.backgroundColor = p.color;
             document.getElementById('drawer-qty').innerText = '1';
 
