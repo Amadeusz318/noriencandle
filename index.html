@@ -267,26 +267,53 @@
         </div>
     </section>
 
-    <!-- NOWA SEKCJA: PROTOTYP SCROLLYTELLINGU "TWÓRSTWO" -->
+    <!-- ZAAWANSOWANY PROTOTYP SCROLLYTELLINGU (Szkło, Etykieta ze zdjęcia, Opakowanie) -->
     <section id="story-section" class="relative w-full h-[400vh] bg-norien-canvas">
         <div class="sticky top-0 w-full h-screen flex flex-col items-center justify-center overflow-hidden">
             <h2 id="story-headline" class="text-[10px] tracking-ultra uppercase opacity-40 mb-12">Proces Tworzenia</h2>
             
-            <div class="relative w-64 h-96 flex flex-col items-center justify-end">
-                <!-- Pudełko docelowe (Pojawia się na końcu) -->
-                <div id="story-box" class="absolute bottom-0 w-80 h-48 border border-norien-dark bg-[#fcfaf7] opacity-0 transform scale-95 z-20 flex items-center justify-center text-norien-dark text-[10px] tracking-widest">GOTOWY PRODUKT</div>
+            <div class="relative w-80 h-[450px] flex flex-col items-center justify-end">
                 
-                <!-- Główny Szklany Słoik -->
-                <div id="story-jar" class="relative w-48 h-64 border-2 border-norien-dark/20 rounded-b-xl overflow-hidden bg-white/30 backdrop-blur-md z-10 flex items-end">
-                    <!-- Animujący się wosk -->
-                    <div id="story-wax" class="w-full h-0 bg-norien-gold opacity-90"></div>
-                    
-                    <!-- Etykieta naklejana na wosk -->
-                    <div id="story-label" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-20 bg-black text-white text-[9px] tracking-widest flex items-center justify-center opacity-0 scale-75">NORIEN BERLIN</div>
+                <!-- Pudełko (Odtworzone z Twojego drugiego zdjęcia - elegancka czerń) -->
+                <div id="story-box" class="absolute bottom-0 w-[300px] h-[380px] bg-[#0a0a0a] border border-[#1a1a1a] opacity-0 transform scale-95 z-30 flex flex-col items-center justify-center text-white shadow-2xl">
+                    <div class="text-[8px] tracking-[0.3em] uppercase text-center mb-6 opacity-60 text-norien-gold">Norien Berlin</div>
+                    <div class="text-3xl tracking-[0.2em] font-light text-center">MITTE</div>
+                    <div class="w-8 h-px bg-white/20 mx-auto mt-6 mb-4"></div>
+                    <div class="text-[8px] tracking-widest uppercase opacity-40">Ready to Ship</div>
                 </div>
                 
-                <!-- Wieczko -->
-                <div id="story-lid" class="absolute top-16 w-52 h-6 bg-norien-dark rounded-t-lg opacity-0 -translate-y-20 z-30"></div>
+                <!-- Fotorealistyczny Słoik (Bursztynowe Szkło CSS) -->
+                <div id="story-jar" class="relative w-[260px] h-[320px] rounded-b-[15px] rounded-t-[5px] overflow-hidden z-10 flex items-end shadow-xl" 
+                     style="background: linear-gradient(90deg, rgba(30,10,5,0.9) 0%, rgba(80,30,15,0.7) 15%, rgba(110,45,20,0.5) 50%, rgba(80,30,15,0.7) 85%, rgba(30,10,5,0.9) 100%); 
+                            box-shadow: inset 0 0 25px rgba(0,0,0,0.9), inset 15px 0 30px rgba(255,255,255,0.1), inset -15px 0 30px rgba(0,0,0,0.5); 
+                            border: 1px solid rgba(255,255,255,0.05); 
+                            backdrop-filter: blur(5px);">
+                    
+                    <!-- Animujący się wosk (Głęboki brąz, naśladujący roztopiony wosk rzepakowy) -->
+                    <div id="story-wax" class="w-full h-0 bg-[#240a04] opacity-95 relative">
+                        <!-- Zaokrąglona góra wosku dla nadania głębi 3D -->
+                        <div class="absolute top-0 w-full h-[15px] bg-[#331107] rounded-[50%] transform -translate-y-1/2"></div>
+                    </div>
+                    
+                    <!-- Etykieta (Dokładna kopia z Twojego pierwszego zdjęcia) -->
+                    <div id="story-label" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[85%] flex flex-col justify-center opacity-0 scale-90 text-white/95 z-20">
+                        <div class="text-[9px] tracking-[0.25em] font-semibold uppercase text-center mb-8">Norien Berlin</div>
+                        <div class="text-[44px] tracking-[0.2em] font-light text-center mb-6" style="font-family: 'Montserrat', sans-serif;">MITTE</div>
+                        
+                        <div class="w-full pl-6 pr-6">
+                            <div class="w-20 h-[1.5px] bg-white/60 mb-5"></div>
+                            <div class="text-[11px] tracking-[0.15em] font-semibold uppercase leading-[1.8] mb-6 text-left">
+                                Lavender<br>Myrrh<br>Suede
+                            </div>
+                            <div class="w-20 h-[1px] bg-white/60 mb-5"></div>
+                            <div class="text-[10px] tracking-widest font-semibold text-left">160 G</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Eleganckie Czarne Wieczko -->
+                <div id="story-lid" class="absolute top-[125px] w-[270px] h-[20px] bg-[#111] rounded-t-[4px] opacity-0 -translate-y-20 z-20 border-b border-white/10"
+                     style="box-shadow: inset 0 2px 5px rgba(255,255,255,0.1), 0 10px 20px rgba(0,0,0,0.5);"></div>
             </div>
         </div>
     </section>
@@ -392,13 +419,11 @@
         </div>
     </section>
 
-    <!-- Zaktualizowana sekcja manifestu z animacją słów -->
     <section id="manifesto" class="min-h-[100vh] w-full bg-norien-dark text-white flex flex-col justify-between pt-24 pb-0 relative">
         <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10 py-20">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
                 <h2 id="manifesto-sub" class="footer-reveal text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
                 
-                <!-- Tekst rozbijany w JS -->
                 <p id="manifesto-text" class="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight">
                     Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.
                 </p>
@@ -642,29 +667,29 @@
             );
 
             // ==========================================
-            // KOD SCROLLYTELLINGU (Symulacja 3D z użyciem 2D)
+            // KOD SCROLLYTELLINGU (Odświeżone timery GSAP)
             // ==========================================
             let storyTl = gsap.timeline({
                 scrollTrigger: {
                     trigger: "#story-section",
-                    start: "top top", // Zaczyna się, gdy sekcja dojedzie do samej góry ekranu
-                    end: "bottom bottom", // Kończy, gdy przescrollujesz przez jej 400vh
-                    scrub: 1, // Maślane powiązanie animacji ze scrollem
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1,
                 }
             });
 
             storyTl
-                // 1. Nalewanie wosku (zwiększamy wysokość)
+                // 1. Nalewanie wosku
                 .to("#story-wax", { height: "85%", duration: 3, ease: "power1.inOut" })
-                // 2. Wyskakuje etykieta 
-                .to("#story-label", { opacity: 1, scale: 1, duration: 1.5, ease: "back.out(1.7)" })
-                // 3. Opada wieczko
-                .to("#story-lid", { opacity: 1, y: 16, duration: 1.5, ease: "bounce.out" })
-                // 4. Pojawia się pudełko w tle
+                // 2. Wyskakuje piękna, dokładna etykieta
+                .to("#story-label", { opacity: 1, scale: 1, duration: 1.5, ease: "back.out(1.4)" })
+                // 3. Opada eleganckie czarne wieczko
+                .to("#story-lid", { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" })
+                // 4. Pojawia się czarne pudełko w tle
                 .to("#story-box", { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" })
-                // 5. Cały słoik chowa się (wjeżdża do pudełka)
-                .to("#story-jar", { y: 200, opacity: 0, duration: 2, ease: "power2.in" }, "pack")
-                .to("#story-lid", { y: 216, opacity: 0, duration: 2, ease: "power2.in" }, "pack");
+                // 5. Świeca chowa się do pudełka
+                .to("#story-jar", { y: 250, opacity: 0, duration: 2, ease: "power2.in" }, "pack")
+                .to("#story-lid", { y: 250, opacity: 0, duration: 2, ease: "power2.in" }, "pack");
         });
 
         const cursor = document.getElementById('custom-cursor');
