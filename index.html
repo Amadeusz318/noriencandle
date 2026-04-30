@@ -33,15 +33,6 @@
             body, a, button, input, select { cursor: none !important; }
         }
 
-        /* CUSTOM CURSOR */
-        .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 12px; height: 12px; 
-            background-color: #fff; border-radius: 50%; pointer-events: none; z-index: 9999;
-            transform: translate(-50%, -50%); border: 1px solid transparent; mix-blend-mode: difference; 
-            transition: background-color 0.2s ease, border-color 0.2s ease; 
-        }
-        .custom-cursor.hover-state { background-color: transparent; border-color: #fff; }
-
         /* PRELOADER */
         #preloader {
             position: fixed; inset: 0; background-color: #fcfaf7; z-index: 10000;
@@ -50,18 +41,30 @@
         }
         #preloader.hide { transform: translateY(-100%); }
 
-        /* ZIARNO FILMOWE */
+        /* TEKSTURA FILMOWEGO ZIARNA */
         .noise-overlay {
             position: fixed; inset: 0; z-index: 9998; pointer-events: none; opacity: 0.04;
             background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
         }
 
         /* MAGNETIC HOVER */
-        .magnetic { transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1); display: inline-block; }
+        .magnetic {
+            transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+            display: inline-block;
+        }
 
-        /* ANIMACJE WJEŻDŻANIA */
+        /* CUSTOM CURSOR */
+        .custom-cursor {
+            position: fixed; top: 0; left: 0; width: 10px; height: 10px; 
+            background-color: #fff; border-radius: 50%; pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%); border: 1px solid transparent; mix-blend-mode: difference; 
+            transition: background-color 0.2s ease, border-color 0.2s ease; 
+        }
+        .custom-cursor.hover-state { background-color: transparent; border-color: #fff; }
+
         .text-reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .is-revealed .text-reveal { opacity: 1; transform: translateY(0); }
+        
         .delay-1 { transition-delay: 0.2s; } .delay-2 { transition-delay: 0.6s; }
         .delay-3 { transition-delay: 1.0s; } .delay-4 { transition-delay: 1.4s; }
 
@@ -74,28 +77,45 @@
             .mobile-scroll::-webkit-scrollbar { display: none; }
         }
 
-        /* MAPA */
+        /* WARSTWOWA MAPA */
         #map-explore::before {
             content: ''; position: absolute; inset: 0;
-            background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px); background-size: 36px 36px; opacity: 0; z-index: 0; transition: opacity 1s ease 0.1s; 
+            background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px);
+            background-size: 36px 36px; opacity: 0; z-index: 0; 
+            transition: opacity 1s ease 0.1s; 
         }
         #map-explore.is-revealed::before { opacity: 1; }
+        
         .map-layer { opacity: 0; transform: translateY(30px) scale(0.95); transform-origin: center; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
         .is-revealed .map-layer { opacity: 1; transform: translateY(0) scale(1); }
         .delay-map-1 { transition-delay: 0.1s; } .delay-map-2 { transition-delay: 0.25s; } .delay-map-3 { transition-delay: 0.4s; } 
 
         #map-svg { transition: all 0.5s ease; max-height: 65vh; position: relative; z-index: 2; }
-        .district-bg { fill: transparent; stroke: #e8e8e8; stroke-width: 0.8; transition: opacity 0.5s ease; }
-        /* Powiększone fonty mapy */
-        .label-bg { font-size: 14px; fill: #1a1a1a; opacity: 0.2; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
-        #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.05; }
+        
+        /* ZAKTUALIZOWANY WYGLĄD BAZOWEJ MAPY */
+        .district-bg { 
+            fill: rgba(0, 0, 0, 0.015); /* Delikatne wypełnienie zamiast przezroczystości */
+            stroke: #d4d4d4; /* Ciemniejszy, wyraźniejszy obrys */
+            stroke-width: 1.5; /* Grubsza linia */
+            transition: opacity 0.5s ease; 
+        }
+        .label-bg { 
+            font-size: 15px; /* Większy rozmiar */
+            font-weight: 500; /* Wyraźniejsza waga czcionki */
+            fill: #1a1a1a; 
+            opacity: 0.45; /* Zwiększona widoczność z 0.2 na 0.45 */
+            pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; 
+        }
+        #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { 
+            opacity: 0.15; /* Przyciemnienie po kliknięciu zostawia więcej tła (było 0.05) */
+        }
+        
         .active-group { transition: opacity 0.5s ease; }
         .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s ease, fill 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; }
         
         .path-mitte { stroke: #b35a2d; } .path-prenzl { stroke: #8a7b8e; }
         .path-kreuz { stroke: #005f63; } .path-neukolln { stroke: #631b2b; }
-        /* Powiększony font aktywnych dzielnic */
-        .label-active { font-size: 20px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.8; transition: transform 0.4s ease; text-anchor: middle; pointer-events: none; }
+        .label-active { font-size: 21px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.9; transition: transform 0.4s ease; text-anchor: middle; pointer-events: none; }
         .text-mitte { fill: #b35a2d; } .text-prenzl { fill: #8a7b8e; }
         .text-kreuz { fill: #005f63; } .text-neukolln { fill: #631b2b; }
 
@@ -150,6 +170,7 @@
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
 
+    <!-- PRELOADER -->
     <div id="preloader">
         <div class="text-xs tracking-[0.4em] uppercase opacity-40 mb-4 font-light">Loading Archives</div>
         <div id="loader-perc" class="text-4xl md:text-6xl font-thin tracking-widest text-norien-dark">0%</div>
@@ -158,6 +179,7 @@
     <div class="noise-overlay"></div>
     <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
 
+    <!-- NAWIGACJA -->
     <nav class="fixed w-full px-6 md:px-12 py-6 flex justify-between items-center text-norien-dark">
         <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover magnetic">
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.5rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
@@ -181,6 +203,7 @@
         </div>
     </nav>
 
+    <!-- SEKCJA 1: HERO -->
     <section id="hero" class="observe-section min-h-[100dvh] w-full snap-start snap-always flex flex-col justify-center items-center text-center px-6 relative overflow-hidden py-40">
         <div class="z-10">
             <p id="hero-sub" class="text-xs md:text-sm tracking-[0.6em] uppercase mb-10 opacity-60 text-reveal delay-1">Exclusive Souvenir from Berlin</p>
@@ -197,12 +220,14 @@
         </div>
     </section>
 
+    <!-- SEKCJA 2: MAPA -->
     <section id="map-explore" class="observe-section min-h-[100dvh] w-full snap-start snap-always flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 py-32">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
+            <!-- SKALOWANIE MAPY DLA LEPSZEJ CZYTELNOŚCI -->
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
                 <div id="map-mobile-hint" class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-xs tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
                 
-                <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible">
+                <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible transform scale-125 sm:scale-110 md:scale-100 origin-center transition-transform duration-700 mt-12 md:mt-0">
                     <g class="map-layer delay-map-1">
                         <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
                         <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
@@ -248,6 +273,7 @@
         </div>
     </section>
 
+    <!-- SEKCJA 3: THE CRAFT -->
     <section id="the-craft" class="observe-section min-h-[100dvh] w-full snap-start snap-always relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white py-40">
         <div class="wax-liquid-bg"></div>
         
@@ -261,19 +287,20 @@
         </div>
     </section>
 
+    <!-- SEKCJA 4: ARCHIWUM -->
     <section id="archives" class="observe-section min-h-[100dvh] w-full snap-start snap-always flex flex-col items-center justify-center px-6 overflow-hidden py-32">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
                 
                 <div class="group relative bg-white p-8 lg:p-10 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-1">
                     <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-xs tracking-ultra mb-6 opacity-40 uppercase">Archive No. 01</p>
+                        <p class="text-[10px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 01</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
                             <img src="mitte.png" alt="Mitte" class="w-full h-full object-contain mix-blend-multiply p-4">
                         </div>
                     </div>
                     <div class="mt-8 space-y-6 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-sm leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
+                        <p class="text-[11px] md:text-xs leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
                         <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
                             <span class="text-base md:text-lg font-light">€ 55.00</span>
                             <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
@@ -290,13 +317,13 @@
 
                 <div class="group relative bg-white p-8 lg:p-10 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-2">
                     <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-xs tracking-ultra mb-6 opacity-40 uppercase">Archive No. 02</p>
+                        <p class="text-[10px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 02</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
                             <img src="prenzlauer.png" alt="Prenzlauer Berg" class="w-full h-full object-contain mix-blend-multiply p-4">
                         </div>
                     </div>
                     <div class="mt-8 space-y-6 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-sm leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
+                        <p class="text-[11px] md:text-xs leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
                         <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
                             <span class="text-base md:text-lg font-light">€ 55.00</span>
                             <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
@@ -313,13 +340,13 @@
 
                 <div class="group relative bg-white p-8 lg:p-10 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-3">
                     <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-xs tracking-ultra mb-6 opacity-40 uppercase">Archive No. 36</p>
+                        <p class="text-[10px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 36</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
                             <img src="kreuzberg.png" alt="Kreuzberg" class="w-full h-full object-contain mix-blend-multiply p-4">
                         </div>
                     </div>
                     <div class="mt-8 space-y-6 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-sm leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
+                        <p class="text-[11px] md:text-xs leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
                         <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
                             <span class="text-base md:text-lg font-light">€ 55.00</span>
                             <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
@@ -336,13 +363,13 @@
 
                 <div class="group relative bg-white p-8 lg:p-10 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-4">
                     <div class="flex-grow flex flex-col items-center text-center">
-                        <p class="text-xs tracking-ultra mb-6 opacity-40 uppercase">Archive No. 03</p>
+                        <p class="text-[10px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 03</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
                             <img src="neukolln.png" alt="Neukölln" class="w-full h-full object-contain mix-blend-multiply p-4">
                         </div>
                     </div>
                     <div class="mt-8 space-y-6 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p class="text-sm leading-relaxed font-light uppercase italic opacity-60 text-center">"Not polished, but real."</p>
+                        <p class="text-[11px] md:text-xs leading-relaxed font-light uppercase italic opacity-60 text-center">"Not polished, but real."</p>
                         <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
                             <span class="text-base md:text-lg font-light">€ 55.00</span>
                             <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
@@ -361,6 +388,7 @@
         </div>
     </section>
 
+    <!-- SEKCJA 5: MANIFEST + NEWSLETTER -->
     <section id="manifesto" class="observe-section min-h-[100dvh] w-full snap-start snap-always bg-norien-dark text-white flex flex-col justify-between pt-32 relative">
         <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10 py-12">
             <div class="max-w-4xl mx-auto space-y-12 text-center">
@@ -402,6 +430,7 @@
         </footer>
     </section>
 
+    <!-- PANELE (DRAWER & CART) -->
     <div id="side-drawer" class="drawer-panel">
         <button class="drawer-close nav-hover" onclick="closeDrawer()">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -620,6 +649,32 @@
                 manifestoSub: "Das Studio", 
                 manifestoText: "Unsere Kompositionen entstehen im Berliner Atelier. Wir verwenden Sojawachs als reinen Träger für seltene Essenzen.", 
                 manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Erhalte private Notizen aus unserem Labor und frühen Zugang zu limitierten Editionen.", newsInput: "Deine E-Mail Adresse", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Kaufen", btnAdded: "Hinzugefügt", cartEmpty: "Dein Warenkorb ist leer.", cartShipping: "Versand", cartFree: "Kostenlos", checkoutBack: "Zurück zum Shop", checkoutOrderSum: "Bestellübersicht", checkoutDue: "Gesamtsumme", checkContact: "Kontakt", inEmail: "E-Mail-Adresse", checkAddress: "Lieferadresse", inFname: "Vorname", inLname: "Nachname", inStreet: "Straße und Hausnummer", inZip: "PLZ", inCity: "Stadt", checkPayment: "Zahlung", checkSys: "Zahlungssystem (Demo)", btnPay: "Zahlen & Bestellen"
+            },
+            fr: {
+                navMap: "La Carte", navCraft: "Artisanat", navArchives: "Archives", navManifesto: "Manifeste", cartWord: "PANIER", scrollText: "Faites défiler", heroSub: "Souvenir Exclusif de Berlin", 
+                heroDesc: "Nous ne vendons pas de bougies. Nous archivons l'identité de Berlin. Chaque parfum est une coordonnée géographique.", 
+                guideHint: "Touchez un quartier", guideSub: "The Urban Guide", 
+                guideTitle: "Votre quartier. <br> Votre passeport olfactif.", 
+                guideDesc: "Nos compositions servent de guides. Neukölln ne sent pas seulement la fumée – il sent l'histoire du changement, l'air nocturne au bord du canal et le béton brut. Mitte est la stérilité des galeries et l'odeur des parquets anciens.", 
+                guideAction: "Sélectionnez une zone sur la carte pour explorer les archives.", 
+                craftSub: "The Craft", craftTitle: "Forme pure.", 
+                craftDesc: "Nous avons abandonné la paraffine pour un mélange végétalien de cire de colza et de coco. Coulé à la main dans notre atelier berlinois.", 
+                manifestoSub: "Le Studio", 
+                manifestoText: "Nos compositions sont créées dans notre atelier berlinois. Nous utilisons la cire de soja comme support pur pour des essences rares.", 
+                manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Recevez des notes privées de notre laboratoire et un accès anticipé aux éditions limitées.", newsInput: "Votre adresse e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquérir", btnAdded: "Ajouté", cartEmpty: "Votre panier est vide.", cartShipping: "Livraison", cartFree: "Gratuit", checkoutBack: "Retour à la boutique", checkoutOrderSum: "Résumé de la commande", checkoutDue: "Total à payer", checkContact: "Contact", inEmail: "Adresse e-mail", checkAddress: "Adresse de livraison", inFname: "Prénom", inLname: "Nom", inStreet: "Rue et numéro", inZip: "Code postal", inCity: "Ville", checkPayment: "Paiement", checkSys: "Système de paiement (Démo)", btnPay: "Payer et commander"
+            },
+            es: {
+                navMap: "El Mapa", navCraft: "Artesanía", navArchives: "Archivos", navManifesto: "Manifiesto", cartWord: "CARRITO", scrollText: "Desplazar para explorar", heroSub: "Recuerdo Exclusivo de Berlín", 
+                heroDesc: "No vendemos velas. Archivamos la identidad de Berlín. Cada aroma es una coordenada geográfica y un registro emocional.", 
+                guideHint: "Toca un distrito", guideSub: "The Urban Guide", 
+                guideTitle: "Tu distrito. <br> Tu pasaporte olfativo.", 
+                guideDesc: "Nuestras composiciones sirven de guía. Neukölln no solo huele a humo: huele a historia de cambios, aire nocturno junto al canal y hormigón bruto. Mitte es la esterilidad de las galerías y el olor de los parqués antiguos.", 
+                guideAction: "Selecciona un área en el mapa para explorar el archivo.", 
+                craftSub: "The Craft", craftTitle: "Forma pura.", 
+                craftDesc: "Abandonamos la parafina en favor de una mezcla vegana de cera de colza y coco. Vertido a mano en nuestro taller de Berlín.", 
+                manifestoSub: "El Estudio", 
+                manifestoText: "Nuestras composiciones se crean en nuestro taller de Berlín. Utilizamos cera de soja como soporte puro para esencias raras.", 
+                manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Recibe notas privadas de nuestro laboratorio y acceso anticipado a ediciones limitadas.", newsInput: "Tu correo electrónico", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Adquirir", btnAdded: "Añadido", cartEmpty: "Tu carrito está vacío.", cartShipping: "Envío", cartFree: "Gratis", checkoutBack: "Volver a la tienda", checkoutOrderSum: "Resumen del pedido", checkoutDue: "Total a pagar", checkContact: "Contacto", inEmail: "Correo electrónico", checkAddress: "Dirección de entrega", inFname: "Nombre", inLname: "Apellidos", inStreet: "Calle y número", inZip: "Código postal", inCity: "Ciudad", checkPayment: "Pago", checkSys: "Sistema de pago (Demo)", btnPay: "Pagar y Pedir"
             }
         };
 
@@ -646,7 +701,7 @@
 
         let currentActiveId = '';
         
-        // PAMIĘĆ KOSZYKA
+        // PAMIĘĆ KOSZYKA (LOCAL STORAGE)
         let cartState = JSON.parse(localStorage.getItem('norienCart')) || {}; 
 
         function saveCart() {
@@ -775,6 +830,7 @@
             document.getElementById('drawer-subtitle').innerText = p.sub;
             document.getElementById('drawer-coords').innerText = p.coords;
             document.getElementById('drawer-notes').innerHTML = p.notes;
+            // Opis w szufladzie będzie tłumaczeniem konkretnego produktu:
             document.getElementById('drawer-desc').innerText = p.desc; 
             document.getElementById('drawer-top-line').style.backgroundColor = p.color;
             document.getElementById('drawer-qty').innerText = '1';
