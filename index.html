@@ -146,6 +146,10 @@
         #drawer-inner::-webkit-scrollbar { width: 3px; }
         #drawer-inner::-webkit-scrollbar-thumb { background: #e0e0e0; }
 
+        /* Klasy pomocnicze dla zdjęcia w panelu */
+        .img-overlay {
+            mix-blend-mode: multiply;
+        }
     </style>
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
@@ -178,7 +182,6 @@
     </section>
 
     <!-- SEKCJA 2: MAPA -->
-    <!-- Dodany padding pt-24 aby mapa byłą idealnie w centrum uwzględniając menu -->
     <section id="map-explore" class="h-screen w-full flex flex-col justify-center bg-white relative overflow-hidden bg-dots border-y border-gray-100 pt-24 pb-12">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
@@ -226,7 +229,6 @@
     </section>
 
     <!-- SEKCJA 3: ARCHIWUM -->
-    <!-- Idealne centrowanie z pt-24 aby uniknąć ucięcia zawartości przez dolną krawędź -->
     <section id="archives" class="h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden pt-24 pb-12">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
@@ -234,7 +236,6 @@
                 <div id="prod-mitte-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#b35a2d] transition-all duration-700 flex flex-col">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 01</p>
-                        <!-- aspect-[3/4] zamiast 2/3 - krępsze, lepiej pasujące do ekranu kafelki -->
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center p-4 lg:p-6 bg-norien-canvas shadow-sm">
                             <div>
                                 <h4 class="text-xl xl:text-3xl font-extralight tracking-ultra mb-4 lg:mb-6 text-[#b35a2d]">MITTE</h4>
@@ -351,9 +352,13 @@
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
 
         <div id="drawer-inner" class="drawer-content">
-            <div id="drawer-img-container" class="w-full aspect-[4/3] bg-white border border-gray-100 mb-8 flex items-center justify-center relative overflow-hidden shadow-sm">
-                <div id="drawer-tint" class="absolute inset-0 opacity-[0.03] transition-colors duration-500"></div>
-                <span id="drawer-placeholder" class="text-[9px] uppercase tracking-widest text-gray-300">Image Container</span>
+            <!-- MIEJSCE NA ZDJĘCIE (Obecnie z pięknymi placeholderami z Unsplash) -->
+            <div id="drawer-img-container" class="w-full aspect-[4/3] bg-[#f8f8f8] mb-8 relative overflow-hidden shadow-sm">
+                <!-- Zdjęcie z Unsplash -->
+                <img id="drawer-image" src="" alt="Norien Candle" class="w-full h-full object-cover opacity-90 transition-opacity duration-500 hidden">
+                <!-- Delikatny tint w kolorze dzielnicy dodający klimatu -->
+                <div id="drawer-tint" class="absolute inset-0 img-overlay opacity-20 transition-colors duration-500"></div>
+                <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[9px] uppercase tracking-widest text-gray-300">Loading...</span>
             </div>
 
             <div class="flex-grow">
@@ -382,7 +387,6 @@
 
     <!-- SKRYPTY -->
     <script>
-        // --- CUSTOM SMOOTH SCROLL ---
         function smoothScroll(targetId, duration) {
             const targetElement = document.querySelector(targetId);
             if (!targetElement) return;
@@ -393,7 +397,6 @@
             const startPosition = window.pageYOffset;
             let startTime = null;
 
-            // easeInOutQuint
             function easeInOutQuint(t, b, c, d) {
                 t /= d / 2;
                 if (t < 1) return c / 2 * t * t * t * t * t + b;
@@ -427,30 +430,34 @@
             });
         });
 
-        // --- LOGIKA MAPY I BOCZNEGO PANELU ---
         let currentActiveId = '';
         const mapSvg = document.getElementById('map-svg');
 
+        // BAZA PRODUKTÓW WRAZ Z LINKAMI DO ZDJĘĆ Z UNSPLASH
         const mapProducts = {
             mitte: { 
                 title: 'MITTE', sub: 'Archive No. 01', color: '#b35a2d', coords: '52°31\'12.0"N 13°24\'18.0"E',
                 notes: 'Lavender / Myrrh / Suede',
-                desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy. Dedykowane dla tych, którzy cenią nowoczesną surowość i historię.' 
+                desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy. Dedykowane dla tych, którzy cenią nowoczesną surowość i historię.',
+                image: 'https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=800&q=80' // Surowy, luksusowy słoik
             },
             prenzl: { 
                 title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E',
                 notes: 'Lemon / Jasmine / Sandalwood',
-                desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą. Delikatna cytryna spotyka głębokie, uspokajające drewno sandałowe.' 
+                desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą. Delikatna cytryna spotyka głębokie, uspokajające drewno sandałowe.',
+                image: 'https://images.unsplash.com/photo-1608181114410-db2aa03d7d8b?auto=format&fit=crop&w=800&q=80' // Jasne, spokojne tło
             },
             kreuz: { 
                 title: 'KREUZBERG', sub: 'Archive No. 36', color: '#005f63', coords: '52°29\'56.0"N 13°23\'20.0"E',
                 notes: 'Bergamot / Patchouli / Vetiver',
-                desc: 'Energia kanałów i nocne powietrze. Mocny, nieustępliwy i pełen charakteru zapach wetiwerii i paczuli.' 
+                desc: 'Energia kanałów i nocne powietrze. Mocny, nieustępliwy i pełen charakteru zapach wetiwerii i paczuli.',
+                image: 'https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=800&q=80' // Ciemne, mocne szkło
             },
             neukolln: { 
                 title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E',
                 notes: 'Cardamom / Myrtle / Amber',
-                desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy z targu przy Maybachufer połączone z ciepłym, wibrującym bursztynem.' 
+                desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy z targu przy Maybachufer połączone z ciepłym, wibrującym bursztynem.',
+                image: 'https://images.unsplash.com/photo-1612198188060-b7c191cb3dc6?auto=format&fit=crop&w=800&q=80' // Głęboki, ciepły klimat
             }
         };
 
@@ -465,6 +472,14 @@
             document.getElementById('drawer-top-line').style.backgroundColor = p.color;
             document.getElementById('drawer-tint').style.backgroundColor = p.color;
             document.getElementById('drawer-line').style.backgroundColor = p.color;
+
+            // Zmiana zdjęcia
+            const imgEl = document.getElementById('drawer-image');
+            imgEl.src = p.image;
+            imgEl.onload = () => {
+                imgEl.classList.remove('hidden');
+                document.getElementById('drawer-placeholder').classList.add('hidden');
+            };
         }
 
         function showDrawer(id) {
@@ -518,7 +533,6 @@
             }, 300);
         }
 
-        // Zamykanie drawera po kliknięciu w tło
         document.addEventListener('click', function(event) {
             const drawer = document.getElementById('side-drawer');
             const mapExplore = document.getElementById('map-explore');
