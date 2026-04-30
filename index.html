@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" class="snap-y snap-mandatory">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +25,6 @@
         }
     </script>
     <style>
-        /* USUNIĘTO scroll-behavior: smooth, ABY ZASTĄPIĆ GO PRECYZYJNĄ KRZYWĄ W JS */
         html { 
             scroll-snap-type: y mandatory;
         }
@@ -35,7 +34,6 @@
             background-color: #fcfaf7; 
         }
 
-        /* Łagodne dociąganie, bez "twardego" hamulca */
         section {
             scroll-snap-align: start;
         }
@@ -104,7 +102,6 @@
         .text-kreuz { fill: #005f63; }
         .text-neukolln { fill: #631b2b; }
 
-        /* Miększy Hover dla samej mapy */
         .active-group:hover .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 15px rgba(0,0,0,0.08)); }
         .active-group:hover .label-active { transform: translateY(-8px); opacity: 1; }
         
@@ -320,6 +317,7 @@
 
     <!-- SEKCJA 4: MANIFEST (Zespolony ze stopką) -->
     <section id="manifesto" class="h-screen w-full bg-norien-dark text-white flex flex-col justify-between pt-24">
+        
         <div class="flex-grow flex flex-col justify-center items-center px-6">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
                 <h2 id="manifesto-sub" class="text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
@@ -384,27 +382,32 @@
 
     <!-- SKRYPTY (Map, Drawer & Custom Smooth Scroll) -->
     <script>
-        // --- CUSTOM SMOOTH SCROLL (SZYBKI START, MIĘKKIE LĄDOWANIE) ---
+        // --- CUSTOM SMOOTH SCROLL (BARDZO MIĘKKA KRZYWA) ---
         function smoothScroll(targetId, duration) {
             const targetElement = document.querySelector(targetId);
             if (!targetElement) return;
 
-            // Tymczasowo wyłączamy native snap, by uniknąć zjawiska "zepsutej windy" w trakcie animacji
+            // Wyłączamy twardy snap na czas lotu
             document.documentElement.style.scrollSnapType = 'none';
 
             const targetPosition = targetElement.getBoundingClientRect().top;
             const startPosition = window.pageYOffset;
             let startTime = null;
 
-            // Krzywa easeOutExpo
-            function easeOutExpo(t, b, c, d) {
-                return t === d ? b + c : c * (-Math.pow(2, -10 * t / d) + 1) + b;
+            // Krzywa easeInOutQuart - wolny start, bardzo łagodne lądowanie
+            function easeInOutQuart(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t * t * t + b;
+                t -= 2;
+                return -c / 2 * (t * t * t * t - 2) + b;
             }
 
             function animation(currentTime) {
                 if (startTime === null) startTime = currentTime;
                 const timeElapsed = currentTime - startTime;
-                const run = easeOutExpo(timeElapsed, startPosition, targetPosition, duration);
+                
+                // Obliczamy nowy krok
+                const run = easeInOutQuart(timeElapsed, startPosition, targetPosition, duration);
                 
                 window.scrollTo(0, run);
                 
@@ -412,19 +415,19 @@
                     requestAnimationFrame(animation);
                 } else {
                     window.scrollTo(0, startPosition + targetPosition);
-                    // Przywracamy scroll-snapping
+                    // Przywracamy snap po wylądowaniu
                     document.documentElement.style.scrollSnapType = 'y mandatory';
                 }
             }
             requestAnimationFrame(animation);
         }
 
-        // Obsługa kliknięć w menu nawigacyjne
+        // Podpinamy luksusowy scroll pod linki nawigacji
         document.querySelectorAll('.nav-link').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = this.getAttribute('href');
-                smoothScroll(target, 1200); // 1.2 sekundy = majestatyczne, długie lądowanie
+                smoothScroll(target, 2500); // 2.5 sekundy = idealne, powolne tempo luksusowej marki
             });
         });
 
@@ -515,8 +518,9 @@
             
             closeDrawer();
             
+            // Czekamy aż szuflada się schowa i uruchamiamy powolny zjazd 2.5s
             setTimeout(() => {
-                smoothScroll(archiveId, 1200);
+                smoothScroll(archiveId, 2500);
             }, 300);
         }
 
