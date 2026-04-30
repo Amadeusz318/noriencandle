@@ -380,9 +380,9 @@
         </div>
     </div>
 
-    <!-- SKRYPTY (Map, Drawer & Custom Smooth Scroll) -->
+    <!-- SKRYPTY (Map, Drawer & Bardzo wolny Smooth Scroll) -->
     <script>
-        // --- CUSTOM SMOOTH SCROLL (BARDZO MIĘKKA KRZYWA) ---
+        // --- CUSTOM SMOOTH SCROLL ---
         function smoothScroll(targetId, duration) {
             const targetElement = document.querySelector(targetId);
             if (!targetElement) return;
@@ -394,20 +394,20 @@
             const startPosition = window.pageYOffset;
             let startTime = null;
 
-            // Krzywa easeInOutQuart - wolny start, bardzo łagodne lądowanie
-            function easeInOutQuart(t, b, c, d) {
+            // BARDZO, BARDZO płynna krzywa: easeInOutQuint (do potęgi 5)
+            // Startuje ledwo zauważalnie, a potem ląduje niezwykle miękko.
+            function easeInOutQuint(t, b, c, d) {
                 t /= d / 2;
-                if (t < 1) return c / 2 * t * t * t * t + b;
+                if (t < 1) return c / 2 * t * t * t * t * t + b;
                 t -= 2;
-                return -c / 2 * (t * t * t * t - 2) + b;
+                return c / 2 * (t * t * t * t * t + 2) + b;
             }
 
             function animation(currentTime) {
                 if (startTime === null) startTime = currentTime;
                 const timeElapsed = currentTime - startTime;
                 
-                // Obliczamy nowy krok
-                const run = easeInOutQuart(timeElapsed, startPosition, targetPosition, duration);
+                const run = easeInOutQuint(timeElapsed, startPosition, targetPosition, duration);
                 
                 window.scrollTo(0, run);
                 
@@ -422,15 +422,14 @@
             requestAnimationFrame(animation);
         }
 
-        // Podpinamy luksusowy scroll pod linki nawigacji
+        // Czas zjazdu ustawiłem na 3.5 sekundy (bardzo długo i majestatycznie)
         document.querySelectorAll('.nav-link').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = this.getAttribute('href');
-                smoothScroll(target, 2500); // 2.5 sekundy = idealne, powolne tempo luksusowej marki
+                smoothScroll(target, 3500); 
             });
         });
-
 
         // --- LOGIKA MAPY I BOCZNEGO PANELU ---
         let currentActiveId = '';
@@ -518,9 +517,8 @@
             
             closeDrawer();
             
-            // Czekamy aż szuflada się schowa i uruchamiamy powolny zjazd 2.5s
             setTimeout(() => {
-                smoothScroll(archiveId, 2500);
+                smoothScroll(archiveId, 3500); // Ten sam majestatyczny zjazd z drawera do archiwum
             }, 300);
         }
 
