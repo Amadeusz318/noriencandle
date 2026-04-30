@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" class="scroll-smooth">
+<html lang="pl" class="snap-y snap-mandatory scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,31 +26,11 @@
     </script>
     <style>
         ::-webkit-scrollbar { display: none; }
-        html { -ms-overflow-style: none; scrollbar-width: none; scroll-behavior: smooth; }
+        html { -ms-overflow-style: none; scrollbar-width: none; }
         body { overflow-x: hidden; background-color: #fcfaf7; }
 
         @media (pointer: fine) {
             body, a, button, input, select { cursor: none !important; }
-        }
-
-        /* KINOWY PRELOADER */
-        #preloader {
-            position: fixed; inset: 0; background-color: #fcfaf7; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
-        }
-        #preloader.hide { transform: translateY(-100%); }
-
-        /* TEKSTURA FILMOWEGO ZIARNA */
-        .noise-overlay {
-            position: fixed; inset: 0; z-index: 9998; pointer-events: none; opacity: 0.04;
-            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-        }
-
-        /* MAGNETIC HOVER */
-        .magnetic {
-            transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1);
-            display: inline-block;
         }
 
         /* CUSTOM CURSOR */
@@ -118,12 +98,23 @@
         .active-group.is-selected[data-id="neukolln"] .active-path { fill: rgba(99, 27, 43, 0.15); }
         .active-group.is-selected .label-active { transform: translateY(-8px); opacity: 1; }
 
-        /* NOWY EFEKT THE CRAFT (Slow Zoom) */
-        @keyframes slowZoom {
-            0% { transform: scale(1.0); }
-            100% { transform: scale(1.15); }
+        /* NOWE: EFEKT PŁYNNEGO WOSKU / ORGANICZNEGO ŚWIATŁA W TLE */
+        .wax-liquid-bg {
+            position: absolute; inset: -50%; z-index: 0;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(74, 44, 42, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(166, 138, 100, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 20% 80%, rgba(43, 23, 14, 0.9) 0%, transparent 50%);
+            background-color: #0f0f0f;
+            filter: blur(80px);
+            animation: waxLiquidMove 25s infinite alternate ease-in-out;
+            opacity: 0.7;
         }
-        .img-zoom { animation: slowZoom 25s alternate infinite ease-in-out; }
+        @keyframes waxLiquidMove {
+            0% { transform: translate(0%, 0%) rotate(0deg) scale(1); }
+            50% { transform: translate(-5%, 5%) rotate(10deg) scale(1.1); }
+            100% { transform: translate(5%, -5%) rotate(-5deg) scale(1); }
+        }
 
         .qty-btn { display: inline-block; padding: 0 8px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease; }
         .qty-btn:hover { transform: scale(1.6); font-weight: 600; }
@@ -134,11 +125,13 @@
         .drawer-close:hover { opacity: 1; }
         .drawer-inner { overflow-y: auto; flex-grow: 1; padding: 4rem 2rem 2rem 2rem; display: flex; flex-direction: column; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
         .drawer-inner.loaded { opacity: 1; transform: translateY(0); }
+        .drawer-inner::-webkit-scrollbar { width: 3px; }
+        .drawer-inner::-webkit-scrollbar-thumb { background: #e0e0e0; }
 
         #checkout-overlay { position: fixed; inset: 0; background-color: #fcfaf7; z-index: 2000; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; }
         #checkout-overlay.open { transform: translateY(0); }
-        .input-minimal { width: 100%; border-bottom: 1px solid rgba(15,15,15,0.2); padding: 10px 10px; font-size: 12px; font-weight: 300; outline: none; transition: all 0.3s; background: transparent; }
-        .input-minimal:hover, .input-minimal:focus { border-color: #0f0f0f; background-color: rgba(15,15,15,0.02); }
+        .input-minimal { width: 100%; border-bottom: 1px solid rgba(15,15,15,0.2); padding: 10px 0; font-size: 12px; font-weight: 300; outline: none; transition: border-color 0.3s; background: transparent; }
+        .input-minimal:focus { border-color: #0f0f0f; }
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
         .lang-btn { transition: all 0.3s; opacity: 0.3; padding-bottom: 2px; }
@@ -148,39 +141,34 @@
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
 
-    <div id="preloader">
-        <div class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light">Loading Archives</div>
-        <div id="loader-perc" class="text-4xl md:text-6xl font-thin tracking-widest text-norien-dark">0%</div>
-    </div>
-
-    <div class="noise-overlay"></div>
-
     <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
 
     <nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
-        <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover magnetic">
+        <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover">
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.25rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 9px; letter-spacing: 0.23em; margin-top: 0.45rem; margin-right: -0.23em; color: #555;">BERLIN</span>
         </a>
 
         <div class="hidden lg:flex gap-10 text-[10px] tracking-widest uppercase font-light ml-8">
-            <div class="magnetic"><a href="#map-explore" id="nav-map" class="hover:opacity-50 transition nav-hover">Mapa</a></div>
-            <div class="magnetic"><a href="#the-craft" id="nav-craft" class="hover:opacity-50 transition nav-hover">Rzemiosło</a></div>
-            <div class="magnetic"><a href="#archives" id="nav-archives" class="hover:opacity-50 transition nav-hover">Archiwum</a></div>
-            <div class="magnetic"><a href="#manifesto" id="nav-manifesto" class="hover:opacity-50 transition nav-hover">Manifest</a></div>
+            <a href="#map-explore" id="nav-map" class="hover:opacity-50 transition nav-hover">Mapa</a>
+            <a href="#the-craft" id="nav-craft" class="hover:opacity-50 transition nav-hover">Rzemiosło</a>
+            <a href="#archives" id="nav-archives" class="hover:opacity-50 transition nav-hover">Archiwum</a>
+            <a href="#manifesto" id="nav-manifesto" class="hover:opacity-50 transition nav-hover">Manifest</a>
         </div>
         
         <div class="flex items-center gap-6 md:gap-10">
             <div class="hidden md:flex gap-3 text-[8px] tracking-widest uppercase">
-                <div class="magnetic"><button onclick="changeLang('pl')" class="lang-btn active nav-hover lang-pl">PL</button></div>
-                <div class="magnetic"><button onclick="changeLang('en')" class="lang-btn nav-hover lang-en">EN</button></div>
-                <div class="magnetic"><button onclick="changeLang('de')" class="lang-btn nav-hover lang-de">DE</button></div>
+                <button onclick="changeLang('pl')" class="lang-btn active nav-hover lang-pl">PL</button>
+                <button onclick="changeLang('en')" class="lang-btn nav-hover lang-en">EN</button>
+                <button onclick="changeLang('de')" class="lang-btn nav-hover lang-de">DE</button>
+                <button onclick="changeLang('fr')" class="lang-btn nav-hover lang-fr">FR</button>
+                <button onclick="changeLang('es')" class="lang-btn nav-hover lang-es">ES</button>
             </div>
-            <div class="magnetic"><div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap nav-hover cursor-pointer" onclick="openCart(event)">KOSZYK (0)</div></div>
+            <div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap nav-hover cursor-pointer" onclick="openCart(event)">KOSZYK (0)</div>
         </div>
     </nav>
 
-    <section id="hero" class="observe-section min-h-screen w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden py-32">
+    <section id="hero" class="observe-section h-[100dvh] w-full snap-start snap-always flex flex-col justify-center items-center text-center px-6 relative overflow-hidden">
         <div class="z-10">
             <p id="hero-sub" class="text-[9px] md:text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Exclusive Souvenir from Berlin</p>
             <h1 class="text-5xl md:text-8xl font-thin tracking-tighter mb-10 leading-tight">
@@ -191,12 +179,12 @@
                 Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.
             </p>
         </div>
-        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4">
+        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4">
             <a href="#map-explore" id="hero-scroll" class="nav-hover text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
         </div>
     </section>
 
-    <section id="map-explore" class="observe-section min-h-screen w-full flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 py-32">
+    <section id="map-explore" class="observe-section h-[100dvh] w-full snap-start snap-always flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 pt-20">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
                 <div id="map-mobile-hint" class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[8px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
@@ -247,10 +235,8 @@
         </div>
     </section>
 
-    <section id="the-craft" class="observe-section min-h-screen w-full relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white py-40">
-        <div class="absolute inset-0 z-0 overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="img-zoom w-full h-full object-cover opacity-40 filter brightness-50 contrast-125">
-        </div>
+    <section id="the-craft" class="observe-section h-[100dvh] w-full snap-start snap-always relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white">
+        <div class="wax-liquid-bg"></div>
         
         <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center pointer-events-none">
             <p id="craft-sub" class="text-[10px] tracking-[0.6em] uppercase mb-12 opacity-60 text-reveal delay-1" style="font-family: 'Montserrat', sans-serif;">The Craft</p>
@@ -262,7 +248,7 @@
         </div>
     </section>
 
-    <section id="archives" class="observe-section min-h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden pt-32 pb-20">
+    <section id="archives" class="observe-section h-[100dvh] w-full snap-start snap-always flex flex-col items-center justify-center px-6 overflow-hidden pt-20">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 
@@ -275,15 +261,15 @@
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
-                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-50">
-                            <span class="text-sm font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-light">€ 55.00</span>
+                            <div class="flex items-center gap-3 relative z-10">
                                 <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-mitte', -1)">-</button>
                                     <span id="qty-mitte" class="w-4 text-center">1</span>
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-mitte', 1)">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[9px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('mitte', 'qty-mitte', this)">Acquire</button></div>
+                                <div><span class="btn-acquire text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer nav-hover" onclick="addToCart('mitte', 'qty-mitte', this)">Acquire</span></div>
                             </div>
                         </div>
                     </div>
@@ -298,15 +284,15 @@
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
-                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-50">
-                            <span class="text-sm font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-light">€ 55.00</span>
+                            <div class="flex items-center gap-3 relative z-10">
                                 <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-prenzl', -1)">-</button>
                                     <span id="qty-prenzl" class="w-4 text-center">1</span>
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-prenzl', 1)">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[9px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('prenzl', 'qty-prenzl', this)">Acquire</button></div>
+                                <div><span class="btn-acquire text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer nav-hover" onclick="addToCart('prenzl', 'qty-prenzl', this)">Acquire</span></div>
                             </div>
                         </div>
                     </div>
@@ -321,15 +307,15 @@
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
-                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-50">
-                            <span class="text-sm font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-light">€ 55.00</span>
+                            <div class="flex items-center gap-3 relative z-10">
                                 <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-kreuz', -1)">-</button>
                                     <span id="qty-kreuz" class="w-4 text-center">1</span>
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-kreuz', 1)">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[9px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('kreuz', 'qty-kreuz', this)">Acquire</button></div>
+                                <div><span class="btn-acquire text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer nav-hover" onclick="addToCart('kreuz', 'qty-kreuz', this)">Acquire</span></div>
                             </div>
                         </div>
                     </div>
@@ -344,15 +330,15 @@
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Not polished, but real."</p>
-                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-50">
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
                             <span class="text-xs font-light">€ 55.00</span>
-                            <div class="flex items-center gap-3 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                            <div class="flex items-center gap-3 relative z-10">
                                 <div class="flex items-center text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-neukolln', -1)">-</button>
                                     <span id="qty-neukolln" class="w-4 text-center">1</span>
                                     <button class="outline-none nav-hover qty-btn" onclick="changeQty('qty-neukolln', 1)">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[9px] tracking-widest border border-norien-dark px-4 py-1.5 uppercase cursor-pointer nav-hover hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('neukolln', 'qty-neukolln', this)">Acquire</button></div>
+                                <div><span class="btn-acquire text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer nav-hover" onclick="addToCart('neukolln', 'qty-neukolln', this)">Acquire</span></div>
                             </div>
                         </div>
                     </div>
@@ -362,7 +348,7 @@
         </div>
     </section>
 
-    <section id="manifesto" class="observe-section min-h-screen w-full bg-norien-dark text-white flex flex-col justify-between pt-32 pb-10 relative">
+    <section id="manifesto" class="observe-section h-[100dvh] w-full snap-start snap-always bg-norien-dark text-white flex flex-col justify-between pt-24 relative">
         <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
                 <h2 id="manifesto-sub" class="text-[10px] tracking-ultra uppercase opacity-40 text-reveal delay-1">The Studio</h2>
@@ -377,7 +363,7 @@
             </div>
         </div>
 
-        <div class="w-full max-w-xl mx-auto px-6 pb-20 text-center relative z-10 text-reveal delay-4 mt-20">
+        <div class="w-full max-w-xl mx-auto px-6 pb-12 text-center relative z-10 text-reveal delay-4">
             <p id="news-title" class="text-[10px] tracking-widest uppercase mb-4 opacity-60">Join the Archive</p>
             <p id="news-desc" class="text-xs font-light opacity-50 mb-6">Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.</p>
             <div class="flex items-end justify-center border-b border-white/30 pb-2">
@@ -386,13 +372,15 @@
             </div>
         </div>
 
-        <footer class="pt-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10">
+        <footer class="py-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10">
             <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
             
             <div class="flex md:hidden gap-3 text-[8px] tracking-widest uppercase">
                 <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
                 <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
                 <button onclick="changeLang('de')" class="lang-btn lang-de">DE</button>
+                <button onclick="changeLang('fr')" class="lang-btn lang-fr">FR</button>
+                <button onclick="changeLang('es')" class="lang-btn lang-es">ES</button>
             </div>
 
             <div class="flex gap-10">
@@ -448,7 +436,11 @@
         <div class="h-1 w-full bg-norien-dark"></div>
         <div id="cart-inner" class="drawer-inner flex flex-col">
             <h3 id="cart-title" class="text-2xl font-extralight tracking-widest uppercase mb-10 mt-4">Koszyk</h3>
-            <div id="cart-items" class="flex-grow space-y-6 overflow-y-auto mb-6 pr-2 relative z-10"></div>
+            
+            <div id="cart-items" class="flex-grow space-y-6 overflow-y-auto mb-6 pr-2 relative z-10">
+                <p class="text-xs font-light opacity-50 italic cart-empty-msg">Twój koszyk jest pusty.</p>
+            </div>
+
             <div class="mt-auto pt-6 border-t border-gray-100">
                 <div class="flex justify-between items-center mb-2">
                     <span id="cart-shipping" class="text-[9px] tracking-widest uppercase opacity-50">Wysyłka</span>
@@ -519,42 +511,16 @@
     </div>
 
     <script>
-        // 1. PRELOADER LOGIC
+        // --- PRELOADER (Czyste ukrywanie, start animacji po załadowaniu okna) ---
         window.addEventListener('load', () => {
-            let perc = 0;
-            const loaderPerc = document.getElementById('loader-perc');
-            const preloader = document.getElementById('preloader');
-            
-            const interval = setInterval(() => {
-                perc += Math.floor(Math.random() * 15) + 5;
-                if (perc >= 100) {
-                    perc = 100;
-                    clearInterval(interval);
-                    loaderPerc.innerText = perc + '%';
-                    setTimeout(() => {
-                        preloader.classList.add('hide');
-                        document.getElementById('hero').classList.add('is-revealed');
-                    }, 400);
-                } else {
-                    loaderPerc.innerText = perc + '%';
-                }
-            }, 80);
+            document.getElementById('preloader').classList.add('hide');
+            // Z małym opóźnieniem uruchamiamy animację Hero po odjechaniu preloadera
+            setTimeout(() => {
+                document.getElementById('hero').classList.add('is-revealed');
+            }, 500); 
         });
 
-        // 2. MAGNETIC HOVER
-        document.querySelectorAll('.magnetic').forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-            });
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = `translate(0px, 0px)`;
-            });
-        });
-
-        // 3. INTERSECTION OBSERVER DLA MAPY I SEKCJI
+        // --- OBSERVER ---
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -593,6 +559,12 @@
             },
             de: {
                 navMap: "Karte", navCraft: "Handwerk", navArchives: "Archiv", navManifesto: "Manifest", cartWord: "WARENKORB", scrollText: "Scrollen zum Entdecken", heroSub: "Exklusives Souvenir aus Berlin", heroDesc: "Wir verkaufen keine Kerzen. Wir archivieren die Identität Berlins. Jeder Duft ist eine geografische Koordinate und eine emotionale Aufzeichnung.", guideHint: "Bezirk antippen", guideSub: "The Urban Guide", guideTitle: "Dein Viertel. <br> Dein Duft.", guideDesc: "Unsere Kompositionen dienen als Wegweiser. Fahre über die farbige Kontur, um die Interaktion zu aktivieren und den sensorischen Code zu entdecken.", guideAction: "Auf die Karte klicken für Details.", craftSub: "The Craft", craftTitle: "Reine Form.", craftDesc: "Wir verzichten auf Paraffin zugunsten einer veganen Raps- und Kokoswachsmischung. Handgegossen im Berliner Atelier.", manifestoSub: "Das Studio", manifestoText: "Unsere Kompositionen entstehen im Berliner Atelier. Wir verwenden Pflanzenwachs als reinen Träger für seltene Essenzen.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Erhalte private Notizen aus unserem Labor und frühen Zugang zu limitierten Editionen.", newsInput: "Deine E-Mail Adresse", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Kaufen", btnAdded: "Hinzugefügt", cartEmpty: "Dein Warenkorb ist leer.", cartShipping: "Versand", cartFree: "Kostenlos", checkoutBack: "Zurück zum Shop", checkoutOrderSum: "Bestellübersicht", checkoutDue: "Gesamtsumme", checkContact: "Kontakt", inEmail: "E-Mail-Adresse", checkAddress: "Lieferadresse", inFname: "Vorname", inLname: "Nachname", inStreet: "Straße und Hausnummer", inZip: "PLZ", inCity: "Stadt", checkPayment: "Zahlung", checkSys: "Zahlungssystem (Demo)", btnPay: "Zahlen & Bestellen"
+            },
+            fr: {
+                navMap: "La Carte", navCraft: "Artisanat", navArchives: "Archives", navManifesto: "Manifeste", cartWord: "PANIER", scrollText: "Faites défiler", heroSub: "Souvenir Exclusif de Berlin", heroDesc: "Nous ne vendons pas de bougies. Nous archivons l'identité de Berlin. Chaque parfum est une coordonnée géographique.", guideHint: "Touchez un quartier", guideSub: "The Urban Guide", guideTitle: "Votre quartier. <br> Votre parfum.", guideDesc: "Nos compositions servent de guides. Survolez le contour coloré pour activer l'interaction et découvrir le code sensoriel du quartier.", guideAction: "Cliquez sur la carte pour les détails.", craftSub: "The Craft", craftTitle: "Forme pure.", craftDesc: "Nous avons abandonné la paraffine pour un mélange végétalien de cire de colza et de coco. Coulé à la main dans notre atelier berlinois.", manifestoSub: "Le Studio", manifestoText: "Nos compositions sont créées dans notre atelier berlinois. Nous utilisons la cire végétale comme support pur pour des essences rares.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Recevez des notes privées de notre laboratoire et un accès anticipé aux éditions limitées.", newsInput: "Votre adresse e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquérir", btnAdded: "Ajouté", cartEmpty: "Votre panier est vide.", cartShipping: "Livraison", cartFree: "Gratuit", checkoutBack: "Retour à la boutique", checkoutOrderSum: "Résumé de la commande", checkoutDue: "Total à payer", checkContact: "Contact", inEmail: "Adresse e-mail", checkAddress: "Adresse de livraison", inFname: "Prénom", inLname: "Nom", inStreet: "Rue et numéro", inZip: "Code postal", inCity: "Ville", checkPayment: "Paiement", checkSys: "Système de paiement (Démo)", btnPay: "Payer et commander"
+            },
+            es: {
+                navMap: "El Mapa", navCraft: "Artesanía", navArchives: "Archivos", navManifesto: "Manifiesto", cartWord: "CARRITO", scrollText: "Desplazar para explorar", heroSub: "Recuerdo Exclusivo de Berlín", heroDesc: "No vendemos velas. Archivamos la identidad de Berlín. Cada aroma es una coordenada geográfica y un registro emocional.", guideHint: "Toca un distrito", guideSub: "The Urban Guide", guideTitle: "Tu distrito. <br> Tu aroma.", guideDesc: "Nuestras composiciones sirven de guía. Pasa el cursor sobre el contorno de color para activar la interacción y descubrir el código sensorial.", guideAction: "Haz clic en el mapa para más detalles.", craftSub: "The Craft", craftTitle: "Forma pura.", craftDesc: "Abandonamos la parafina en favor de una mezcla vegana de cera de colza y coco. Vertido a mano en nuestro taller de Berlín.", manifestoSub: "El Estudio", manifestoText: "Nuestras composiciones se crean en nuestro taller de Berlín. Utilizamos cera vegetal como soporte puro para esencias raras.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Recibe notas privadas de nuestro laboratorio y acceso anticipado a ediciones limitadas.", newsInput: "Tu correo electrónico", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Adquirir", btnAdded: "Añadido", cartEmpty: "Tu carrito está vacío.", cartShipping: "Envío", cartFree: "Gratis", checkoutBack: "Volver a la tienda", checkoutOrderSum: "Resumen del pedido", checkoutDue: "Total a pagar", checkContact: "Contacto", inEmail: "Correo electrónico", checkAddress: "Dirección de entrega", inFname: "Nombre", inLname: "Apellidos", inStreet: "Calle y número", inZip: "Código postal", inCity: "Ciudad", checkPayment: "Pago", checkSys: "Sistema de pago (Demo)", btnPay: "Pagar y Pedir"
             }
         };
 
@@ -639,7 +611,7 @@
             if (!cartState[productId]) cartState[productId] = 0;
             cartState[productId] += qty;
             
-            saveCart(); // Zapisujemy po dodaniu
+            saveCart(); // Zapis po dodaniu
             
             document.getElementById(qtyElementId).innerText = '1';
             const originalText = btnElement.innerText;
@@ -660,7 +632,7 @@
             if (cartState[productId]) {
                 cartState[productId] += delta;
                 if (cartState[productId] <= 0) delete cartState[productId];
-                saveCart(); // Zapisujemy po zmianie
+                saveCart(); // Zapis po zmianie/usunięciu
                 renderCart();
             }
         }
@@ -800,9 +772,9 @@
             }
         });
 
-        // Initialize
+        // Initialize translations and cart on load
         changeLang('pl');
-        renderCart(); // Załaduj koszyk z Local Storage przy starcie
+        renderCart();
 
     </script>
 </body>
