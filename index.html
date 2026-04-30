@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     
-    <!-- Biblioteki GSAP i Lenis do animacji SCROLLYTELLINGU -->
+    <!-- Biblioteki GSAP i Lenis -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
@@ -101,6 +101,10 @@
         .active-group:hover .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.1)); }
         .active-group:hover .label-active { transform: translateY(-8px); opacity: 1; }
         .active-group.is-selected[data-id="mitte"] .active-path { fill: rgba(179, 90, 45, 0.15); }
+        .active-group.is-selected[data-id="prenzl"] .active-path { fill: rgba(138, 123, 142, 0.15); }
+        .active-group.is-selected[data-id="kreuz"] .active-path { fill: rgba(0, 95, 99, 0.15); }
+        .active-group.is-selected[data-id="neukolln"] .active-path { fill: rgba(99, 27, 43, 0.15); }
+        .active-group.is-selected .label-active { transform: translateY(-8px); opacity: 1; }
 
         .wax-flow-bg {
             position: absolute; inset: 0; z-index: 1;
@@ -111,6 +115,8 @@
 
         .qty-btn { display: inline-block; padding: 0 8px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease; opacity: 0.6; }
         .qty-btn:hover { transform: scale(1.4); opacity: 1; }
+
+        .btn-acquire { min-width: 60px; text-align: right; display: inline-block; transition: opacity 0.3s ease; }
 
         .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh; background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06); z-index: 1050; transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; }
         .drawer-panel.open { transform: translateX(0); }
@@ -123,57 +129,72 @@
         #checkout-overlay.open { transform: translateY(0); }
         .input-minimal { width: 100%; border-bottom: 1px solid rgba(15,15,15,0.2); padding: 10px 0; font-size: 12px; font-weight: 300; outline: none; transition: border-color 0.3s; background: transparent; }
         .input-minimal:focus { border-color: #0f0f0f; }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
+        .lang-btn { transition: all 0.3s; opacity: 0.3; padding-bottom: 2px; }
+        .lang-btn:hover { opacity: 0.8; }
+        .lang-btn.active { opacity: 1; font-weight: 600; border-bottom: 1px solid currentColor; }
+
         .archive-card { opacity: 0; }
 
-        /* FOTOREALISTYCZNE STYLE DLA SCROLLYTELLINGU (SZKŁO, WOSK, PUDEŁKO) */
+        /* =========================================
+           FOTOREALISTYCZNY SCROLLYTELLING CSS
+           ========================================= */
         
-        /* Warstwa tylna słoika (ciemny bursztyn) */
+        /* 1. Tylna ściana słoika (bardzo ciemny gradient na wzór zdjęcia) */
         .glass-back {
-            background: linear-gradient(105deg, #1a0f0a 0%, #3d2217 50%, #1a0f0a 100%);
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+            background: linear-gradient(180deg, #110905 0%, #29150c 50%, #0d0603 100%);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.9);
         }
 
-        /* Warstwa przednia słoika (odblaski szkła) - musi być NAD woskiem */
+        /* 2. Pojemnik na wosk ograniczający jego rozlewanie do kształtu słoika */
+        .wax-mask {
+            border-radius: 0 0 16px 16px; 
+            overflow: hidden;
+        }
+
+        /* 3. Kolor i kształt kremowego wosku */
+        #wax-level {
+            background: #e6d6b8; /* Kremowy/beżowy */
+            border-radius: 10px 10px 0 0; /* Delikatny menisk na górze */
+            box-shadow: inset 0 10px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            height: 0%;
+        }
+
+        /* 4. Przednia ściana szkła (Odblaski i przezroczystość) */
         .glass-front {
             background: linear-gradient(90deg, 
-                rgba(255,255,255,0.05) 0%, 
-                rgba(255,255,255,0.2) 20%, 
+                rgba(255,255,255,0.1) 0%, 
+                rgba(255,255,255,0.3) 15%, 
                 transparent 30%, 
                 transparent 70%, 
-                rgba(255,255,255,0.15) 85%, 
                 rgba(255,255,255,0.05) 100%);
-            border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(1px); /* Delikatne rozmycie wosku pod szkłem */
-            pointer-events: none; /* Pozwala na klikanie przez szkło, jeśli trzeba */
+            border: 1px solid rgba(255,255,255,0.05);
+            /* Lekkie przyciemnienie brzegów, srodek czysty żeby widzieć wosk */
+            box-shadow: inset 20px 0 30px rgba(0,0,0,0.5), inset -20px 0 30px rgba(0,0,0,0.5);
+            pointer-events: none;
         }
 
-        /* Wosk Rzepakowy (Z-index pod frontem) */
-        #wax-pour {
-            background: #eddcb2; /* Ciepły, kremowy kolor wosku */
-            box-shadow: inset 0 5px 15px rgba(0,0,0,0.1), 0 0 10px rgba(237, 220, 178, 0.4);
-            border-radius: 50% 50% 15px 15px / 10% 10% 15px 15px; /* Symulacja menisku */
-        }
-
-        /* Strumień wosku */
+        /* 5. Strumienie lejącego się wosku */
         .pour-stream {
-            width: 4px;
-            background: #eddcb2;
-            filter: blur(1px);
-            opacity: 0;
-            box-shadow: 0 0 10px rgba(237, 220, 178, 0.6);
+            width: 3px;
+            background: #e6d6b8;
+            opacity: 0; /* Na start ukryte */
+            box-shadow: 0 0 8px rgba(230, 214, 184, 0.8);
         }
 
-        /* Białe Pudełko (Zdjęcie 4) */
+        /* 6. Finałowe białe pudełko */
         .premium-box {
             background: #ffffff;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.07);
-            border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08), 0 10px 20px rgba(0,0,0,0.03);
+            border: 1px solid #f0f0f0;
         }
     </style>
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
 
+    <!-- PRELOADER -->
     <div id="preloader">
         <div class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light">Loading Archives</div>
         <div id="loader-perc" class="text-4xl md:text-6xl font-thin tracking-widest text-norien-dark">0%</div>
@@ -182,6 +203,7 @@
     <div class="noise-overlay"></div>
     <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
 
+    <!-- NAWIGACJA -->
     <nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
         <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover magnetic">
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.25rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
@@ -205,6 +227,7 @@
         </div>
     </nav>
 
+    <!-- SEKCJA 1: HERO -->
     <section id="hero" class="observe-section min-h-[100vh] w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden py-32">
         <div class="z-10">
             <p id="hero-sub" class="text-[9px] md:text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Exclusive Souvenir from Berlin</p>
@@ -221,11 +244,11 @@
         </div>
     </section>
 
+    <!-- SEKCJA 2: MAPA -->
     <section id="map-explore" class="observe-section min-h-[100vh] w-full flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 py-32">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
                 <div id="map-mobile-hint" class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[8px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
-                
                 <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible">
                     <g class="map-layer delay-map-1">
                         <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
@@ -270,6 +293,7 @@
         </div>
     </section>
 
+    <!-- SEKCJA 3: RZEMIOSŁO -->
     <section id="the-craft" class="observe-section min-h-[100vh] w-full relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white py-32">
         <div class="absolute inset-0 z-0 overflow-hidden">
             <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="craft-bg-img w-full h-[130%] object-cover opacity-30 filter grayscale -translate-y-[15%]">
@@ -285,68 +309,71 @@
         </div>
     </section>
 
-    <!-- FOTOREALISTYCZNY SCROLLYTELLING Z EFEKTEM NALEWANIA I SZKŁEM -->
-    <section id="story-section" class="relative w-full h-[600vh] bg-norien-canvas">
+    <!-- SEKCJA 4: SCROLLYTELLING (PROCES TWORZENIA) -->
+    <!-- h-[500vh] daje dużo miejsca na scrollowanie, zapobiegając ucinaniu -->
+    <section id="story-section" class="relative w-full h-[500vh] bg-norien-canvas">
         <div class="sticky top-0 w-full h-screen flex flex-col items-center justify-center overflow-hidden">
             <h2 id="story-headline" class="text-[10px] tracking-ultra uppercase opacity-40 mb-16">Proces Tworzenia</h2>
             
             <div class="relative w-[320px] h-[480px] flex items-center justify-center">
                 
-                <!-- BIAŁE PUDEŁKO (FINAL - FOTO 4) -->
-                <div id="story-box" class="premium-box absolute w-[310px] h-[410px] opacity-0 scale-90 z-[100] flex flex-col items-center justify-center p-12">
-                    <p class="text-[8px] tracking-[0.4em] uppercase mb-10 opacity-60">Norien Berlin</p>
-                    <h2 class="text-4xl tracking-[0.2em] font-light mb-10">MITTE</h2>
-                    <div class="w-10 h-[1px] bg-black/10 mb-8"></div>
-                    <p class="text-[8px] tracking-widest uppercase opacity-40 text-center">Ready to Ship<br>Berlin, Germany</p>
+                <!-- BIAŁE PUDEŁKO FINAŁOWE (Zjeżdża na samym końcu) -->
+                <div id="story-box" class="premium-box absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[310px] h-[410px] opacity-0 z-[100] flex flex-col items-center justify-center pointer-events-none">
+                    <p class="text-[8px] tracking-[0.4em] uppercase mb-10 opacity-50 text-norien-dark">Norien Berlin</p>
+                    <h2 class="text-4xl tracking-[0.2em] font-light mb-10 text-norien-dark">MITTE</h2>
+                    <div class="w-8 h-[1px] bg-black/10 mb-8"></div>
+                    <p class="text-[8px] tracking-widest uppercase opacity-40 text-center text-norien-dark">Ready to Ship<br>Berlin, Germany</p>
                 </div>
 
-                <!-- SŁOIK: WARSTWA TYLNA (Wnętrze, Z-Index 10) -->
-                <div class="glass-back absolute w-[280px] h-[340px] rounded-b-[18px] rounded-t-[4px] z-10"></div>
-
-                <!-- DWA STRUMIENIE WOSKU (Z-Index 20, leją się do środka) -->
-                <div id="stream-left" class="pour-stream absolute top-0 left-[40%] h-0 z-20"></div>
-                <div id="stream-right" class="pour-stream absolute top-0 left-[60%] h-0 z-20"></div>
-
-                <!-- KONTENER NA WOSK (Z-Index 20) -->
-                <div id="wax-container" class="absolute bottom-[20px] w-[280px] h-[320px] flex items-end justify-center z-20 overflow-hidden px-[2px]">
-                    <!-- Plama wosku, która rośnie -->
-                    <div id="wax-pour" class="w-[0%] h-[0%] relative flex justify-center">
-                        
-                        <!-- KNOT (Wychodzi z wosku) -->
-                        <div id="story-wick" class="absolute -top-[15px] w-[2px] h-[20px] bg-[#e6e6e6] opacity-0 flex flex-col items-center border-l border-black/10">
-                            <!-- Spalona końcówka -->
-                            <div class="w-[4px] h-[4px] bg-[#222] rounded-full -mt-[2px]"></div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- SŁOIK: WARSTWA PRZEDNIA (Szkło, Odblaski, Etykieta, Z-Index 30) -->
-                <div id="story-jar-front" class="glass-front absolute w-[280px] h-[340px] rounded-b-[18px] rounded-t-[4px] z-30 flex items-center justify-center">
+                <!-- GŁÓWNY SŁOIK -->
+                <div class="relative w-[280px] h-[360px]">
                     
-                    <!-- Dno szkła frontowe -->
-                    <div class="absolute bottom-0 w-full h-[20px] bg-gradient-to-t from-black/80 to-transparent rounded-b-[18px]"></div>
-
-                    <!-- BIAŁA PRZEZROCZYSTA ETYKIETA (Ze zdjęcia 5) -->
-                    <div id="story-label" class="text-white opacity-0 flex flex-col items-start w-[70%]">
-                        <div class="text-[7px] tracking-[0.3em] font-semibold uppercase mb-8 opacity-80 w-full text-center">Norien Berlin</div>
-                        <div class="text-[44px] tracking-[0.15em] font-light mb-8 w-full text-center" style="font-family: 'Montserrat', sans-serif;">MITTE</div>
-                        <div class="w-12 h-[1.5px] bg-[#b88b4a] mb-6"></div>
-                        <div class="text-[9px] tracking-[0.2em] font-semibold uppercase leading-[2.2] mb-8">
-                            Lavender<br>Myrrh<br>Suede
+                    <!-- 1. Warstwa Z-10: Wnętrze (ciemne szkło) -->
+                    <div class="glass-back absolute inset-0 rounded-b-[16px] rounded-t-[4px] z-10"></div>
+                    
+                    <!-- 2. Warstwa Z-20: Wosk i Strumienie -->
+                    <div class="absolute inset-0 z-20 overflow-hidden rounded-b-[16px]">
+                        <!-- Lewy Strumień -->
+                        <div id="stream-left" class="pour-stream absolute top-0 left-[35%] h-0"></div>
+                        <!-- Prawy Strumień -->
+                        <div id="stream-right" class="pour-stream absolute top-0 left-[65%] h-0"></div>
+                        
+                        <!-- Rosnący Wosk -->
+                        <div class="absolute bottom-0 w-full h-full flex items-end">
+                            <div id="wax-level">
+                                <!-- Pojawiający się Knot -->
+                                <div id="story-wick" class="absolute -top-[16px] left-1/2 -translate-x-1/2 w-[2px] h-[16px] bg-[#e6e6e6] opacity-0 flex flex-col items-center border-l border-black/10">
+                                    <div class="w-[4px] h-[4px] bg-[#222] rounded-full -mt-[2px]"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mt-2 text-[9px] font-medium tracking-widest opacity-90">160 G</div>
                     </div>
+                    
+                    <!-- 3. Warstwa Z-30: Front Szkła (Odblaski, Etykieta) -->
+                    <div class="glass-front absolute inset-0 rounded-b-[16px] rounded-t-[4px] z-30 flex items-center justify-center">
+                        <!-- Przezroczysta etykieta z białym tekstem -->
+                        <div id="story-label" class="text-white opacity-0 flex flex-col items-start w-[70%]">
+                            <div class="text-[7px] tracking-[0.3em] font-semibold uppercase mb-8 opacity-80 w-full text-center">Norien Berlin</div>
+                            <div class="text-[44px] tracking-[0.15em] font-light mb-8 w-full text-center" style="font-family: 'Montserrat', sans-serif;">MITTE</div>
+                            <div class="w-12 h-[1.5px] bg-[#b88b4a] mb-6"></div>
+                            <div class="text-[9px] tracking-[0.2em] font-semibold uppercase leading-[2.2] mb-8">
+                                Lavender<br>Myrrh<br>Suede
+                            </div>
+                            <div class="mt-2 text-[9px] font-medium tracking-widest opacity-90">160 G</div>
+                        </div>
+                    </div>
+
+                    <!-- CZARNE WIECZKO -->
+                    <div id="story-lid" class="absolute -top-[10px] left-1/2 -translate-x-1/2 w-[290px] h-[16px] bg-[#1a1a1a] rounded-t-[3px] opacity-0 z-40 shadow-[0_15px_30px_rgba(0,0,0,0.8)] border-b border-white/5"></div>
                 </div>
 
-                <!-- CZARNE WIECZKO -->
-                <div id="story-lid" class="absolute top-[60px] w-[290px] h-[15px] bg-[#151515] rounded-t-sm z-40 opacity-0 -translate-y-20 shadow-[0_15px_30px_rgba(0,0,0,0.8)] border-b border-white/5"></div>
             </div>
         </div>
     </section>
 
-    <!-- SEKCJA 5: ARCHIWUM -->
-    <section id="archives" class="min-h-[100vh] w-full flex flex-col items-center justify-center px-6 overflow-hidden py-32 border-t border-norien-dark/5">
+    <!-- SEKCJA 5: ARCHIWUM KART -->
+    <!-- Usunięto marginesy, sekcja od razu pojawia się po odpięciu Scrollytellingu -->
+    <section id="archives" class="min-h-[100vh] w-full flex flex-col items-center justify-center px-6 overflow-hidden py-32 bg-norien-canvas relative z-20">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 <!-- KARTA 1 -->
@@ -453,11 +480,9 @@
         <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10 py-20">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
                 <h2 id="manifesto-sub" class="footer-reveal text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
-                
                 <p id="manifesto-text" class="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight">
                     Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.
                 </p>
-                
                 <div class="pt-8 footer-reveal">
                     <div id="manifesto-badge" class="inline-block border border-white/20 px-8 py-5 text-[9px] tracking-ultra uppercase opacity-60">
                         Designed for Galleries & Concept Stores
@@ -655,46 +680,43 @@
         );
 
         // ==========================================
-        // NOWY FOTOREALISTYCZNY SCROLLYTELLING Z PODWÓJNYM NALEWANIEM
+        // GŁÓWNA OŚ CZASU (SCROLLYTELLING)
+        // Brak pustego odjazdu na końcu (brak zanikania słoika)
         // ==========================================
         let storyTl = gsap.timeline({
             scrollTrigger: {
                 trigger: "#story-section",
                 start: "top top",
-                end: "+=5000", // 5000 punktów scrolla dla super płynności
-                scrub: 1, // Maślane wygładzanie
+                end: "+=4000", // Zapewnia dużo klatek dla płynności strumieni i wypełniania
+                scrub: 1,
                 pin: true
             }
         });
 
         storyTl
-            // 1. Dwa strumienie wosku leją się w dół naprzemiennie
-            .to("#stream-left", { height: "70%", opacity: 1, duration: 0.8, ease: "power1.in" })
-            .to("#stream-right", { height: "70%", opacity: 1, duration: 0.8, ease: "power1.in" }, "-=0.4")
+            // 1. Dwa strumienie lądują na dnie (drobne opóźnienie dla realizmu)
+            .to("#stream-left", { height: "calc(100% - 15px)", opacity: 1, duration: 1.5, ease: "power1.in" })
+            .to("#stream-right", { height: "calc(100% - 15px)", opacity: 1, duration: 1.5, ease: "power1.in" }, "-=1.2")
             
-            // 2. Wosk uderza o dno i rozlewa się na boki (traci okrągłość)
-            .to("#wax-pour", { width: "100%", height: "5%", borderRadius: "10px 10px 15px 15px", duration: 1, ease: "power2.out" }, "-=0.4")
+            // 2. Wosk podnosi się wypełniając słój (traci zaokrąglenie, zyskując płaską taflę z meniskiem)
+            .to("#wax-level", { height: "75%", borderRadius: "10px 10px 0 0", duration: 4, ease: "none" }, "-=0.5")
             
-            // 3. Strumienie zanikają powoli
-            .to(".pour-stream", { opacity: 0, duration: 0.5 })
+            // 3. Strumienie zanikają krótko przed końcem napełniania
+            .to(".pour-stream", { opacity: 0, duration: 0.5 }, "-=1")
             
-            // 4. Wosk podnosi się w słoiku do góry
-            .to("#wax-pour", { height: "80%", borderRadius: "0 0 15px 15px", duration: 4, ease: "none" }, "-=0.5")
+            // 4. Wynurza się knot
+            .to("#story-wick", { opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.5)" })
             
-            // 5. Z gotowego wosku wynurza się knot
-            .to("#story-wick", { opacity: 1, y: 0, duration: 1, ease: "back.out(2)" })
+            // 5. Pojawia się biała, minimalistyczna typografia
+            .to("#story-label", { opacity: 1, duration: 1.5, ease: "power2.inOut" })
             
-            // 6. Pojawia się biała, przezroczysta etykieta (NAD woskiem, a POD frontowym szkłem ze względu na układy divów)
-            .to("#story-label", { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" })
-            
-            // 7. Opada eleganckie, matowe wieczko
+            // 6. Opada eleganckie wieczko
             .to("#story-lid", { opacity: 1, y: 0, duration: 1.5, ease: "bounce.out" })
             
-            // 8. Pojawia się luksusowe białe pudełko
-            .to("#story-box", { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" })
-            
-            // 9. Cała konstrukcja słoika wchodzi do pudełka
-            .to("#story-jar-front, .glass-back, #wax-container, #story-lid", { y: 250, opacity: 0, duration: 2, ease: "power2.in" }, "pack");
+            // 7. Z góry spada białe pudełko, ukrywając resztę w swoim obrysie
+            // UWAGA: Kiedy pudełko spadnie, animacja się kończy. Kolejna sekcja wejdzie płynnie.
+            .to("#story-box", { opacity: 1, top: "50%", transform: "translate(-50%, -50%) scale(1)", duration: 2, ease: "power2.inOut" })
+            .to(".glass-back, .glass-front, #wax-level", { opacity: 0, duration: 0.5 }, "-=0.5"); // Wygaszamy detale pod spodem
 
 
         // KURSOR
@@ -709,7 +731,7 @@
             });
         }
 
-        // TŁUMACZENIA I LOGIKA KOSZYKA (Zachowane z wersji docelowej)
+        // TŁUMACZENIA I LOGIKA KOSZYKA
         let currentLang = 'pl';
         const translations = {
             pl: { navMap: "Mapa", navCraft: "Rzemiosło", navArchives: "Archiwum", navManifesto: "Manifest", cartWord: "KOSZYK", scrollText: "Przewiń by odkryć", heroSub: "Exclusive Souvenir from Berlin", heroDesc: "Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.", guideHint: "Dotknij dzielnicy", guideSub: "The Urban Guide", guideTitle: "Twoja dzielnica. <br> Twój zapach.", guideDesc: "Nasze kompozycje pełnią rolę przewodników. Najedź na kolorowy obrys, aby aktywować interakcję i poznać sensoryczny kod danej dzielnicy.", guideAction: "Kliknij na mapę, aby wysunąć detale.", craftSub: "The Craft", craftTitle: "Czysta forma.", craftDesc: "Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. Ręcznie zalewane w berlińskim atelier. Zestawione z rzadkimi esencjami, by rezonować bez zakłóceń.", manifestoSub: "The Studio", manifestoText: "Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.", newsInput: "Twój adres e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Twój koszyk jest pusty.", cartShipping: "Wysyłka", cartFree: "Gratis", checkoutBack: "Wróć do sklepu", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Kontakt", inEmail: "Adres e-mail", checkAddress: "Adres Dostawy", inFname: "Imię", inLname: "Nazwisko", inStreet: "Ulica i numer domu", inZip: "Kod pocztowy", inCity: "Miasto", checkPayment: "Płatność", checkSys: "System płatności (Demo)", btnPay: "Zapłać i Zamów" },
