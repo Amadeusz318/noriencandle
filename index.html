@@ -33,23 +33,21 @@
             body, a, button, input, select { cursor: none !important; }
         }
 
+        /* CUSTOM CURSOR - KAMELEON */
         .custom-cursor {
             position: fixed; top: 0; left: 0; width: 10px; height: 10px;
-            background-color: #0f0f0f; border-radius: 50%;
+            background-color: #fff; /* Biały jako baza dla trybu Difference daje głęboką czerń na jasnym tle */
+            border-radius: 50%;
             pointer-events: none; z-index: 9999;
             transform: translate(-50%, -50%);
             border: 1px solid transparent;
-            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            mix-blend-mode: difference; /* Magiczna właściwość inwersji kolorów */
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
         }
         .custom-cursor.hover-state {
+            width: 40px; height: 40px;
             background-color: transparent;
-            border-color: rgba(15, 15, 15, 0.6);
-            transform: translate(-50%, -50%) scale(1.6);
-        }
-        .custom-cursor.hover-state-light {
-            background-color: transparent;
-            border-color: rgba(255, 255, 255, 0.8);
-            transform: translate(-50%, -50%) scale(1.6);
+            border-color: #fff; /* W trybie difference da białą ramkę na czarnym, czarną na białym */
         }
 
         nav { 
@@ -243,7 +241,7 @@
 
     <!-- SEKCJA 3: THE CRAFT / RZEMIOSŁO -->
     <section id="the-craft" class="h-[100dvh] w-full snap-start snap-always relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-norien-dark text-white">
-        <div class="absolute inset-0 z-0 nav-hover-light">
+        <div class="absolute inset-0 z-0">
             <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="w-full h-full object-cover opacity-40 filter brightness-50 contrast-125">
         </div>
         
@@ -359,8 +357,8 @@
     </section>
 
     <!-- SEKCJA 5: MANIFEST + NEWSLETTER -->
-    <section id="manifesto" class="h-[100dvh] w-full snap-start snap-always bg-norien-dark text-white flex flex-col justify-between pt-24">
-        <div class="flex-grow flex flex-col justify-center items-center px-6">
+    <section id="manifesto" class="h-[100dvh] w-full snap-start snap-always bg-norien-dark text-white flex flex-col justify-between pt-24 relative">
+        <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
                 <h2 class="text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
                 <p class="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight">
@@ -374,20 +372,20 @@
             </div>
         </div>
 
-        <div class="w-full max-w-xl mx-auto px-6 pb-12 text-center nav-hover-light relative z-10">
+        <div class="w-full max-w-xl mx-auto px-6 pb-12 text-center relative z-10">
             <p class="text-[10px] tracking-widest uppercase mb-4 opacity-60">Join the Archive</p>
             <p class="text-xs font-light opacity-50 mb-6">Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.</p>
             <div class="flex items-end justify-center border-b border-white/30 pb-2">
-                <input type="email" placeholder="Twój adres e-mail" class="bg-transparent text-xs font-light outline-none text-center text-white placeholder-white/30 w-full">
-                <button class="text-[9px] tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4 nav-hover-light">-></button>
+                <input type="email" placeholder="Twój adres e-mail" class="bg-transparent text-xs font-light outline-none text-center text-white placeholder-white/30 w-full nav-hover">
+                <button class="text-[9px] tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4 nav-hover">-></button>
             </div>
         </div>
 
-        <footer class="py-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full">
+        <footer class="py-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10">
             <div>&copy; 2026 Norien Berlin — Olfactory Archives</div>
-            <div class="flex gap-10 relative z-10">
-                <a href="#" class="hover:opacity-100 transition nav-hover-light">Instagram</a>
-                <a href="#" class="hover:opacity-100 transition nav-hover-light">Privacy</a>
+            <div class="flex gap-10">
+                <a href="#" class="hover:opacity-100 transition nav-hover">Instagram</a>
+                <a href="#" class="hover:opacity-100 transition nav-hover">Privacy</a>
             </div>
             <div>Berlin, GER</div>
         </footer>
@@ -524,13 +522,10 @@
                 cursor.style.left = e.clientX + 'px';
                 cursor.style.top = e.clientY + 'px';
             });
-            document.querySelectorAll('.nav-hover').forEach(el => {
+            // W trybie difference nie potrzebujemy już odróżniać .nav-hover od .nav-hover-light
+            document.querySelectorAll('.nav-hover, .nav-hover-light').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('hover-state'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state'));
-            });
-            document.querySelectorAll('.nav-hover-light').forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hover-state-light'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state-light'));
             });
         }
 
@@ -582,11 +577,10 @@
             }
         }
 
-        // --- ZMIANA ILOŚCI W SAMYM KOSZYKU Z BLOKADĄ PROPAGACJI ---
         function updateCartItemQty(e, productId, delta) {
             if (e) {
                 e.preventDefault();
-                e.stopPropagation(); // Blokuje przekazanie kliknięcia do tła!
+                e.stopPropagation();
             }
             if (cartState[productId]) {
                 cartState[productId] += delta;
@@ -616,7 +610,6 @@
                 totalPrice += qty * 55;
                 let product = mapProducts[id];
 
-                // Ważne: Przekazujemy event jako parametr 'event' z poziomu atrybutu onclick
                 itemsContainer.innerHTML += `
                     <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
                         <div>
@@ -653,6 +646,14 @@
             navCartEl.innerText = `KOSZYK (${totalItems})`;
             totalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
             checkoutTotalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
+            
+            // Re-bind cursor events for newly added cart items
+            if (window.matchMedia("(pointer: fine)").matches) {
+                document.querySelectorAll('#cart-items .nav-hover').forEach(el => {
+                    el.addEventListener('mouseenter', () => cursor.classList.add('hover-state'));
+                    el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state'));
+                });
+            }
         }
 
         function openCart(e) {
