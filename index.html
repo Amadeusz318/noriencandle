@@ -673,4 +673,137 @@
             const navCartEl = document.getElementById('nav-cart');
             const t = translations[currentLang] || translations['en'];
             
-            itemsContainer.innerHTML = ''; checkoutItems
+            itemsContainer.innerHTML = ''; checkoutItemsContainer.innerHTML = '';
+            let totalItems = 0; let totalPrice = 0;
+
+            for (let id in cartState) {
+                let qty = cartState[id]; totalItems += qty; totalPrice += qty * 55;
+                let product = mapProducts[id];
+
+                itemsContainer.innerHTML += `
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
+                        <div>
+                            <h4 class="text-sm tracking-widest uppercase">${product.title}</h4>
+                            <p class="text-[8px] tracking-widest uppercase opacity-40">${product.sub}</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-2 text-[10px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                                <button class="outline-none nav-hover qty-btn" onclick="updateCartItemQty(event, '${id}', -1)">-</button>
+                                <span class="w-4 text-center">${qty}</span>
+                                <button class="outline-none nav-hover qty-btn" onclick="updateCartItemQty(event, '${id}', 1)">+</button>
+                            </div>
+                            <span class="text-sm font-light w-14 text-right">€ ${(qty * 55).toFixed(2)}</span>
+                        </div>
+                    </div>`;
+
+                checkoutItemsContainer.innerHTML += `
+                    <div class="flex justify-between items-center border-b border-white/10 pb-4 relative z-10">
+                        <div>
+                            <h4 class="text-sm tracking-widest uppercase">${product.title} <span class="text-xs opacity-50 ml-2">x${qty}</span></h4>
+                            <p class="text-[8px] tracking-widest uppercase opacity-40">${product.sub}</p>
+                        </div>
+                        <span class="text-sm font-light">€ ${(qty * 55).toFixed(2)}</span>
+                    </div>`;
+            }
+
+            if (totalItems === 0) {
+                itemsContainer.innerHTML = `<p class="text-xs font-light opacity-50 italic cart-empty-msg">${t.cartEmpty}</p>`;
+                checkoutItemsContainer.innerHTML = `<p class="text-xs font-light opacity-50 italic">${t.cartEmpty}</p>`;
+            }
+
+            navCartEl.innerText = `${t.cartWord} (${totalItems})`;
+            totalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
+            checkoutTotalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
+            
+            if (window.matchMedia("(pointer: fine)").matches) {
+                document.querySelectorAll('#cart-items .nav-hover').forEach(el => {
+                    el.addEventListener('mouseenter', () => cursor.classList.add('hover-state'));
+                    el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state'));
+                });
+            }
+        }
+
+        function openCart(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            closeDrawer(); 
+            document.getElementById('cart-drawer').classList.add('open');
+            setTimeout(() => document.getElementById('cart-inner').classList.add('loaded'), 10);
+        }
+
+        function closeCart() {
+            document.getElementById('cart-drawer').classList.remove('open');
+            document.getElementById('cart-inner').classList.remove('loaded');
+        }
+
+        function openCheckout() {
+            if (Object.keys(cartState).length === 0) { alert(translations[currentLang].cartEmpty); return; }
+            closeCart(); document.getElementById('checkout-overlay').classList.add('open');
+        }
+
+        function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); }
+
+        function updateDrawerUI(p) {
+            document.getElementById('drawer-title').innerText = p.title;
+            document.getElementById('drawer-title').style.color = p.color;
+            document.getElementById('drawer-subtitle').innerText = p.sub;
+            document.getElementById('drawer-coords').innerText = p.coords;
+            document.getElementById('drawer-notes').innerHTML = p.notes;
+            document.getElementById('drawer-desc').innerText = translations[currentLang].heroDesc; 
+            document.getElementById('drawer-top-line').style.backgroundColor = p.color;
+            document.getElementById('drawer-qty').innerText = '1';
+
+            const imgEl = document.getElementById('drawer-image');
+            imgEl.src = p.image;
+            imgEl.onload = () => { imgEl.classList.remove('hidden'); document.getElementById('drawer-placeholder').classList.add('hidden'); };
+        }
+
+        const mapSvg = document.getElementById('map-svg');
+
+        function showDrawer(id) {
+            const drawer = document.getElementById('side-drawer');
+            const inner = document.getElementById('drawer-inner');
+            const p = mapProducts[id];
+
+            closeCart(); 
+            mapSvg.classList.add('is-focused');
+            document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected'));
+            document.querySelector(`.active-group[data-id="${id}"]`).classList.add('is-selected');
+
+            if (drawer.classList.contains('open')) {
+                if (currentActiveId === id) return;
+                inner.classList.remove('loaded');
+                setTimeout(() => { updateDrawerUI(p); inner.classList.add('loaded'); }, 300); 
+            } else {
+                updateDrawerUI(p); drawer.classList.add('open'); setTimeout(() => { inner.classList.add('loaded'); }, 200);
+            }
+            currentActiveId = id;
+        }
+
+        function closeDrawer() {
+            document.getElementById('side-drawer').classList.remove('open');
+            document.getElementById('drawer-inner').classList.remove('loaded');
+            mapSvg.classList.remove('is-focused');
+            document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected'));
+            currentActiveId = '';
+        }
+
+        document.addEventListener('click', function(event) {
+            const drawer = document.getElementById('side-drawer');
+            const cartDrawer = document.getElementById('cart-drawer');
+            const checkoutOverlay = document.getElementById('checkout-overlay');
+            
+            if (drawer && drawer.classList.contains('open')) {
+                if (!drawer.contains(event.target) && !event.target.closest('.active-group')) closeDrawer();
+            }
+            if (cartDrawer && cartDrawer.classList.contains('open')) {
+                if (!cartDrawer.contains(event.target) && !event.target.closest('#nav-cart') && !checkoutOverlay.classList.contains('open')) closeCart();
+            }
+        });
+
+        // Initialize
+        changeLang('pl');
+        renderCart(); // Załaduj koszyk z Local Storage przy starcie
+
+    </script>
+</body>
+</html>
