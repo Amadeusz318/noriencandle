@@ -26,7 +26,6 @@
     </script>
     <style>
         html { scroll-behavior: smooth; }
-        
         body { overflow-x: hidden; }
 
         nav { 
@@ -63,7 +62,7 @@
         }
 
         /* ------------------------------------- */
-        /* STYLIZACJA MAPY (ZGODNA Z POLECENIEM) */
+        /* STYLIZACJA ZAAWANSOWANEJ MAPY */
         /* ------------------------------------- */
         
         .bg-dots {
@@ -71,11 +70,11 @@
             background-size: 32px 32px;
         }
 
-        /* Pasywne dzielnice w tle */
-        .district-bg { fill: transparent; stroke: #e0e0e0; stroke-width: 0.8; }
-        .label-bg { font-size: 11px; fill: #1a1a1a; opacity: 0.15; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; }
+        /* Pasywne dzielnice w tle - Delikatne linie budujące kształt miasta */
+        .district-bg { fill: transparent; stroke: #e8e8e8; stroke-width: 0.8; }
+        .label-bg { font-size: 10px; fill: #1a1a1a; opacity: 0.15; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase;}
 
-        /* Aktywne Dzielnice - BOLD RAMKI (Przezroczyste w środku) */
+        /* Aktywne Dzielnice - BOLD KOLOROWE RAMKI */
         .active-path { 
             fill: transparent; 
             stroke-width: 3.5; 
@@ -90,8 +89,9 @@
         .path-kreuz { stroke: #005f63; }
         .path-neukolln { stroke: #631b2b; }
 
+        /* Labele wewnątrz dzielnic na sprzedaż */
         .label-active { 
-            font-size: 13px; font-weight: 600; letter-spacing: 0.2em; opacity: 0.8; 
+            font-size: 11px; font-weight: 600; letter-spacing: 0.2em; opacity: 0.8; 
             transition: transform 0.4s ease; text-anchor: middle; pointer-events: none;
         }
         .text-mitte { fill: #b35a2d; }
@@ -99,7 +99,7 @@
         .text-kreuz { fill: #005f63; }
         .text-neukolln { fill: #631b2b; }
 
-        /* HOVER EFEKT - idealne pionowe wznoszenie + kolor */
+        /* HOVER EFEKT - Klocki płynnie "wysuwają" się w stronę użytkownika */
         .active-group:hover .active-path {
             transform: translateY(-8px);
             filter: drop-shadow(0 15px 12px rgba(0,0,0,0.12));
@@ -158,57 +158,56 @@
         <a href="#map-explore" id="scroll-text" class="absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
     </section>
 
-    <!-- SEKCJA MAPY -->
-    <section id="map-explore" class="py-24 md:py-32 bg-white relative overflow-hidden bg-dots">
-        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center">
+    <!-- MAPA Z IDEALNYMI STYKAMI -->
+    <section id="map-explore" class="py-24 md:py-32 bg-white relative overflow-hidden bg-dots border-y border-gray-100">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16 md:gap-24 items-center">
             
-            <div class="lg:col-span-8 relative">
-                <!-- SVG wyrysowane od zera na siatce 1000x1000 wg mapy administracyjnej -->
-                <svg viewBox="0 0 1000 1000" class="w-full h-auto overflow-visible">
+            <div class="map-container relative scale-110 md:scale-100">
+                <svg viewBox="0 0 1000 850" class="w-full h-auto overflow-visible">
                     
-                    <!-- PASYWNE TŁO MIASTA -->
-                    <path class="district-bg" d="M 80,400 L 150,320 L 220,350 L 250,450 L 200,550 L 120,600 L 60,500 Z" /> <text x="140" y="470" class="label-bg">Spandau</text>
-                    <path class="district-bg" d="M 220,350 L 150,320 L 250,150 L 350,120 L 450,150 L 420,250 L 350,300 L 280,320 Z" /> <text x="320" y="240" class="label-bg">Reinickendorf</text>
-                    <path class="district-bg" d="M 450,150 L 550,100 L 650,180 L 620,280 L 650,350 L 590,340 L 520,310 L 460,380 L 420,380 L 350,300 L 420,250 Z" /> <text x="540" y="220" class="label-bg">Pankow</text>
-                    <path class="district-bg" d="M 280,450 L 250,450 L 220,350 L 280,320 L 350,300 L 420,380 L 400,440 L 380,480 L 350,550 Z" /> <text x="300" y="420" class="label-bg">Charl.-Wilm.</text>
-                    <path class="district-bg" d="M 350,550 L 380,480 L 400,440 L 440,470 L 490,460 L 470,490 L 460,650 L 480,780 L 400,820 L 320,700 Z" /> <text x="380" y="620" class="label-bg">Temp.-Schön.</text>
-                    <path class="district-bg" d="M 200,550 L 250,450 L 280,450 L 350,550 L 320,700 L 400,820 L 250,900 L 120,850 L 120,600 Z" /> <text x="240" y="700" class="label-bg">Steglitz-Zehl.</text>
-                    <path class="district-bg" d="M 620,280 L 720,300 L 750,450 L 680,550 L 610,430 L 580,400 L 590,340 L 650,350 Z" /> <text x="680" y="420" class="label-bg">Lichtenberg</text>
-                    <path class="district-bg" d="M 720,300 L 880,300 L 950,450 L 880,550 L 750,450 Z" /> <text x="820" y="420" class="label-bg">Marzahn</text>
-                    <path class="district-bg" d="M 680,550 L 750,450 L 880,550 L 950,700 L 850,900 L 650,850 L 580,820 L 640,620 L 580,500 L 610,430 Z" /> <text x="750" y="650" class="label-bg">Treptow-Köp.</text>
+                    <!-- DZIELNICE TŁA -->
+                    <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
+                    <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
+                    <path class="district-bg" d="M 50,350 L 180,280 L 260,520 L 120,600 L 40,480 Z" /> <text x="130" y="450" class="label-bg">Spandau</text>
+                    <!-- Charlottenburg - idealnie dopasowane do ząbkowanego boku Mitte i Tempelhofu -->
+                    <path class="district-bg" d="M 260,520 L 340,460 L 280,390 L 320,320 L 250,220 L 180,280 Z" /> <text x="250" y="410" class="label-bg">Charl.-Wilm.</text>
+                    <path class="district-bg" d="M 120,600 L 260,520 L 320,750 L 280,850 L 100,800 Z" /> <text x="190" y="720" class="label-bg">Steglitz-Zehl.</text>
+                    <path class="district-bg" d="M 340,460 L 430,480 L 460,550 L 430,650 L 450,800 L 320,750 L 260,520 Z" /> <text x="350" y="620" class="label-bg">Temp.-Schön.</text>
+                    <path class="district-bg" d="M 640,350 L 750,320 L 820,450 L 650,550 L 600,450 Z" /> <text x="710" y="410" class="label-bg">Lichtenberg</text>
+                    <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z" /> <text x="780" y="650" class="label-bg">Treptow-Köp.</text>
 
-                    <!-- AKTYWNE DZIELNICE - Idealnie pasujące "puzzle" -->
+                    <!-- TWOJE 4 PRODUKTY (Zero szczelin w stanie spoczynku) -->
                     <!-- MITTE -->
                     <g class="active-group" data-id="mitte" onclick="showPopup('mitte')">
-                        <path class="active-path path-mitte" d="M 420,380 L 460,380 L 500,410 L 490,460 L 440,470 L 400,440 Z" />
-                        <text x="450" y="430" class="label-active text-mitte">MITTE</text>
+                        <path class="active-path path-mitte" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
+                        <text x="390" y="405" class="label-active text-mitte">MITTE</text>
                     </g>
                     <!-- PRENZLAUER BERG -->
                     <g class="active-group" data-id="prenzl" onclick="showPopup('prenzl')">
-                        <path class="active-path path-prenzl" d="M 460,380 L 520,310 L 590,340 L 580,400 L 540,420 L 500,410 Z" />
-                        <text x="540" y="375" class="label-active text-prenzl">PRENZL. BERG</text>
+                        <path class="active-path path-prenzl" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
+                        <text x="545" y="395" class="label-active text-prenzl">PRENZL. BERG</text>
                     </g>
-                    <!-- KREUZBERG -->
+                    <!-- KREUZBERG (Posiada wspólną krawędź z Mitte 480,420 -> 430,480) -->
                     <g class="active-group" data-id="kreuz" onclick="showPopup('kreuz')">
-                        <path class="active-path path-kreuz" d="M 490,460 L 500,410 L 540,420 L 610,430 L 580,500 L 510,510 L 470,490 Z" />
-                        <text x="545" y="470" class="label-active text-kreuz">KREUZBERG</text>
+                        <path class="active-path path-kreuz" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
+                        <text x="540" y="515" class="label-active text-kreuz">KREUZBERG</text>
                     </g>
                     <!-- NEUKÖLLN -->
                     <g class="active-group" data-id="neukolln" onclick="showPopup('neukolln')">
-                        <path class="active-path path-neukolln" d="M 510,510 L 580,500 L 640,620 L 580,820 L 480,780 L 460,650 L 470,490 Z" />
-                        <text x="540" y="650" class="label-active text-neukolln">NEUKÖLLN</text>
+                        <path class="active-path path-neukolln" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
+                        <text x="530" y="710" class="label-active text-neukolln">NEUKÖLLN</text>
                     </g>
                 </svg>
             </div>
             
-            <div class="lg:col-span-4 space-y-8 md:space-y-12 lg:pl-10">
+            <div class="space-y-8 md:space-y-12 lg:pl-10">
                 <h2 id="guide-sub" class="text-xs tracking-ultra uppercase opacity-50 font-bold">The Urban Guide</h2>
-                <h3 id="guide-title" class="text-3xl md:text-5xl font-extralight leading-tight">Twoja dzielnica. <br> Twój zapachowy paszport.</h3>
-                <p id="guide-desc" class="text-norien-text/70 leading-relaxed font-light text-sm md:text-base">
+                <h3 id="guide-title" class="text-4xl md:text-5xl font-extralight leading-tight">Twoja dzielnica. <br> Twój zapach.</h3>
+                <p id="guide-desc" class="text-norien-text/70 leading-relaxed font-light text-sm md:text-base text-gray-500">
                     Nasze kompozycje pełnią rolę przewodników. Najedź na kolorowy obrys, aby aktywować interakcję i poznać sensoryczny kod danej dzielnicy.
                 </p>
                 <div class="pt-6 border-t border-norien-dark/10">
-                    <p id="guide-action" class="text-[10px] tracking-widest uppercase opacity-40">Kliknij obszar na mapie, aby otworzyć detale.</p>
+                    <p id="guide-action" class="text-[10px] tracking-widest uppercase opacity-40 font-semibold">Kliknij obszar na mapie, aby otworzyć detale.</p>
                 </div>
             </div>
         </div>
@@ -341,16 +340,15 @@
         </div>
     </div>
 
-    <!-- SKRYPTY -->
+    <!-- SKRYPTY (Tłumaczenia + Popup) -->
     <script>
-        // Logika Mapy / Popup
         let currentActiveId = '';
 
         const mapProducts = {
-            mitte: { title: '01 Mitte', color: '#b35a2d', desc: 'Lavender, Myrrh, Suede. Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy.' },
-            prenzl: { title: '02 Prenzl. Berg', color: '#8a7b8e', desc: 'Lemon, Jasmine, Sandalwood. Spacer po Kollwitzplatz zalanym poranną mgłą.' },
-            kreuz: { title: '03 Kreuzberg', color: '#005f63', desc: 'Bergamot, Patchouli, Vetiver. Energia kanałów i nocne powietrze.' },
-            neukolln: { title: '36 Neukölln', color: '#631b2b', desc: 'Cardamom, Myrtle, Amber. Głębokie, dymne przyprawy z targu przy Maybachufer.' }
+            mitte: { title: '01 Mitte', color: '#b35a2d', desc: 'Lavender, Myrrh, Suede. Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy[cite: 1].' },
+            prenzl: { title: '02 Prenzl. Berg', color: '#8a7b8e', desc: 'Lemon, Jasmine, Sandalwood. Spacer po Kollwitzplatz zalanym poranną mgłą[cite: 1].' },
+            kreuz: { title: '03 Kreuzberg', color: '#005f63', desc: 'Bergamot, Patchouli, Vetiver. Energia kanałów i nocne powietrze[cite: 1].' },
+            neukolln: { title: '36 Neukölln', color: '#631b2b', desc: 'Cardamom, Myrtle, Amber. Głębokie, dymne przyprawy z targu przy Maybachufer[cite: 1].' }
         };
 
         function showPopup(id) {
@@ -379,14 +377,13 @@
             document.getElementById(archiveId).scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // Tłumaczenia
         const translations = {
             pl: {
                 navMap: "Mapa", navArchives: "Archiwum", navManifesto: "Manifest", navCart: "KOSZYK (0)",
                 scrollText: "Przewiń by odkryć", heroSub: "Exclusive Souvenir from Berlin",
                 heroDesc: "Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.",
                 guideSub: "The Urban Guide", guideTitle: "Twoja dzielnica. <br> Twój zapach.",
-                guideDesc: "Nasze kompozycje pełnią rolę przewodników. Najedź na kolorowy obrys, aby aktywować interakcję i poznać sensoryczny kod danej dzielnicy.",
+                guideDesc: "Nasze aktywne edycje (zaznaczone kolorem) to sensoryczne zapisy konkretnych współrzędnych. Wybierz obszar, by poznać szczegóły.",
                 guideAction: "Kliknij obszar na mapie, aby otworzyć detale.",
                 manifestoSub: "The Studio",
                 manifestoText: "Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta."
@@ -396,7 +393,7 @@
                 scrollText: "Scroll to explore", heroSub: "Exclusive Souvenir from Berlin",
                 heroDesc: "We don't sell candles. We archive Berlin's identity. Each scent represents geographic coordinates and an emotional record of a specific district.",
                 guideSub: "The Urban Guide", guideTitle: "Your district. <br> Your scent.",
-                guideDesc: "Our compositions act as guides. Hover over the colored outline to activate interaction and discover the sensory code of the district.",
+                guideDesc: "Our active editions (marked in color) are sensory records of specific coordinates. Select an area to explore.",
                 guideAction: "Click on the map area to view details.",
                 manifestoSub: "The Studio",
                 manifestoText: "Our compositions are created in our Berlin atelier. We use plant-based wax as a clean carrier for rare essences that define the city's architecture."
@@ -406,7 +403,7 @@
                 scrollText: "Scrollen zum Entdecken", heroSub: "Exklusives Souvenir aus Berlin",
                 heroDesc: "Wir verkaufen keine Kerzen. Wir archivieren die Identität Berlins. Jeder Duft ist eine geografische Koordinate und eine emotionale Aufzeichnung eines Viertels.",
                 guideSub: "The Urban Guide", guideTitle: "Dein Viertel. <br> Dein Duft.",
-                guideDesc: "Unsere Kompositionen dienen als Wegweiser. Fahren Sie über den farbigen Umriss, um die Interaktion zu aktivieren und den sensorischen Code des Bezirks zu entdecken.",
+                guideDesc: "Unsere aktiven Editionen (farblich markiert) sind sensorische Aufzeichnungen bestimmter Koordinaten. Wählen Sie einen Bereich aus.",
                 guideAction: "Klicken Sie auf den Kartenbereich, um Details anzuzeigen.",
                 manifestoSub: "Das Studio",
                 manifestoText: "Unsere Kompositionen entstehen in unserem Berliner Atelier. Wir verwenden pflanzliches Wachs als reinen Träger für seltene Essenzen."
@@ -416,7 +413,7 @@
                 scrollText: "Faire défiler", heroSub: "Souvenir Exclusif de Berlin",
                 heroDesc: "Nous ne vendons pas de bougies. Nous archivons l'identité de Berlin. Chaque parfum est une coordonnée géographique.",
                 guideSub: "The Urban Guide", guideTitle: "Votre quartier. <br> Votre parfum.",
-                guideDesc: "Nos compositions agissent comme des guides. Survolez le contour coloré pour activer l'interaction et découvrir le code sensoriel du quartier.",
+                guideDesc: "Nos éditions actives (marquées en couleur) sont des enregistrements sensoriels. Sélectionnez une zone pour explorer.",
                 guideAction: "Cliquez sur la zone de la carte pour voir les détails.",
                 manifestoSub: "Le Studio",
                 manifestoText: "Nos compositions sont créées dans notre atelier berlinois. Nous utilisons de la cire végétale comme support pur."
@@ -426,7 +423,7 @@
                 scrollText: "Desplazar para explorar", heroSub: "Recuerdo Exclusivo de Berlín",
                 heroDesc: "No vendemos velas. Archivamos la identidad de Berlín. Cada aroma es una coordenada geográfica.",
                 guideSub: "The Urban Guide", guideTitle: "Tu distrito. <br> Tu aroma.",
-                guideDesc: "Nuestras composiciones actúan como guías. Pase el ratón sobre el contorno de color para activar la interacción y descubrir el código sensorial del distrito.",
+                guideDesc: "Nuestras ediciones activas (marcadas en color) son registros sensoriales de coordenadas específicas. Seleccione un área.",
                 guideAction: "Haga clic en el área del mapa para ver los detalles.",
                 manifestoSub: "El Estudio",
                 manifestoText: "Nuestras composiciones se crean en nuestro taller de Berlín. Utilizamos cera vegetal como soporte puro."
