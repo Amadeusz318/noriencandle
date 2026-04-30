@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NORIEN BERLIN | Olfactory Cartography</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     
-    <!-- Biblioteki GSAP i Lenis -->
+    <!-- Biblioteki GSAP i Lenis do animacji SCROLLYTELLINGU -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
@@ -19,7 +19,7 @@
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         norien: {
-                            gold: '#a68a64',
+                            gold: '#b88b4a',
                             dark: '#0f0f0f',
                             canvas: '#fcfaf7',
                             mapLine: '#4a2c2a'
@@ -49,10 +49,7 @@
             background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
         }
 
-        .magnetic {
-            transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1);
-            display: inline-block;
-        }
+        .magnetic { transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1); display: inline-block; }
 
         .custom-cursor {
             position: fixed; top: 0; left: 0; width: 10px; height: 10px; 
@@ -61,10 +58,7 @@
             transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, border-color 0.2s ease; 
             will-change: transform;
         }
-        .custom-cursor.hover-state { 
-            background-color: transparent; border-color: rgba(255, 255, 255, 0.5); 
-            width: 28px; height: 28px;
-        }
+        .custom-cursor.hover-state { background-color: transparent; border-color: rgba(255, 255, 255, 0.5); width: 28px; height: 28px; }
 
         .text-reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1); }
         .is-revealed .text-reveal { opacity: 1; transform: translateY(0); }
@@ -106,18 +100,7 @@
 
         .active-group:hover .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.1)); }
         .active-group:hover .label-active { transform: translateY(-8px); opacity: 1; }
-        .active-group[data-id="mitte"]:hover .active-path { fill: rgba(179, 90, 45, 0.1); }
-        .active-group[data-id="prenzl"]:hover .active-path { fill: rgba(138, 123, 142, 0.1); }
-        .active-group[data-id="kreuz"]:hover .active-path { fill: rgba(0, 95, 99, 0.1); }
-        .active-group[data-id="neukolln"]:hover .active-path { fill: rgba(99, 27, 43, 0.1); }
-
-        #map-svg.is-focused .active-group:not(.is-selected) { opacity: 0.2; }
-        #map-svg.is-focused .active-group.is-selected .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.1)); }
         .active-group.is-selected[data-id="mitte"] .active-path { fill: rgba(179, 90, 45, 0.15); }
-        .active-group.is-selected[data-id="prenzl"] .active-path { fill: rgba(138, 123, 142, 0.15); }
-        .active-group.is-selected[data-id="kreuz"] .active-path { fill: rgba(0, 95, 99, 0.15); }
-        .active-group.is-selected[data-id="neukolln"] .active-path { fill: rgba(99, 27, 43, 0.15); }
-        .active-group.is-selected .label-active { transform: translateY(-8px); opacity: 1; }
 
         .wax-flow-bg {
             position: absolute; inset: 0; z-index: 1;
@@ -128,8 +111,6 @@
 
         .qty-btn { display: inline-block; padding: 0 8px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease; opacity: 0.6; }
         .qty-btn:hover { transform: scale(1.4); opacity: 1; }
-
-        .btn-acquire { min-width: 60px; text-align: right; display: inline-block; transition: opacity 0.3s ease; }
 
         .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh; background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06); z-index: 1050; transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; }
         .drawer-panel.open { transform: translateX(0); }
@@ -142,13 +123,17 @@
         #checkout-overlay.open { transform: translateY(0); }
         .input-minimal { width: 100%; border-bottom: 1px solid rgba(15,15,15,0.2); padding: 10px 0; font-size: 12px; font-weight: 300; outline: none; transition: border-color 0.3s; background: transparent; }
         .input-minimal:focus { border-color: #0f0f0f; }
-        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
-        .lang-btn { transition: all 0.3s; opacity: 0.3; padding-bottom: 2px; }
-        .lang-btn:hover { opacity: 0.8; }
-        .lang-btn.active { opacity: 1; font-weight: 600; border-bottom: 1px solid currentColor; }
-
         .archive-card { opacity: 0; }
+
+        /* FOTOREALISTYCZNE STYLE DLA SCROLLYTELLINGU (SZKŁO, WOSK, PUDEŁKO) */
+        .glass-highlight {
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 30%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.15) 70%, transparent 100%);
+        }
+        
+        .white-box-shadow {
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08), 0 10px 20px rgba(0,0,0,0.03), inset 0 2px 10px rgba(255,255,255,1);
+        }
     </style>
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
@@ -203,8 +188,6 @@
     <section id="map-explore" class="observe-section min-h-[100vh] w-full flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 py-32">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
-                <div id="map-mobile-hint" class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[8px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
-                
                 <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible">
                     <g class="map-layer delay-map-1">
                         <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
@@ -216,7 +199,6 @@
                         <path class="district-bg" d="M 640,350 L 750,320 L 820,450 L 650,550 L 600,450 Z" /> <text x="710" y="410" class="label-bg">Lichtenberg</text>
                         <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z" /> <text x="780" y="650" class="label-bg">Treptow-Köp.</text>
                     </g>
-
                     <g class="map-layer delay-map-2">
                         <g class="active-group" data-id="mitte" onclick="showDrawer('mitte')">
                             <path class="active-path path-mitte nav-hover" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
@@ -237,7 +219,6 @@
                     </g>
                 </svg>
             </div>
-            
             <div class="space-y-6 md:col-span-5 lg:col-span-4 lg:pl-6 xl:pr-12 map-layer delay-map-3">
                 <h2 id="guide-sub" class="text-[10px] tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
                 <h3 id="guide-title" class="text-3xl lg:text-4xl font-extralight leading-tight">Twoja dzielnica. <br> Twój zapach.</h3>
@@ -256,7 +237,6 @@
             <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="craft-bg-img w-full h-[130%] object-cover opacity-30 filter grayscale -translate-y-[15%]">
         </div>
         <div class="wax-flow-bg"></div>
-        
         <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center pointer-events-none">
             <p id="craft-sub" class="text-[10px] tracking-[0.6em] uppercase mb-12 opacity-60 text-reveal delay-1" style="font-family: 'Montserrat', sans-serif;">The Craft</p>
             <h2 id="craft-title" class="text-4xl md:text-6xl font-thin mb-10 tracking-wide text-reveal delay-2">Czysta forma.</h2>
@@ -267,62 +247,73 @@
         </div>
     </section>
 
-    <!-- ZAAWANSOWANY PROTOTYP SCROLLYTELLINGU (Szkło, Etykieta ze zdjęcia, Opakowanie) -->
-    <section id="story-section" class="relative w-full h-[400vh] bg-norien-canvas">
+    <!-- FOTOREALISTYCZNY SCROLLYTELLING Z EFEKTEM NALEWANIA -->
+    <section id="story-section" class="relative w-full h-[500vh] bg-norien-canvas">
         <div class="sticky top-0 w-full h-screen flex flex-col items-center justify-center overflow-hidden">
-            <h2 id="story-headline" class="text-[10px] tracking-ultra uppercase opacity-40 mb-12">Proces Tworzenia</h2>
+            <h2 id="story-headline" class="text-[10px] tracking-ultra uppercase opacity-40 mb-16">Proces Tworzenia</h2>
             
-            <div class="relative w-80 h-[450px] flex flex-col items-center justify-end">
+            <div class="relative w-[320px] h-[480px] flex flex-col items-center justify-end perspective-1000">
                 
-                <!-- Pudełko (Odtworzone z Twojego drugiego zdjęcia - elegancka czerń) -->
-                <div id="story-box" class="absolute bottom-0 w-[300px] h-[380px] bg-[#0a0a0a] border border-[#1a1a1a] opacity-0 transform scale-95 z-30 flex flex-col items-center justify-center text-white shadow-2xl">
-                    <div class="text-[8px] tracking-[0.3em] uppercase text-center mb-6 opacity-60 text-norien-gold">Norien Berlin</div>
-                    <div class="text-3xl tracking-[0.2em] font-light text-center">MITTE</div>
-                    <div class="w-8 h-px bg-white/20 mx-auto mt-6 mb-4"></div>
-                    <div class="text-[8px] tracking-widest uppercase opacity-40">Ready to Ship</div>
+                <!-- Białe, luksusowe pudełko finałowe (Twoje zdjęcie nr 4) -->
+                <div id="story-box" class="absolute bottom-0 w-[300px] h-[400px] bg-[#fcfaf7] opacity-0 transform scale-95 z-30 flex flex-col items-center justify-center text-norien-dark white-box-shadow rounded-[2px]">
+                    <div class="text-[8px] tracking-[0.3em] font-medium uppercase text-center mb-8 opacity-60">Norien Berlin</div>
+                    <div class="text-4xl tracking-[0.25em] font-light text-center">MITTE</div>
+                    <div class="w-8 h-px bg-norien-dark/20 mx-auto mt-8 mb-6"></div>
+                    <div class="text-[8px] tracking-widest uppercase opacity-50">Ready to Ship</div>
                 </div>
                 
-                <!-- Fotorealistyczny Słoik (Bursztynowe Szkło CSS) -->
-                <div id="story-jar" class="relative w-[260px] h-[320px] rounded-b-[15px] rounded-t-[5px] overflow-hidden z-10 flex items-end shadow-xl" 
-                     style="background: linear-gradient(90deg, rgba(30,10,5,0.9) 0%, rgba(80,30,15,0.7) 15%, rgba(110,45,20,0.5) 50%, rgba(80,30,15,0.7) 85%, rgba(30,10,5,0.9) 100%); 
-                            box-shadow: inset 0 0 25px rgba(0,0,0,0.9), inset 15px 0 30px rgba(255,255,255,0.1), inset -15px 0 30px rgba(0,0,0,0.5); 
-                            border: 1px solid rgba(255,255,255,0.05); 
-                            backdrop-filter: blur(5px);">
+                <!-- Strumień wylewającego się wosku z góry -->
+                <div id="story-stream" class="absolute top-0 left-1/2 -translate-x-1/2 w-[6px] h-0 bg-[#f9eee0] opacity-0 z-0 shadow-[0_0_10px_rgba(249,238,224,0.8)] filter blur-[1px]"></div>
+
+                <!-- Ciemnobrązowy fotorealistyczny słój szklany -->
+                <div id="story-jar" class="relative w-[280px] h-[340px] rounded-b-[18px] rounded-t-[3px] overflow-hidden z-10 flex items-end shadow-2xl" 
+                     style="background: linear-gradient(90deg, rgba(30,15,5,0.95) 0%, rgba(80,35,15,0.7) 15%, rgba(120,55,25,0.4) 50%, rgba(80,35,15,0.7) 85%, rgba(30,15,5,0.95) 100%); 
+                            box-shadow: inset 0 -30px 40px rgba(0,0,0,0.95), inset 25px 0 45px rgba(0,0,0,0.9), inset -25px 0 45px rgba(0,0,0,0.9); 
+                            backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.05);">
                     
-                    <!-- Animujący się wosk (Głęboki brąz, naśladujący roztopiony wosk rzepakowy) -->
-                    <div id="story-wax" class="w-full h-0 bg-[#240a04] opacity-95 relative">
-                        <!-- Zaokrąglona góra wosku dla nadania głębi 3D -->
-                        <div class="absolute top-0 w-full h-[15px] bg-[#331107] rounded-[50%] transform -translate-y-1/2"></div>
+                    <!-- Odblask światła na szkle -->
+                    <div class="absolute top-0 left-[15%] w-[8%] h-full glass-highlight skew-x-[-2deg] z-30 mix-blend-screen pointer-events-none"></div>
+
+                    <!-- Wosk wewnątrz (Jasny, kremowy wegański wosk) -->
+                    <div id="story-wax-container" class="absolute bottom-[20px] left-0 w-full h-full flex justify-center items-end z-10">
+                        <!-- Zaczyna jako kropka na środku, rozlewa się i rośnie -->
+                        <div id="story-wax" class="w-[5%] h-[0%] bg-[#f5e6d3] relative rounded-t-[50%] opacity-90 transition-none" style="box-shadow: inset 0 10px 20px rgba(0,0,0,0.15);">
+                            <!-- Bawełniany knot -->
+                            <div id="story-wick" class="absolute -top-[14px] left-1/2 -translate-x-1/2 w-[2px] h-[16px] bg-[#d9d9d9] opacity-0 flex justify-center origin-bottom">
+                                <div class="w-full h-full bg-[repeating-linear-gradient(45deg,transparent,transparent_2px,rgba(0,0,0,0.1)_2px,rgba(0,0,0,0.1)_4px)]"></div>
+                                <div class="absolute -top-[2px] w-[3px] h-[3px] bg-[#333] rounded-full"></div> <!-- Upalona końcówka -->
+                            </div>
+                        </div>
                     </div>
                     
-                    <!-- Etykieta (Dokładna kopia z Twojego pierwszego zdjęcia) -->
-                    <div id="story-label" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[85%] flex flex-col justify-center opacity-0 scale-90 text-white/95 z-20">
-                        <div class="text-[9px] tracking-[0.25em] font-semibold uppercase text-center mb-8">Norien Berlin</div>
-                        <div class="text-[44px] tracking-[0.2em] font-light text-center mb-6" style="font-family: 'Montserrat', sans-serif;">MITTE</div>
+                    <!-- Przezroczysta Etykieta (Szkic nr 5) -->
+                    <div id="story-label" class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] text-white opacity-0 scale-95 z-40 flex flex-col justify-center items-center pointer-events-none">
+                        <div class="text-[8px] tracking-[0.3em] font-semibold uppercase mb-10 opacity-90">Norien Berlin</div>
+                        <div class="text-[48px] tracking-[0.2em] font-light mb-8" style="font-family: 'Montserrat', sans-serif;">MITTE</div>
                         
-                        <div class="w-full pl-6 pr-6">
-                            <div class="w-20 h-[1.5px] bg-white/60 mb-5"></div>
-                            <div class="text-[11px] tracking-[0.15em] font-semibold uppercase leading-[1.8] mb-6 text-left">
+                        <div class="w-full px-6 flex flex-col items-start">
+                            <div class="w-[60px] h-[1.5px] bg-[#a68a64] mb-6"></div> <!-- Złoty akcent -->
+                            <div class="text-[10px] tracking-[0.2em] font-semibold uppercase leading-[2.2] mb-8 text-left">
                                 Lavender<br>Myrrh<br>Suede
                             </div>
-                            <div class="w-20 h-[1px] bg-white/60 mb-5"></div>
-                            <div class="text-[10px] tracking-widest font-semibold text-left">160 G</div>
+                            <div class="w-[60px] h-[1.5px] bg-white/30 mb-6 hidden"></div>
+                            <div class="text-[10px] tracking-widest font-medium text-left opacity-90">160 G</div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Eleganckie Czarne Wieczko -->
-                <div id="story-lid" class="absolute top-[125px] w-[270px] h-[20px] bg-[#111] rounded-t-[4px] opacity-0 -translate-y-20 z-20 border-b border-white/10"
-                     style="box-shadow: inset 0 2px 5px rgba(255,255,255,0.1), 0 10px 20px rgba(0,0,0,0.5);"></div>
+                <!-- Klasyczne, matowe, czarne wieczko -->
+                <div id="story-lid" class="absolute top-[125px] w-[290px] h-[18px] bg-[#1a1a1a] rounded-t-[3px] opacity-0 -translate-y-20 z-20"
+                     style="box-shadow: inset 0 2px 4px rgba(255,255,255,0.15), 0 15px 30px rgba(0,0,0,0.6);"></div>
             </div>
         </div>
     </section>
 
-    <!-- Zaktualizowana kaskadowa sekcja archiwum -->
+    <!-- RESZTA STRONY POZOSTAJE BEZ ZMIAN -->
     <section id="archives" class="min-h-[100vh] w-full flex flex-col items-center justify-center px-6 overflow-hidden py-32 border-t border-norien-dark/5">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
-                
+                <!-- Archive Cards (Kod z poprzedniej wiadomości) -->
                 <div class="archive-card group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#b35a2d] transition-all duration-700 flex flex-col nav-hover">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 01</p>
@@ -414,7 +405,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -462,7 +452,7 @@
         </footer>
     </section>
 
-    <!-- PANELE (DRAWER & CART) -->
+    <!-- PANELE -->
     <div id="side-drawer" class="drawer-panel">
         <button class="drawer-close nav-hover" onclick="closeDrawer()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -623,51 +613,33 @@
                 const y = e.clientY - rect.top - rect.height / 2;
                 el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
             });
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = `translate(0px, 0px)`;
-            });
+            el.addEventListener('mouseleave', () => el.style.transform = `translate(0px, 0px)`);
         });
 
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('is-revealed');
-                });
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-revealed'); });
             }, { threshold: 0.15 }); 
             
-            document.querySelectorAll('.observe-section:not(#hero)').forEach(section => {
-                observer.observe(section);
-            });
+            document.querySelectorAll('.observe-section:not(#hero)').forEach(section => observer.observe(section));
 
             gsap.to(".craft-bg-img", {
-                yPercent: 30,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "#the-craft",
-                    start: "top bottom", 
-                    end: "bottom top",
-                    scrub: true 
-                }
+                yPercent: 30, ease: "none",
+                scrollTrigger: { trigger: "#the-craft", start: "top bottom", end: "bottom top", scrub: true }
             });
 
             gsap.fromTo(".archive-card", 
                 { y: 80, opacity: 0 }, 
-                {
-                    y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out",
-                    scrollTrigger: { trigger: "#archives", start: "top 65%" }
-                }
+                { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out", scrollTrigger: { trigger: "#archives", start: "top 65%" } }
             );
 
             gsap.fromTo(".footer-reveal",
                 { y: 40, opacity: 0 },
-                {
-                    y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out",
-                    scrollTrigger: { trigger: "#manifesto", start: "top 60%" }
-                }
+                { y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: "#manifesto", start: "top 60%" } }
             );
 
             // ==========================================
-            // KOD SCROLLYTELLINGU (Odświeżone timery GSAP)
+            // KOD SCROLLYTELLINGU: NALEWANIE WOSKU Z KNOTEM
             // ==========================================
             let storyTl = gsap.timeline({
                 scrollTrigger: {
@@ -679,15 +651,23 @@
             });
 
             storyTl
-                // 1. Nalewanie wosku
-                .to("#story-wax", { height: "85%", duration: 3, ease: "power1.inOut" })
-                // 2. Wyskakuje piękna, dokładna etykieta
-                .to("#story-label", { opacity: 1, scale: 1, duration: 1.5, ease: "back.out(1.4)" })
-                // 3. Opada eleganckie czarne wieczko
-                .to("#story-lid", { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" })
-                // 4. Pojawia się czarne pudełko w tle
+                // 1. Strumień wosku leci w dół
+                .to("#story-stream", { height: "100%", opacity: 1, duration: 0.5, ease: "power1.in" })
+                // 2. Wosk uderza o dno i rozlewa się na boki
+                .to("#story-wax", { width: "100%", duration: 0.5, ease: "power2.out" })
+                // 3. Po rozlaniu strumień przestaje lecieć z góry
+                .to("#story-stream", { opacity: 0, duration: 0.2 }, "+=0")
+                // 4. Tafla wosku podnosi się w słoiku do góry
+                .to("#story-wax", { height: "70%", duration: 2.5, ease: "power1.inOut" }, "-=0.2")
+                // 5. Z gotowego wosku wynurza się knot
+                .to("#story-wick", { opacity: 1, y: 0, duration: 0.5, ease: "back.out(2)" })
+                // 6. Pokazuje się przezroczysta, naklejana etykieta (sama typografia)
+                .to("#story-label", { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }, "-=0.5")
+                // 7. Opada wieczko
+                .to("#story-lid", { opacity: 1, y: 0, duration: 1.2, ease: "bounce.out" })
+                // 8. Pojawia się białe pudełko (finał ze zdjęcia 4)
                 .to("#story-box", { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" })
-                // 5. Świeca chowa się do pudełka
+                // 9. Szkło chowa się do eleganckiego białego pudełka
                 .to("#story-jar", { y: 250, opacity: 0, duration: 2, ease: "power2.in" }, "pack")
                 .to("#story-lid", { y: 250, opacity: 0, duration: 2, ease: "power2.in" }, "pack");
         });
@@ -718,23 +698,12 @@
             el.innerHTML = '';
             
             text.split(' ').forEach(word => {
-                const wrap = document.createElement('span');
-                wrap.className = 'inline-block overflow-hidden align-top mr-[0.25em]';
-                const inner = document.createElement('span');
-                inner.className = 'inline-block manifesto-word transform translate-y-[100%] opacity-0';
-                inner.innerText = word;
-                wrap.appendChild(inner);
-                el.appendChild(wrap);
+                const wrap = document.createElement('span'); wrap.className = 'inline-block overflow-hidden align-top mr-[0.25em]';
+                const inner = document.createElement('span'); inner.className = 'inline-block manifesto-word transform translate-y-[100%] opacity-0';
+                inner.innerText = word; wrap.appendChild(inner); el.appendChild(wrap);
             });
 
-            gsap.to(".manifesto-word", {
-                y: "0%",
-                opacity: 1,
-                duration: 0.8,
-                stagger: 0.03,
-                ease: "power4.out",
-                scrollTrigger: { trigger: "#manifesto", start: "top 70%" }
-            });
+            gsap.to(".manifesto-word", { y: "0%", opacity: 1, duration: 0.8, stagger: 0.03, ease: "power4.out", scrollTrigger: { trigger: "#manifesto", start: "top 70%" } });
         }
 
         function changeLang(lang) {
@@ -748,8 +717,7 @@
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.lang-' + lang).forEach(btn => btn.classList.add('active'));
 
-            splitAndAnimateText();
-            renderCart(); 
+            splitAndAnimateText(); renderCart(); 
         }
 
         const mapProducts = {
@@ -759,38 +727,23 @@
             neukolln: { id: 'neukolln', title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E', notes: 'Cardamom / Myrtle / Amber', desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy.', image: 'neukolln.png' }
         };
 
-        let currentActiveId = '';
-        let cartState = {}; 
+        let currentActiveId = ''; let cartState = {}; 
 
         function changeQty(elementId, delta) {
-            let el = document.getElementById(elementId);
-            let current = parseInt(el.innerText);
-            let newVal = current + delta;
-            if(newVal < 1) newVal = 1; if(newVal > 99) newVal = 99;
-            el.innerText = newVal;
+            let el = document.getElementById(elementId); let current = parseInt(el.innerText); let newVal = current + delta;
+            if(newVal < 1) newVal = 1; if(newVal > 99) newVal = 99; el.innerText = newVal;
         }
 
         function addToCart(productId, qtyElementId, btnElement) {
             let qty = parseInt(document.getElementById(qtyElementId).innerText);
-            if (!cartState[productId]) cartState[productId] = 0;
-            cartState[productId] += qty;
+            if (!cartState[productId]) cartState[productId] = 0; cartState[productId] += qty;
             
-            document.getElementById(qtyElementId).innerText = '1';
-            
-            btnElement.style.opacity = '0.3';
-            setTimeout(() => {
-                btnElement.innerText = translations[currentLang].btnAdded || "Added";
-                btnElement.style.opacity = '1';
-            }, 150);
-            
+            document.getElementById(qtyElementId).innerText = '1'; btnElement.style.opacity = '0.3';
+            setTimeout(() => { btnElement.innerText = translations[currentLang].btnAdded || "Added"; btnElement.style.opacity = '1'; }, 150);
             setTimeout(() => {
                 btnElement.style.opacity = '0.3';
-                setTimeout(() => {
-                    btnElement.innerText = translations[currentLang].btnAcquire || "Acquire";
-                    btnElement.style.opacity = '1';
-                }, 150);
+                setTimeout(() => { btnElement.innerText = translations[currentLang].btnAcquire || "Acquire"; btnElement.style.opacity = '1'; }, 150);
             }, 1200);
-            
             renderCart();
         }
 
@@ -799,27 +752,20 @@
         function updateCartItemQty(e, productId, delta) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
             if (cartState[productId]) {
-                cartState[productId] += delta;
-                if (cartState[productId] <= 0) delete cartState[productId];
+                cartState[productId] += delta; if (cartState[productId] <= 0) delete cartState[productId];
                 renderCart();
             }
         }
 
         function renderCart() {
-            const itemsContainer = document.getElementById('cart-items');
-            const checkoutItemsContainer = document.getElementById('checkout-items');
-            const totalEl = document.getElementById('cart-total');
-            const checkoutTotalEl = document.getElementById('checkout-total');
-            const navCartEl = document.getElementById('nav-cart');
-            const t = translations[currentLang] || translations['en'];
+            const itemsContainer = document.getElementById('cart-items'); const checkoutItemsContainer = document.getElementById('checkout-items');
+            const totalEl = document.getElementById('cart-total'); const checkoutTotalEl = document.getElementById('checkout-total');
+            const navCartEl = document.getElementById('nav-cart'); const t = translations[currentLang] || translations['en'];
             
-            itemsContainer.innerHTML = ''; checkoutItemsContainer.innerHTML = '';
-            let totalItems = 0; let totalPrice = 0;
+            itemsContainer.innerHTML = ''; checkoutItemsContainer.innerHTML = ''; let totalItems = 0; let totalPrice = 0;
 
             for (let id in cartState) {
-                let qty = cartState[id]; totalItems += qty; totalPrice += qty * 55;
-                let product = mapProducts[id];
-
+                let qty = cartState[id]; totalItems += qty; totalPrice += qty * 55; let product = mapProducts[id];
                 itemsContainer.innerHTML += `
                     <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
                         <div>
@@ -835,7 +781,6 @@
                             <span class="text-sm font-light w-14 text-right">€ ${(qty * 55).toFixed(2)}</span>
                         </div>
                     </div>`;
-
                 checkoutItemsContainer.innerHTML += `
                     <div class="flex justify-between items-center border-b border-white/10 pb-4 relative z-10">
                         <div>
@@ -851,9 +796,7 @@
                 checkoutItemsContainer.innerHTML = `<p class="text-xs font-light opacity-50 italic">${t.cartEmpty}</p>`;
             }
 
-            navCartEl.innerText = `${t.cartWord} (${totalItems})`;
-            totalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
-            checkoutTotalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
+            navCartEl.innerText = `${t.cartWord} (${totalItems})`; totalEl.innerText = `€ ${totalPrice.toFixed(2)}`; checkoutTotalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
             
             if (window.matchMedia("(pointer: fine)").matches) {
                 document.querySelectorAll('#cart-items .nav-hover').forEach(el => {
@@ -865,86 +808,53 @@
 
         function openCart(e) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
-            closeDrawer(); 
-            lenis.stop();
-            document.getElementById('cart-drawer').classList.add('open');
+            closeDrawer(); lenis.stop(); document.getElementById('cart-drawer').classList.add('open');
             setTimeout(() => document.getElementById('cart-inner').classList.add('loaded'), 10);
         }
 
-        function closeCart() {
-            lenis.start();
-            document.getElementById('cart-drawer').classList.remove('open');
-            document.getElementById('cart-inner').classList.remove('loaded');
-        }
+        function closeCart() { lenis.start(); document.getElementById('cart-drawer').classList.remove('open'); document.getElementById('cart-inner').classList.remove('loaded'); }
 
         function openCheckout() {
             if (Object.keys(cartState).length === 0) { alert(translations[currentLang].cartEmpty); return; }
-            closeCart(); 
-            lenis.stop();
-            document.getElementById('checkout-overlay').classList.add('open');
+            closeCart(); lenis.stop(); document.getElementById('checkout-overlay').classList.add('open');
         }
 
-        function closeCheckout() { 
-            lenis.start();
-            document.getElementById('checkout-overlay').classList.remove('open'); 
-        }
+        function closeCheckout() { lenis.start(); document.getElementById('checkout-overlay').classList.remove('open'); }
 
         function updateDrawerUI(p) {
-            document.getElementById('drawer-title').innerText = p.title;
-            document.getElementById('drawer-title').style.color = p.color;
-            document.getElementById('drawer-subtitle').innerText = p.sub;
-            document.getElementById('drawer-coords').innerText = p.coords;
-            document.getElementById('drawer-notes').innerHTML = p.notes;
-            document.getElementById('drawer-desc').innerText = translations[currentLang].heroDesc; 
-            document.getElementById('drawer-top-line').style.backgroundColor = p.color;
-            document.getElementById('drawer-qty').innerText = '1';
+            document.getElementById('drawer-title').innerText = p.title; document.getElementById('drawer-title').style.color = p.color;
+            document.getElementById('drawer-subtitle').innerText = p.sub; document.getElementById('drawer-coords').innerText = p.coords;
+            document.getElementById('drawer-notes').innerHTML = p.notes; document.getElementById('drawer-desc').innerText = translations[currentLang].heroDesc; 
+            document.getElementById('drawer-top-line').style.backgroundColor = p.color; document.getElementById('drawer-qty').innerText = '1';
 
-            const imgEl = document.getElementById('drawer-image');
-            imgEl.src = p.image;
+            const imgEl = document.getElementById('drawer-image'); imgEl.src = p.image;
             imgEl.onload = () => { imgEl.classList.remove('hidden'); document.getElementById('drawer-placeholder').classList.add('hidden'); };
         }
 
         const mapSvg = document.getElementById('map-svg');
 
         function showDrawer(id) {
-            const drawer = document.getElementById('side-drawer');
-            const inner = document.getElementById('drawer-inner');
-            const p = mapProducts[id];
-
-            closeCart(); 
-            mapSvg.classList.add('is-focused');
+            const drawer = document.getElementById('side-drawer'); const inner = document.getElementById('drawer-inner'); const p = mapProducts[id];
+            closeCart(); mapSvg.classList.add('is-focused');
             document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected'));
             document.querySelector(`.active-group[data-id="${id}"]`).classList.add('is-selected');
 
             if (drawer.classList.contains('open')) {
                 if (currentActiveId === id) return;
-                inner.classList.remove('loaded');
-                setTimeout(() => { updateDrawerUI(p); inner.classList.add('loaded'); }, 300); 
-            } else {
-                updateDrawerUI(p); drawer.classList.add('open'); setTimeout(() => { inner.classList.add('loaded'); }, 200);
-            }
+                inner.classList.remove('loaded'); setTimeout(() => { updateDrawerUI(p); inner.classList.add('loaded'); }, 300); 
+            } else { updateDrawerUI(p); drawer.classList.add('open'); setTimeout(() => { inner.classList.add('loaded'); }, 200); }
             currentActiveId = id;
         }
 
         function closeDrawer() {
-            document.getElementById('side-drawer').classList.remove('open');
-            document.getElementById('drawer-inner').classList.remove('loaded');
-            mapSvg.classList.remove('is-focused');
-            document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected'));
-            currentActiveId = '';
+            document.getElementById('side-drawer').classList.remove('open'); document.getElementById('drawer-inner').classList.remove('loaded');
+            mapSvg.classList.remove('is-focused'); document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected')); currentActiveId = '';
         }
 
         document.addEventListener('click', function(event) {
-            const drawer = document.getElementById('side-drawer');
-            const cartDrawer = document.getElementById('cart-drawer');
-            const checkoutOverlay = document.getElementById('checkout-overlay');
-            
-            if (drawer && drawer.classList.contains('open')) {
-                if (!drawer.contains(event.target) && !event.target.closest('.active-group')) closeDrawer();
-            }
-            if (cartDrawer && cartDrawer.classList.contains('open')) {
-                if (!cartDrawer.contains(event.target) && !event.target.closest('#nav-cart') && !checkoutOverlay.classList.contains('open')) closeCart();
-            }
+            const drawer = document.getElementById('side-drawer'); const cartDrawer = document.getElementById('cart-drawer'); const checkoutOverlay = document.getElementById('checkout-overlay');
+            if (drawer && drawer.classList.contains('open')) { if (!drawer.contains(event.target) && !event.target.closest('.active-group')) closeDrawer(); }
+            if (cartDrawer && cartDrawer.classList.contains('open')) { if (!cartDrawer.contains(event.target) && !event.target.closest('#nav-cart') && !checkoutOverlay.classList.contains('open')) closeCart(); }
         });
 
         changeLang('pl');
