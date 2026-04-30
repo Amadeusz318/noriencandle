@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NORIEN BERLIN | Olfactory Cartography</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Zaktualizowane fonty: Dodano Montserrat dla logo -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -154,15 +153,14 @@
     <!-- NAWIGACJA -->
     <nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
         
-        <!-- NOWE LOGO: Zbudowane w HTML z odpowiednimi parametrami Montserrat -->
         <div class="flex flex-col items-center justify-center pt-1 cursor-pointer" onclick="smoothScroll('#hero', 2500)">
-            <!-- margin-right kompensuje domyślne dodawanie odstępu na końcu wyrazu przez letter-spacing -->
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.25rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 9px; letter-spacing: 0.23em; margin-top: 0.45rem; margin-right: -0.23em; color: #555;">BERLIN</span>
         </div>
 
-        <div class="hidden lg:flex gap-12 text-[10px] tracking-widest uppercase font-light">
+        <div class="hidden lg:flex gap-10 text-[10px] tracking-widest uppercase font-light">
             <a href="#map-explore" class="hover:opacity-50 transition nav-link">Mapa</a>
+            <a href="#the-craft" class="hover:opacity-50 transition nav-link">Rzemiosło</a>
             <a href="#archives" class="hover:opacity-50 transition nav-link">Archiwum</a>
             <a href="#manifesto" class="hover:opacity-50 transition nav-link">Manifest</a>
         </div>
@@ -228,7 +226,25 @@
         </div>
     </section>
 
-    <!-- SEKCJA 3: ARCHIWUM Z TWOIMI ZDJĘCIAMI -->
+    <!-- SEKCJA 3 (NOWA): THE CRAFT / RZEMIOSŁO -->
+    <section id="the-craft" class="h-screen w-full relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-norien-dark">
+        <!-- Zmieniłem jasność i nasycenie by zbudować mocny kinowy kontrast -->
+        <div class="absolute inset-0 z-0">
+            <!-- Placeholder ciemnego, nastrojowego detalu szkła/betonu -->
+            <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="w-full h-full object-cover opacity-40 filter brightness-50 contrast-125">
+        </div>
+        
+        <div class="relative z-10 text-white max-w-2xl mx-auto flex flex-col items-center">
+            <p class="text-[10px] tracking-[0.6em] uppercase mb-12 opacity-60" style="font-family: 'Montserrat', sans-serif;">The Craft</p>
+            <h2 class="text-4xl md:text-6xl font-thin mb-10 tracking-wide">Czysta forma.</h2>
+            <div class="h-px w-10 bg-white/20 mx-auto mb-10"></div>
+            <p class="text-sm md:text-base font-light leading-loose opacity-80 max-w-md">
+                Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. Ręcznie zalewane w berlińskim atelier. Zestawione z rzadkimi esencjami, by rezonować bez zakłóceń.
+            </p>
+        </div>
+    </section>
+
+    <!-- SEKCJA 4: ARCHIWUM -->
     <section id="archives" class="h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden pt-24 pb-12">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
@@ -301,7 +317,7 @@
         </div>
     </section>
 
-    <!-- SEKCJA 4: MANIFEST -->
+    <!-- SEKCJA 5: MANIFEST -->
     <section id="manifesto" class="h-screen w-full bg-norien-dark text-white flex flex-col justify-between pt-24">
         <div class="flex-grow flex flex-col justify-center items-center px-6">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
@@ -367,7 +383,6 @@
 
     <!-- SKRYPTY -->
     <script>
-        // --- CUSTOM SMOOTH SCROLL ---
         function smoothScroll(targetId, duration) {
             const targetElement = document.querySelector(targetId);
             if (!targetElement) return;
@@ -414,7 +429,6 @@
         let currentActiveId = '';
         const mapSvg = document.getElementById('map-svg');
 
-        // BAZA PRODUKTÓW Z TWOIMI LOKALNYMI ZDJĘCIAMI
         const mapProducts = {
             mitte: { 
                 title: 'MITTE', sub: 'Archive No. 01', color: '#b35a2d', coords: '52°31\'12.0"N 13°24\'18.0"E',
@@ -512,18 +526,16 @@
             }, 300);
         }
 
-        // 1. ZAMYKANIE SZUFLADY KLIKNIĘCIEM GDZIEKOLWIEK POZA NIĄ I POZA DZIELNICAMI
         document.addEventListener('click', function(event) {
             const drawer = document.getElementById('side-drawer');
             const isClickInsideDrawer = drawer.contains(event.target);
-            const isClickOnDistrict = event.target.closest('.active-group'); // Sprawdza, czy kliknięto w dzielnicę na mapie
+            const isClickOnDistrict = event.target.closest('.active-group');
 
             if (drawer.classList.contains('open') && !isClickInsideDrawer && !isClickOnDistrict) {
                 closeDrawer();
             }
         });
 
-        // 2. ZAMYKANIE SZUFLADY PRZY ROZPOCZĘCIU SCROLLOWANIA PRZEZ UŻYTKOWNIKA
         window.addEventListener('wheel', function() {
             if (document.getElementById('side-drawer').classList.contains('open')) {
                 closeDrawer();
