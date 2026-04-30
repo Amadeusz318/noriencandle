@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NORIEN BERLIN | Olfactory Cartography</title>
+    <title>NORIEN BERLIN | Rzemieślnicze Świece</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <script>
@@ -158,6 +158,7 @@
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
 
+    <!-- PRELOADER -->
     <div id="preloader">
         <div class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light">Loading Archives</div>
         <div id="loader-perc" class="text-4xl md:text-5xl font-thin tracking-widest text-norien-dark">0%</div>
@@ -166,6 +167,7 @@
     <div class="noise-overlay"></div>
     <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
 
+    <!-- NAWIGACJA -->
     <nav class="fixed w-full px-6 md:px-10 py-5 flex justify-between items-center text-norien-dark">
         <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover magnetic">
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.3rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
@@ -189,15 +191,16 @@
         </div>
     </nav>
 
+    <!-- SEKCJA 1: HERO -->
     <section id="hero" class="observe-section min-h-[100dvh] w-full snap-start flex flex-col justify-center items-center text-center px-6 relative overflow-hidden py-24">
         <div class="z-10">
-            <p id="hero-sub" class="text-[10px] md:text-[11px] tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Exclusive Souvenir from Berlin</p>
-            <h1 class="text-6xl md:text-7xl lg:text-8xl font-thin tracking-tighter mb-10 leading-tight">
-                <span class="block text-reveal delay-2">Olfactory</span>
-                <span class="block text-reveal delay-3 italic">Cartography.</span>
+            <p id="hero-sub" class="text-[10px] md:text-[11px] tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Rzemieślnicze Świece z Berlina</p>
+            <h1 class="text-6xl md:text-7xl lg:text-7xl font-thin tracking-tighter mb-10 leading-tight">
+                <span class="block text-reveal delay-2" id="hero-title-1">Prawdziwy Berlin.</span>
+                <span class="block text-reveal delay-3 italic" id="hero-title-2">Zamknięty w szkle.</span>
             </h1>
             <p id="hero-desc" class="max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed opacity-80 text-reveal delay-4">
-                Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.
+                Tworzymy świece z najwyższej jakości wosku roślinnego. Każda kompozycja to nasza interpretacja berlińskich dzielnic – szczera, intrygująca i tworzona z dbałością o detale.
             </p>
         </div>
         <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4">
@@ -205,6 +208,7 @@
         </div>
     </section>
 
+    <!-- SEKCJA 2: MAPA -->
     <section id="map-explore" class="observe-section min-h-[100dvh] w-full snap-start flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 py-20">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
             
@@ -255,30 +259,32 @@
             
             <div class="space-y-6 md:col-span-5 lg:col-span-4 lg:pl-6 xl:pr-12 map-layer delay-map-3">
                 <h2 id="guide-sub" class="text-[10px] md:text-xs tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
-                <h3 id="guide-title" class="text-3xl lg:text-4xl font-extralight leading-tight">Twoja dzielnica. <br> Twój zapachowy paszport.</h3>
+                <h3 id="guide-title" class="text-3xl lg:text-4xl font-extralight leading-tight">Odkryj miasto. <br> Zapach po zapachu.</h3>
                 <p id="guide-desc" class="text-norien-text/70 leading-relaxed font-light text-sm text-gray-500">
-                    Nasze kompozycje pełnią rolę przewodników. Neukölln nie pachnie tylko dymem – pachnie historią przemian, nocnym powietrzem przy kanale i surowym betonem. Mitte to sterylność galerii i zapach starych parkietów.
+                    Zamiast pocztówek, proponujemy zmysłową podróż. Neukölln łączy nuty dymu i przypraw tętniących życiem ulic, a Mitte to chłód galerii i ciepło starego drewna. Wybierz swój kierunek.
                 </p>
                 <div class="pt-5 border-t border-norien-dark/10">
-                    <p id="guide-action" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-40 font-semibold">Wybierz obszar na mapie, aby poznać archiwum.</p>
+                    <p id="guide-action" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-40 font-semibold">Wybierz obszar na mapie, aby poznać detale.</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- SEKCJA 3: THE CRAFT -->
     <section id="the-craft" class="observe-section min-h-[100dvh] w-full snap-start relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white py-24">
         <div class="wax-liquid-bg"></div>
         
         <div class="relative z-10 max-w-3xl mx-auto flex flex-col items-center pointer-events-none">
-            <p id="craft-sub" class="text-[10px] md:text-[11px] tracking-[0.6em] uppercase mb-10 opacity-60 text-reveal delay-1" style="font-family: 'Montserrat', sans-serif;">The Craft</p>
-            <h2 id="craft-title" class="text-4xl md:text-5xl font-thin mb-10 tracking-wide text-reveal delay-2">Czysta forma.</h2>
+            <p id="craft-sub" class="text-[10px] md:text-[11px] tracking-[0.6em] uppercase mb-10 opacity-60 text-reveal delay-1" style="font-family: 'Montserrat', sans-serif;">Rzemiosło</p>
+            <h2 id="craft-title" class="text-4xl md:text-5xl font-thin mb-10 tracking-wide text-reveal delay-2">Świadomy wybór.</h2>
             <div class="h-px w-12 bg-white/20 mx-auto mb-10 text-reveal delay-3"></div>
             <p id="craft-desc" class="text-base md:text-lg font-light leading-loose opacity-80 text-reveal delay-4">
-                Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. Ręcznie zalewane w berlińskim atelier. Zestawione z rzadkimi esencjami, by rezonować bez zakłóceń.
+                Materiały mają znaczenie. Używamy wegańskiej mieszanki wosku rzepakowego i kokosowego zamiast parafiny. Świece zalewamy ręcznie, by zapewnić czyste spalanie i naturalny aromat.
             </p>
         </div>
     </section>
 
+    <!-- SEKCJA 4: ARCHIWUM -->
     <section id="archives" class="observe-section min-h-[100dvh] w-full snap-start flex flex-col items-center justify-center px-6 overflow-hidden py-24">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
@@ -379,12 +385,13 @@
         </div>
     </section>
 
+    <!-- SEKCJA 5: MANIFEST + NEWSLETTER -->
     <section id="manifesto" class="observe-section min-h-[100dvh] w-full snap-start bg-norien-dark text-white flex flex-col justify-between pt-24 relative">
         <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10 py-10">
             <div class="max-w-4xl mx-auto space-y-10 text-center">
-                <h2 id="manifesto-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase opacity-40 text-reveal delay-1">The Studio</h2>
+                <h2 id="manifesto-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase opacity-40 text-reveal delay-1">Nasze Podejście</h2>
                 <p id="manifesto-text" class="text-3xl md:text-4xl lg:text-5xl font-thin leading-tight text-reveal delay-2">
-                    Nasze kompozycje powstają w berlińskim atelier. Używamy wosku sojowego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.
+                    Wierzymy w proste, dobre rzeczy. Roślinny wosk, starannie dobrane esencje i ręczna praca w naszym berlińskim atelier. Bez zbędnego patosu – po prostu świetna świeca.
                 </p>
                 <div class="pt-8 text-reveal delay-3">
                     <div id="manifesto-badge" class="inline-block border border-white/20 px-8 py-5 text-[10px] tracking-ultra uppercase opacity-60">
@@ -420,6 +427,7 @@
         </footer>
     </section>
 
+    <!-- PANELE (DRAWER & CART) -->
     <div id="side-drawer" class="drawer-panel">
         <button class="drawer-close nav-hover" onclick="closeDrawer()">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -597,46 +605,49 @@
             });
         }
 
-        // --- TRANSLACJE ---
+        // --- TRANSLACJE OPARTE O ZAAKTUALIZOWANY (SZCZERY) COPYWRITING ---
         let currentLang = 'pl';
         const translations = {
             pl: {
-                navMap: "Mapa", navCraft: "Rzemiosło", navArchives: "Archiwum", navManifesto: "Manifest", cartWord: "KOSZYK", scrollText: "Przewiń by odkryć", heroSub: "Exclusive Souvenir from Berlin", 
-                heroDesc: "Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.", 
+                navMap: "Mapa", navCraft: "Rzemiosło", navArchives: "Archiwum", navManifesto: "Podejście", cartWord: "KOSZYK", scrollText: "Przewiń by odkryć", heroSub: "Rzemieślnicze Świece z Berlina", 
+                heroTitle1: "Prawdziwy Berlin.", heroTitle2: "Zamknięty w szkle.",
+                heroDesc: "Tworzymy świece z najwyższej jakości wosku roślinnego. Każda kompozycja to nasza interpretacja berlińskich dzielnic – szczera, intrygująca i tworzona z dbałością o detale.", 
                 guideHint: "Dotknij dzielnicy", guideSub: "The Urban Guide", 
-                guideTitle: "Twoja dzielnica. <br> Twój zapachowy paszport.", 
-                guideDesc: "Nasze kompozycje pełnią rolę przewodników. Neukölln nie pachnie tylko dymem – pachnie historią przemian, nocnym powietrzem przy kanale i surowym betonem. Mitte to sterylność galerii i zapach starych parkietów.", 
-                guideAction: "Wybierz obszar na mapie, aby poznać archiwum.", 
-                craftSub: "The Craft", craftTitle: "Czysta forma.", 
-                craftDesc: "Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. Ręcznie zalewane w berlińskim atelier. Zestawione z rzadkimi esencjami, by rezonować bez zakłóceń.", 
-                manifestoSub: "The Studio", 
-                manifestoText: "Nasze kompozycje powstają w berlińskim atelier. Używamy wosku sojowego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.", 
+                guideTitle: "Odkryj miasto. <br> Zapach po zapachu.", 
+                guideDesc: "Zamiast pocztówek, proponujemy zmysłową podróż. Neukölln łączy nuty dymu i przypraw tętniących życiem ulic, a Mitte to chłód galerii i ciepło starego drewna. Wybierz swój kierunek.", 
+                guideAction: "Wybierz obszar na mapie, aby poznać detale.", 
+                craftSub: "Rzemiosło", craftTitle: "Świadomy wybór.", 
+                craftDesc: "Materiały mają znaczenie. Używamy wegańskiej mieszanki wosku rzepakowego i kokosowego zamiast parafiny. Świece zalewamy ręcznie, by zapewnić czyste spalanie i naturalny aromat.", 
+                manifestoSub: "Nasze Podejście", 
+                manifestoText: "Wierzymy w proste, dobre rzeczy. Roślinny wosk, starannie dobrane esencje i ręczna praca w naszym berlińskim atelier. Bez zbędnego patosu – po prostu świetna świeca.", 
                 manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.", newsInput: "Twój adres e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Twój koszyk jest pusty.", cartShipping: "Wysyłka", cartFree: "Gratis", checkoutBack: "Wróć do sklepu", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Kontakt", inEmail: "Adres e-mail", checkAddress: "Adres Dostawy", inFname: "Imię", inLname: "Nazwisko", inStreet: "Ulica i numer domu", inZip: "Kod pocztowy", inCity: "Miasto", checkPayment: "Płatność", checkSys: "System płatności (Demo)", btnPay: "Zapłać i Zamów"
             },
             en: {
-                navMap: "The Map", navCraft: "The Craft", navArchives: "Archives", navManifesto: "Manifesto", cartWord: "CART", scrollText: "Scroll to explore", heroSub: "Exclusive Souvenir from Berlin", 
-                heroDesc: "We don't sell candles. We archive Berlin's identity. Each scent represents geographic coordinates and an emotional record of a specific district.", 
+                navMap: "Map", navCraft: "Craft", navArchives: "Archives", navManifesto: "Approach", cartWord: "CART", scrollText: "Scroll to explore", heroSub: "Berlin Crafted Candles", 
+                heroTitle1: "Real Berlin.", heroTitle2: "Captured in glass.",
+                heroDesc: "We create candles using the highest quality plant wax. Each fragrance is our honest interpretation of Berlin's districts, crafted with uncompromising attention to detail.", 
                 guideHint: "Tap a district", guideSub: "The Urban Guide", 
-                guideTitle: "Your district. <br> Your olfactory passport.", 
-                guideDesc: "Our compositions serve as guides. Neukölln doesn't just smell like smoke – it smells like the history of change, night air by the canal, and raw concrete. Mitte is the sterility of galleries and the scent of old floors.", 
-                guideAction: "Select an area on the map to explore the archive.", 
-                craftSub: "The Craft", craftTitle: "Pure form.", 
-                craftDesc: "We abandoned paraffin in favor of a vegan rapeseed and coconut wax blend. Hand-poured in our Berlin atelier. Paired with rare essences to resonate without interference.", 
-                manifestoSub: "The Studio", 
-                manifestoText: "Our compositions are created in our Berlin atelier. We use soy wax as a clean carrier for rare essences that define the city's architecture.", 
+                guideTitle: "Discover the city. <br> Scent by scent.", 
+                guideDesc: "Instead of postcards, we offer a sensory journey. Neukölln combines smoke and spices reflecting its vibrant streets, while Mitte balances the coolness of galleries with the warmth of old wood. Choose your direction.", 
+                guideAction: "Select an area on the map to explore details.", 
+                craftSub: "Craft", craftTitle: "Conscious choice.", 
+                craftDesc: "Materials matter. We use a vegan blend of rapeseed and coconut wax instead of paraffin. Hand-poured in Berlin to ensure a clean burn and natural aroma.", 
+                manifestoSub: "Our Approach", 
+                manifestoText: "We believe in simple, good things. Plant-based wax, carefully selected essences, and manual work in our Berlin atelier. No pretentious philosophy—just an excellent candle.", 
                 manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Receive private notes from our lab and early access to limited fragrance editions.", newsInput: "Your email address", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Your cart is empty.", cartShipping: "Shipping", cartFree: "Free", checkoutBack: "Back to store", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Contact", inEmail: "Email address", checkAddress: "Delivery Address", inFname: "First name", inLname: "Last name", inStreet: "Street and house number", inZip: "ZIP code", inCity: "City", checkPayment: "Payment", checkSys: "Payment System (Demo)", btnPay: "Pay & Order"
             },
             de: {
-                navMap: "Karte", navCraft: "Handwerk", navArchives: "Archiv", navManifesto: "Manifest", cartWord: "WARENKORB", scrollText: "Scrollen zum Entdecken", heroSub: "Exklusives Souvenir aus Berlin", 
-                heroDesc: "Wir verkaufen keine Kerzen. Wir archivieren die Identität Berlins. Jeder Duft ist eine geografische Koordinate und eine emotionale Aufzeichnung.", 
+                navMap: "Karte", navCraft: "Handwerk", navArchives: "Archiv", navManifesto: "Ansatz", cartWord: "WARENKORB", scrollText: "Scrollen zum Entdecken", heroSub: "Handgefertigte Kerzen aus Berlin", 
+                heroTitle1: "Echtes Berlin.", heroTitle2: "Gegossen in Glas.",
+                heroDesc: "Wir kreieren Kerzen aus hochwertigem Pflanzenwachs. Jede Komposition ist unsere Interpretation der Berliner Bezirke – ehrlich, faszinierend und mit Liebe zum Detail gefertigt.", 
                 guideHint: "Bezirk antippen", guideSub: "The Urban Guide", 
-                guideTitle: "Dein Viertel. <br> Dein Geruchspass.", 
-                guideDesc: "Unsere Kompositionen dienen als Wegweiser. Neukölln riecht nicht nur nach Rauch – es riecht nach der Geschichte des Wandels, Nachtluft am Kanal und rohem Beton. Mitte ist die Sterilität der Galerien und der Duft alter Parkettböden.", 
-                guideAction: "Wähle einen Bereich auf der Karte aus, um das Archiv zu erkunden.", 
-                craftSub: "The Craft", craftTitle: "Reine Form.", 
-                craftDesc: "Wir verzichten auf Paraffin zugunsten einer veganen Raps- und Kokoswachsmischung. Handgegossen im Berliner Atelier.", 
-                manifestoSub: "Das Studio", 
-                manifestoText: "Unsere Kompositionen entstehen im Berliner Atelier. Wir verwenden Sojawachs als reinen Träger für seltene Essenzen.", 
+                guideTitle: "Entdecke die Stadt. <br> Duft für Duft.", 
+                guideDesc: "Statt Postkarten bieten wir eine sinnliche Reise. Neukölln vereint Rauch und Gewürze, während Mitte die Kühle von Galerien und die Wärme von altem Holz ausstrahlt. Wähle deine Richtung.", 
+                guideAction: "Wähle einen Bereich auf der Karte aus für Details.", 
+                craftSub: "Handwerk", craftTitle: "Bewusste Wahl.", 
+                craftDesc: "Materialien sind wichtig. Wir verwenden eine vegane Raps- und Kokoswachsmischung statt Paraffin. Handgegossen für eine saubere Verbrennung und ein natürliches Aroma.", 
+                manifestoSub: "Unser Ansatz", 
+                manifestoText: "Wir glauben an einfache, gute Dinge. Pflanzenwachs, ausgewählte Essenzen und Handarbeit in unserem Berliner Atelier. Ohne überflüssiges Pathos – einfach eine großartige Kerze.", 
                 manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Erhalte private Notizen aus unserem Labor und frühen Zugang zu limitierten Editionen.", newsInput: "Deine E-Mail Adresse", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Kaufen", btnAdded: "Hinzugefügt", cartEmpty: "Dein Warenkorb ist leer.", cartShipping: "Versand", cartFree: "Kostenlos", checkoutBack: "Zurück zum Shop", checkoutOrderSum: "Bestellübersicht", checkoutDue: "Gesamtsumme", checkContact: "Kontakt", inEmail: "E-Mail-Adresse", checkAddress: "Lieferadresse", inFname: "Vorname", inLname: "Nachname", inStreet: "Straße und Hausnummer", inZip: "PLZ", inCity: "Stadt", checkPayment: "Zahlung", checkSys: "Zahlungssystem (Demo)", btnPay: "Zahlen & Bestellen"
             }
         };
@@ -645,7 +656,13 @@
             currentLang = lang;
             const t = translations[lang] || translations['en'];
 
-            document.getElementById('nav-map').innerText = t.navMap; document.getElementById('nav-craft').innerText = t.navCraft; document.getElementById('nav-archives').innerText = t.navArchives; document.getElementById('nav-manifesto').innerText = t.navManifesto; document.getElementById('hero-scroll').innerText = t.scrollText; document.getElementById('hero-sub').innerText = t.heroSub; document.getElementById('hero-desc').innerText = t.heroDesc; document.getElementById('map-mobile-hint').innerText = t.guideHint; document.getElementById('guide-sub').innerText = t.guideSub; document.getElementById('guide-title').innerHTML = t.guideTitle; document.getElementById('guide-desc').innerText = t.guideDesc; document.getElementById('guide-action').innerText = t.guideAction; document.getElementById('craft-sub').innerText = t.craftSub; document.getElementById('craft-title').innerText = t.craftTitle; document.getElementById('craft-desc').innerText = t.craftDesc; document.getElementById('manifesto-sub').innerText = t.manifestoSub; document.getElementById('manifesto-text').innerText = t.manifestoText; document.getElementById('manifesto-badge').innerText = t.manifestoBadge; document.getElementById('news-title').innerText = t.newsTitle; document.getElementById('news-desc').innerText = t.newsDesc; document.getElementById('news-input').placeholder = t.newsInput; document.getElementById('footer-copy').innerHTML = t.footerCopy; document.getElementById('cart-title').innerText = t.cartWord; document.getElementById('cart-shipping').innerText = t.cartShipping; document.getElementById('cart-shipping-val').innerText = t.cartFree; document.getElementById('checkout-back').innerText = t.checkoutBack; document.getElementById('checkout-summary-title').innerText = t.checkoutOrderSum; document.getElementById('checkout-due-label').innerText = t.checkoutDue; document.getElementById('check-contact').innerText = t.checkContact; document.getElementById('in-email').placeholder = t.inEmail; document.getElementById('check-address').innerText = t.checkAddress; document.getElementById('in-fname').placeholder = t.inFname; document.getElementById('in-lname').placeholder = t.inLname; document.getElementById('in-street').placeholder = t.inStreet; document.getElementById('in-zip').placeholder = t.inZip; document.getElementById('in-city').placeholder = t.inCity; document.getElementById('check-payment').innerText = t.checkPayment; document.getElementById('check-sys').innerText = t.checkSys; document.getElementById('btn-pay').innerText = t.btnPay;
+            document.getElementById('nav-map').innerText = t.navMap; document.getElementById('nav-craft').innerText = t.navCraft; document.getElementById('nav-archives').innerText = t.navArchives; document.getElementById('nav-manifesto').innerText = t.navManifesto; document.getElementById('hero-scroll').innerText = t.scrollText; document.getElementById('hero-sub').innerText = t.heroSub; 
+            
+            // Dynamiczne podmienienie rozbitego tytułu
+            document.getElementById('hero-title-1').innerText = t.heroTitle1;
+            document.getElementById('hero-title-2').innerText = t.heroTitle2;
+            
+            document.getElementById('hero-desc').innerText = t.heroDesc; document.getElementById('map-mobile-hint').innerText = t.guideHint; document.getElementById('guide-sub').innerText = t.guideSub; document.getElementById('guide-title').innerHTML = t.guideTitle; document.getElementById('guide-desc').innerText = t.guideDesc; document.getElementById('guide-action').innerText = t.guideAction; document.getElementById('craft-sub').innerText = t.craftSub; document.getElementById('craft-title').innerText = t.craftTitle; document.getElementById('craft-desc').innerText = t.craftDesc; document.getElementById('manifesto-sub').innerText = t.manifestoSub; document.getElementById('manifesto-text').innerText = t.manifestoText; document.getElementById('manifesto-badge').innerText = t.manifestoBadge; document.getElementById('news-title').innerText = t.newsTitle; document.getElementById('news-desc').innerText = t.newsDesc; document.getElementById('news-input').placeholder = t.newsInput; document.getElementById('footer-copy').innerHTML = t.footerCopy; document.getElementById('cart-title').innerText = t.cartWord; document.getElementById('cart-shipping').innerText = t.cartShipping; document.getElementById('cart-shipping-val').innerText = t.cartFree; document.getElementById('checkout-back').innerText = t.checkoutBack; document.getElementById('checkout-summary-title').innerText = t.checkoutOrderSum; document.getElementById('checkout-due-label').innerText = t.checkoutDue; document.getElementById('check-contact').innerText = t.checkContact; document.getElementById('in-email').placeholder = t.inEmail; document.getElementById('check-address').innerText = t.checkAddress; document.getElementById('in-fname').placeholder = t.inFname; document.getElementById('in-lname').placeholder = t.inLname; document.getElementById('in-street').placeholder = t.inStreet; document.getElementById('in-zip').placeholder = t.inZip; document.getElementById('in-city').placeholder = t.inCity; document.getElementById('check-payment').innerText = t.checkPayment; document.getElementById('check-sys').innerText = t.checkSys; document.getElementById('btn-pay').innerText = t.btnPay;
             
             document.querySelectorAll('.btn-checkout').forEach(el => el.innerText = 'CHECKOUT');
             document.querySelectorAll('.btn-acquire').forEach(el => el.innerText = t.btnAcquire);
@@ -728,32 +745,32 @@
                 itemsContainer.innerHTML += `
                     <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
                         <div>
-                            <h4 class="text-sm tracking-widest uppercase">${product.title}</h4>
-                            <p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p>
+                            <h4 class="text-base tracking-widest uppercase">${product.title}</h4>
+                            <p class="text-xs tracking-widest uppercase opacity-40">${product.sub}</p>
                         </div>
                         <div class="flex items-center gap-4">
-                            <div class="flex items-center gap-2 text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                            <div class="flex items-center gap-2 text-sm opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                 <button class="outline-none nav-hover qty-btn" onclick="updateCartItemQty(event, '${id}', -1)">-</button>
                                 <span class="w-6 text-center">${qty}</span>
                                 <button class="outline-none nav-hover qty-btn" onclick="updateCartItemQty(event, '${id}', 1)">+</button>
                             </div>
-                            <span class="text-base font-light w-16 text-right">€ ${(qty * 55).toFixed(2)}</span>
+                            <span class="text-lg font-light w-16 text-right">€ ${(qty * 55).toFixed(2)}</span>
                         </div>
                     </div>`;
 
                 checkoutItemsContainer.innerHTML += `
                     <div class="flex justify-between items-center border-b border-white/10 pb-4 relative z-10">
                         <div>
-                            <h4 class="text-sm tracking-widest uppercase">${product.title} <span class="text-xs opacity-50 ml-2">x${qty}</span></h4>
-                            <p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p>
+                            <h4 class="text-base tracking-widest uppercase">${product.title} <span class="text-sm opacity-50 ml-2">x${qty}</span></h4>
+                            <p class="text-xs tracking-widest uppercase opacity-40">${product.sub}</p>
                         </div>
-                        <span class="text-base font-light">€ ${(qty * 55).toFixed(2)}</span>
+                        <span class="text-lg font-light">€ ${(qty * 55).toFixed(2)}</span>
                     </div>`;
             }
 
             if (totalItems === 0) {
-                itemsContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic cart-empty-msg">${t.cartEmpty}</p>`;
-                checkoutItemsContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic">${t.cartEmpty}</p>`;
+                itemsContainer.innerHTML = `<p class="text-base font-light opacity-50 italic cart-empty-msg">${t.cartEmpty}</p>`;
+                checkoutItemsContainer.innerHTML = `<p class="text-base font-light opacity-50 italic">${t.cartEmpty}</p>`;
             }
 
             navCartEl.innerText = `${t.cartWord} (${totalItems})`;
