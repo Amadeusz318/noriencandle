@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" class="snap-y snap-mandatory">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,9 +25,8 @@
         }
     </script>
     <style>
+        /* USUNIĘTO scroll-behavior: smooth, ABY ZASTĄPIĆ GO PRECYZYJNĄ KRZYWĄ W JS */
         html { 
-            scroll-behavior: smooth; 
-            /* GŁÓWNY BAJER: Płynne zakotwiczanie sekcji (Scroll Snapping) */
             scroll-snap-type: y mandatory;
         }
         
@@ -36,10 +35,9 @@
             background-color: #fcfaf7; 
         }
 
-        /* Każda sekcja musi być zakotwiczona */
+        /* Łagodne dociąganie, bez "twardego" hamulca */
         section {
             scroll-snap-align: start;
-            scroll-snap-stop: always;
         }
 
         nav { 
@@ -88,7 +86,7 @@
             fill: transparent; 
             stroke-width: 3.5; 
             cursor: pointer; 
-            transition: transform 0.4s ease, fill 0.4s ease, filter 0.4s ease, stroke-opacity 0.4s ease;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), fill 0.5s ease, filter 0.5s ease;
             transform-origin: center; transform-box: fill-box;
         }
         
@@ -99,14 +97,15 @@
 
         .label-active { 
             font-size: 13px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.8; 
-            transition: transform 0.4s ease; text-anchor: middle; pointer-events: none;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); text-anchor: middle; pointer-events: none;
         }
         .text-mitte { fill: #b35a2d; }
         .text-prenzl { fill: #8a7b8e; }
         .text-kreuz { fill: #005f63; }
         .text-neukolln { fill: #631b2b; }
 
-        .active-group:hover .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.12)); }
+        /* Miększy Hover dla samej mapy */
+        .active-group:hover .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 15px rgba(0,0,0,0.08)); }
         .active-group:hover .label-active { transform: translateY(-8px); opacity: 1; }
         
         .active-group[data-id="mitte"]:hover .active-path { fill: rgba(179, 90, 45, 0.1); }
@@ -115,7 +114,7 @@
         .active-group[data-id="neukolln"]:hover .active-path { fill: rgba(99, 27, 43, 0.1); }
 
         #map-svg.is-focused .active-group:not(.is-selected) { opacity: 0.2; }
-        #map-svg.is-focused .active-group.is-selected .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.12)); }
+        #map-svg.is-focused .active-group.is-selected .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 15px rgba(0,0,0,0.08)); }
         .active-group.is-selected[data-id="mitte"] .active-path { fill: rgba(179, 90, 45, 0.15); }
         .active-group.is-selected[data-id="prenzl"] .active-path { fill: rgba(138, 123, 142, 0.15); }
         .active-group.is-selected[data-id="kreuz"] .active-path { fill: rgba(0, 95, 99, 0.15); }
@@ -123,7 +122,7 @@
         .active-group.is-selected .label-active { transform: translateY(-8px); opacity: 1; }
 
         /* ------------------------------------- */
-        /* WYSUWANY PANEL BOCZNY (DRAWER)        */
+        /* WYSUWANY PANEL BOCZNY                 */
         /* ------------------------------------- */
         #side-drawer {
             position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh;
@@ -162,9 +161,9 @@
         </div>
 
         <div class="hidden lg:flex gap-12 text-[10px] tracking-widest uppercase font-light">
-            <a href="#map-explore" id="nav-map" class="hover:opacity-50 transition">Mapa</a>
-            <a href="#archives" id="nav-archives" class="hover:opacity-50 transition">Archiwum</a>
-            <a href="#manifesto" id="nav-manifesto" class="hover:opacity-50 transition">Manifest</a>
+            <a href="#map-explore" class="hover:opacity-50 transition nav-link">Mapa</a>
+            <a href="#archives" class="hover:opacity-50 transition nav-link">Archiwum</a>
+            <a href="#manifesto" class="hover:opacity-50 transition nav-link">Manifest</a>
         </div>
         <div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap">KOSZYK (0)</div>
     </nav>
@@ -178,7 +177,7 @@
                 Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.
             </p>
         </div>
-        <a href="#map-explore" id="scroll-text" class="absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
+        <a href="#map-explore" class="nav-link absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
     </section>
 
     <!-- SEKCJA 2: MAPA -->
@@ -319,10 +318,8 @@
         </div>
     </section>
 
-    <!-- SEKCJA 4: MANIFEST (Połączona ze stopką na samym dole) -->
+    <!-- SEKCJA 4: MANIFEST (Zespolony ze stopką) -->
     <section id="manifesto" class="h-screen w-full bg-norien-dark text-white flex flex-col justify-between pt-24">
-        
-        <!-- Wyśrodkowana zawartość manifestu -->
         <div class="flex-grow flex flex-col justify-center items-center px-6">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
                 <h2 id="manifesto-sub" class="text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
@@ -337,7 +334,6 @@
             </div>
         </div>
 
-        <!-- Stopka przyklejona do dołu sekcji (100vh) -->
         <footer class="py-10 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full">
             <div>&copy; 2026 Norien Berlin — Olfactory Archives</div>
             <div class="flex gap-10">
@@ -386,8 +382,54 @@
         </div>
     </div>
 
-    <!-- SKRYPTY -->
+    <!-- SKRYPTY (Map, Drawer & Custom Smooth Scroll) -->
     <script>
+        // --- CUSTOM SMOOTH SCROLL (SZYBKI START, MIĘKKIE LĄDOWANIE) ---
+        function smoothScroll(targetId, duration) {
+            const targetElement = document.querySelector(targetId);
+            if (!targetElement) return;
+
+            // Tymczasowo wyłączamy native snap, by uniknąć zjawiska "zepsutej windy" w trakcie animacji
+            document.documentElement.style.scrollSnapType = 'none';
+
+            const targetPosition = targetElement.getBoundingClientRect().top;
+            const startPosition = window.pageYOffset;
+            let startTime = null;
+
+            // Krzywa easeOutExpo
+            function easeOutExpo(t, b, c, d) {
+                return t === d ? b + c : c * (-Math.pow(2, -10 * t / d) + 1) + b;
+            }
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const run = easeOutExpo(timeElapsed, startPosition, targetPosition, duration);
+                
+                window.scrollTo(0, run);
+                
+                if (timeElapsed < duration) {
+                    requestAnimationFrame(animation);
+                } else {
+                    window.scrollTo(0, startPosition + targetPosition);
+                    // Przywracamy scroll-snapping
+                    document.documentElement.style.scrollSnapType = 'y mandatory';
+                }
+            }
+            requestAnimationFrame(animation);
+        }
+
+        // Obsługa kliknięć w menu nawigacyjne
+        document.querySelectorAll('.nav-link').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href');
+                smoothScroll(target, 1200); // 1.2 sekundy = majestatyczne, długie lądowanie
+            });
+        });
+
+
+        // --- LOGIKA MAPY I BOCZNEGO PANELU ---
         let currentActiveId = '';
         const mapSvg = document.getElementById('map-svg');
 
@@ -466,19 +508,19 @@
 
         function scrollToArchiveFromDrawer() {
             let archiveId = '';
-            if(currentActiveId === 'mitte') archiveId = 'prod-mitte-archive';
-            if(currentActiveId === 'prenzl') archiveId = 'prod-prenzlauer-archive';
-            if(currentActiveId === 'kreuz') archiveId = 'prod-kreuzberg-archive';
-            if(currentActiveId === 'neukolln') archiveId = 'prod-neukoln-archive';
+            if(currentActiveId === 'mitte') archiveId = '#prod-mitte-archive';
+            if(currentActiveId === 'prenzl') archiveId = '#prod-prenzlauer-archive';
+            if(currentActiveId === 'kreuz') archiveId = '#prod-kreuzberg-archive';
+            if(currentActiveId === 'neukolln') archiveId = '#prod-neukoln-archive';
             
             closeDrawer();
             
             setTimeout(() => {
-                document.getElementById(archiveId).scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 400);
+                smoothScroll(archiveId, 1200);
+            }, 300);
         }
 
-        // Zamykanie drawera po kliknięciu w tło strony (oprócz drawera i mapy)
+        // Zamykanie drawera po kliknięciu w tło
         document.addEventListener('click', function(event) {
             const drawer = document.getElementById('side-drawer');
             const mapExplore = document.getElementById('map-explore');
@@ -486,7 +528,6 @@
                 closeDrawer();
             }
         });
-
     </script>
 </body>
 </html>
