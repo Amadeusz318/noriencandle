@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" class="snap-y snap-mandatory">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,8 +25,22 @@
         }
     </script>
     <style>
-        html { scroll-behavior: smooth; }
-        body { overflow-x: hidden; background-color: #fcfaf7; }
+        html { 
+            scroll-behavior: smooth; 
+            /* GŁÓWNY BAJER: Płynne zakotwiczanie sekcji (Scroll Snapping) */
+            scroll-snap-type: y mandatory;
+        }
+        
+        body { 
+            overflow-x: hidden; 
+            background-color: #fcfaf7; 
+        }
+
+        /* Każda sekcja musi być zakotwiczona */
+        section {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
 
         nav { 
             background-color: rgba(252, 250, 247, 0.9); 
@@ -48,29 +62,27 @@
         @media (max-width: 768px) {
             .mobile-scroll {
                 display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
-                gap: 1rem; padding-bottom: 2rem; -webkit-overflow-scrolling: touch;
+                gap: 1rem; padding-bottom: 1rem; -webkit-overflow-scrolling: touch;
             }
             .mobile-scroll > div { min-width: 85vw; scroll-snap-align: center; }
             .mobile-scroll::-webkit-scrollbar { display: none; }
         }
 
         /* ------------------------------------- */
-        /* STYLIZACJA MAPY - IDEALNA SKALA       */
+        /* STYLIZACJA MAPY                       */
         /* ------------------------------------- */
         .bg-dots {
             background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px);
             background-size: 36px 36px;
         }
 
-        #map-svg { transition: all 0.5s ease; max-height: 75vh; }
+        #map-svg { transition: all 0.5s ease; max-height: 70vh; }
 
-        /* Pasywne tło - przygaszane w trybie FOCUS */
         .district-bg { fill: transparent; stroke: #e8e8e8; stroke-width: 0.8; transition: opacity 0.5s ease; }
         .label-bg { font-size: 11px; fill: #1a1a1a; opacity: 0.15; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
         
         #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.05; }
 
-        /* Aktywne Dzielnice */
         .active-group { transition: opacity 0.5s ease; }
         .active-path { 
             fill: transparent; 
@@ -94,7 +106,6 @@
         .text-kreuz { fill: #005f63; }
         .text-neukolln { fill: #631b2b; }
 
-        /* HOVER EFEKT */
         .active-group:hover .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.12)); }
         .active-group:hover .label-active { transform: translateY(-8px); opacity: 1; }
         
@@ -103,11 +114,8 @@
         .active-group[data-id="kreuz"]:hover .active-path { fill: rgba(0, 95, 99, 0.1); }
         .active-group[data-id="neukolln"]:hover .active-path { fill: rgba(99, 27, 43, 0.1); }
 
-        /* TRYB FOCUS (Po kliknięciu) */
         #map-svg.is-focused .active-group:not(.is-selected) { opacity: 0.2; }
-        #map-svg.is-focused .active-group.is-selected .active-path { 
-            transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.12)); 
-        }
+        #map-svg.is-focused .active-group.is-selected .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.12)); }
         .active-group.is-selected[data-id="mitte"] .active-path { fill: rgba(179, 90, 45, 0.15); }
         .active-group.is-selected[data-id="prenzl"] .active-path { fill: rgba(138, 123, 142, 0.15); }
         .active-group.is-selected[data-id="kreuz"] .active-path { fill: rgba(0, 95, 99, 0.15); }
@@ -139,7 +147,6 @@
             transition: opacity 0.4s ease, transform 0.4s ease;
         }
         #drawer-inner.loaded { opacity: 1; transform: translateY(0); }
-        
         #drawer-inner::-webkit-scrollbar { width: 3px; }
         #drawer-inner::-webkit-scrollbar-thumb { background: #e0e0e0; }
 
@@ -147,6 +154,7 @@
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
 
+    <!-- NAWIGACJA -->
     <nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
         <div class="flex flex-col">
             <span class="text-lg md:text-xl font-extralight tracking-ultra uppercase leading-none">Norien</span>
@@ -161,8 +169,8 @@
         <div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap">KOSZYK (0)</div>
     </nav>
 
-    <!-- HERO SECTION (Wysokość: 100vh) -->
-    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative">
+    <!-- SEKCJA 1: HERO -->
+    <section id="hero" class="h-screen w-full flex flex-col justify-center items-center text-center px-6 relative">
         <div class="z-10 fade-in">
             <p id="hero-sub" class="text-[9px] md:text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60">Exclusive Souvenir from Berlin</p>
             <h1 class="text-5xl md:text-8xl font-thin tracking-tighter mb-10 leading-tight">Olfactory <br> <span class="italic">Cartography.</span></h1>
@@ -173,13 +181,12 @@
         <a href="#map-explore" id="scroll-text" class="absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
     </section>
 
-    <!-- MAPA (Wysokość zrównana z Hero: min-h-screen, centralne wyrównanie) -->
-    <section id="map-explore" class="min-h-screen flex items-center bg-white relative overflow-hidden bg-dots border-y border-gray-100">
-        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center py-20">
+    <!-- SEKCJA 2: MAPA -->
+    <section id="map-explore" class="h-screen w-full flex flex-col justify-center bg-white relative overflow-hidden bg-dots border-y border-gray-100 pt-16">
+        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
                 <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible">
-                    
                     <!-- PASYWNE TŁO MIASTA -->
                     <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
                     <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
@@ -190,7 +197,7 @@
                     <path class="district-bg" d="M 640,350 L 750,320 L 820,450 L 650,550 L 600,450 Z" /> <text x="710" y="410" class="label-bg">Lichtenberg</text>
                     <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z" /> <text x="780" y="650" class="label-bg">Treptow-Köp.</text>
 
-                    <!-- TWOJE 4 PRODUKTY -->
+                    <!-- AKTYWNE DZIELNICE -->
                     <g class="active-group" data-id="mitte" onclick="showDrawer('mitte')">
                         <path class="active-path path-mitte" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
                         <text x="390" y="405" class="label-active text-mitte">MITTE</text>
@@ -210,129 +217,136 @@
                 </svg>
             </div>
             
-            <div class="space-y-6 md:space-y-8 md:col-span-5 lg:col-span-4 lg:pl-6 xl:pr-12">
+            <div class="space-y-6 md:col-span-5 lg:col-span-4 lg:pl-6 xl:pr-12">
                 <h2 id="guide-sub" class="text-[10px] tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
                 <h3 id="guide-title" class="text-3xl lg:text-4xl font-extralight leading-tight">Twoja dzielnica. <br> Twój zapach.</h3>
                 <p id="guide-desc" class="text-norien-text/70 leading-relaxed font-light text-xs md:text-sm text-gray-500">
                     Nasze kompozycje pełnią rolę przewodników. Najedź na kolorowy obrys, aby aktywować interakcję i poznać sensoryczny kod danej dzielnicy.
                 </p>
-                <div class="pt-6 border-t border-norien-dark/10">
+                <div class="pt-4 border-t border-norien-dark/10">
                     <p id="guide-action" class="text-[9px] tracking-widest uppercase opacity-40 font-semibold">Kliknij na mapę, aby wysunąć detale.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ARCHIWUM PRODUKTÓW -->
-    <section id="archives" class="py-24 md:py-32 px-6 overflow-hidden">
-        <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            
-            <div id="prod-mitte-archive" class="group relative bg-norien-canvas p-10 md:p-12 border border-norien-dark/5 md:border-transparent hover:border-[#b35a2d] transition-all duration-700">
-                <div class="mb-12 md:mb-16 flex flex-col items-center text-center">
-                    <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 01</p>
-                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm">
-                        <div>
-                            <h4 class="text-2xl md:text-3xl font-extralight tracking-ultra mb-6 md:mb-8 text-[#b35a2d]">MITTE</h4>
-                            <div class="h-px w-10 md:w-12 bg-norien-dark mx-auto mb-6 md:mb-8 opacity-20"></div>
-                            <p class="text-[8px] tracking-widest leading-loose uppercase">Lavender / Myrrh<br>Suede</p>
+    <!-- SEKCJA 3: ARCHIWUM -->
+    <section id="archives" class="h-screen w-full flex flex-col justify-center px-6 overflow-hidden">
+        <div class="container mx-auto">
+            <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <div id="prod-mitte-archive" class="group relative bg-white p-8 md:p-10 border border-norien-dark/5 hover:border-[#b35a2d] transition-all duration-700">
+                    <div class="mb-10 flex flex-col items-center text-center">
+                        <p class="text-[8px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 01</p>
+                        <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-6 bg-norien-canvas shadow-sm">
+                            <div>
+                                <h4 class="text-xl md:text-2xl font-extralight tracking-ultra mb-6 text-[#b35a2d]">MITTE</h4>
+                                <div class="h-px w-8 bg-norien-dark mx-auto mb-6 opacity-20"></div>
+                                <p class="text-[7px] tracking-widest leading-loose uppercase">Lavender / Myrrh<br>Suede</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-light">€ 55.00</span>
+                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
                         </div>
                     </div>
                 </div>
-                <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
-                    <div class="flex justify-between items-center pt-4">
-                        <span class="text-sm font-light">€ 55.00</span>
-                        <span class="text-[10px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
-                    </div>
-                </div>
-            </div>
 
-            <div id="prod-prenzlauer-archive" class="group relative bg-norien-canvas p-10 md:p-12 border border-norien-dark/5 md:border-transparent hover:border-[#8a7b8e] transition-all duration-700">
-                <div class="mb-12 md:mb-16 flex flex-col items-center text-center">
-                    <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 02</p>
-                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm">
-                        <div>
-                            <h4 class="text-xl md:text-2xl font-extralight tracking-ultra mb-6 md:mb-8 uppercase text-[#8a7b8e]">Prenzl. Berg</h4>
-                            <div class="h-px w-10 md:w-12 bg-norien-dark mx-auto mb-6 md:mb-8 opacity-20"></div>
-                            <p class="text-[8px] tracking-widest leading-loose uppercase">Lemon / Jasmine<br>Sandalwood</p>
+                <div id="prod-prenzlauer-archive" class="group relative bg-white p-8 md:p-10 border border-norien-dark/5 hover:border-[#8a7b8e] transition-all duration-700">
+                    <div class="mb-10 flex flex-col items-center text-center">
+                        <p class="text-[8px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 02</p>
+                        <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-6 bg-norien-canvas shadow-sm">
+                            <div>
+                                <h4 class="text-lg md:text-xl font-extralight tracking-ultra mb-6 uppercase text-[#8a7b8e]">Prenzl. Berg</h4>
+                                <div class="h-px w-8 bg-norien-dark mx-auto mb-6 opacity-20"></div>
+                                <p class="text-[7px] tracking-widest leading-loose uppercase">Lemon / Jasmine<br>Sandalwood</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-light">€ 55.00</span>
+                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
                         </div>
                     </div>
                 </div>
-                <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
-                    <div class="flex justify-between items-center pt-4">
-                        <span class="text-sm font-light">€ 55.00</span>
-                        <span class="text-[10px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
-                    </div>
-                </div>
-            </div>
 
-            <div id="prod-kreuzberg-archive" class="group relative bg-norien-canvas p-10 md:p-12 border border-norien-dark/5 md:border-transparent hover:border-[#005f63] transition-all duration-700">
-                <div class="mb-12 md:mb-16 flex flex-col items-center text-center">
-                    <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 36</p>
-                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm">
-                        <div>
-                            <h4 class="text-xl md:text-2xl font-extralight tracking-ultra mb-6 md:mb-8 uppercase text-[#005f63]">Kreuzberg</h4>
-                            <div class="h-px w-10 md:w-12 bg-norien-dark mx-auto mb-6 md:mb-8 opacity-20"></div>
-                            <p class="text-[8px] tracking-widest leading-loose uppercase">Bergamot / Patchouli<br>Vetiver</p>
+                <div id="prod-kreuzberg-archive" class="group relative bg-white p-8 md:p-10 border border-norien-dark/5 hover:border-[#005f63] transition-all duration-700">
+                    <div class="mb-10 flex flex-col items-center text-center">
+                        <p class="text-[8px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 36</p>
+                        <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-6 bg-norien-canvas shadow-sm">
+                            <div>
+                                <h4 class="text-lg md:text-xl font-extralight tracking-ultra mb-6 uppercase text-[#005f63]">Kreuzberg</h4>
+                                <div class="h-px w-8 bg-norien-dark mx-auto mb-6 opacity-20"></div>
+                                <p class="text-[7px] tracking-widest leading-loose uppercase">Bergamot / Patchouli<br>Vetiver</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-light">€ 55.00</span>
+                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
                         </div>
                     </div>
                 </div>
-                <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
-                    <div class="flex justify-between items-center pt-4">
-                        <span class="text-sm font-light">€ 55.00</span>
-                        <span class="text-[10px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
-                    </div>
-                </div>
-            </div>
 
-            <div id="prod-neukoln-archive" class="group relative bg-norien-canvas p-10 md:p-12 border border-norien-dark/5 md:border-transparent hover:border-[#631b2b] transition-all duration-700">
-                <div class="mb-12 md:mb-16 flex flex-col items-center text-center">
-                    <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 03</p>
-                    <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-8 bg-white shadow-sm">
-                        <div>
-                            <h4 class="text-2xl md:text-3xl font-extralight tracking-ultra mb-6 md:mb-8 text-[#631b2b]">NEUKÖLLN</h4>
-                            <div class="h-px w-10 md:w-12 bg-norien-dark mx-auto mb-6 md:mb-8 opacity-20"></div>
-                            <p class="text-[8px] tracking-widest leading-loose uppercase">Cardamom / Myrtle<br>Amber</p>
+                <div id="prod-neukoln-archive" class="group relative bg-white p-8 md:p-10 border border-norien-dark/5 hover:border-[#631b2b] transition-all duration-700">
+                    <div class="mb-10 flex flex-col items-center text-center">
+                        <p class="text-[8px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 03</p>
+                        <div class="w-full aspect-[2/3] border border-norien-dark/5 flex items-center justify-center p-6 bg-norien-canvas shadow-sm">
+                            <div>
+                                <h4 class="text-2xl md:text-3xl font-extralight tracking-ultra mb-6 text-[#631b2b]">NEUKÖLLN</h4>
+                                <div class="h-px w-8 bg-norien-dark mx-auto mb-6 opacity-20"></div>
+                                <p class="text-[7px] tracking-widest leading-loose uppercase">Cardamom / Myrtle<br>Amber</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Not polished, but real."</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-light">€ 55.00</span>
+                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
                         </div>
                     </div>
                 </div>
-                <div class="space-y-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <p class="text-[10px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Not polished, but real."</p>
-                    <div class="flex justify-between items-center pt-4">
-                        <span class="text-sm font-light">€ 55.00</span>
-                        <span class="text-[10px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
-                    </div>
-                </div>
-            </div>
 
-        </div>
-    </section>
-
-    <!-- MANIFEST -->
-    <section id="manifesto" class="py-32 md:py-40 bg-norien-dark text-white text-center px-6">
-        <div class="max-w-4xl mx-auto space-y-12">
-            <h2 id="manifesto-sub" class="text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
-            <p id="manifesto-text" class="text-2xl md:text-5xl font-thin leading-tight">
-                Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.
-            </p>
-            <div class="pt-8 md:pt-12">
-                <div class="inline-block border border-white/20 px-8 md:px-12 py-5 md:py-6 text-[9px] md:text-[10px] tracking-ultra uppercase opacity-60">
-                    Designed for Galleries & Concept Stores
-                </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-16 md:py-20 px-10 border-t border-norien-dark/10 text-[9px] md:text-[10px] tracking-widest uppercase opacity-60 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
-        <div>&copy; 2026 Norien Berlin — Olfactory Archives</div>
-        <div class="flex gap-10">
-            <a href="#" class="hover:opacity-100 transition">Instagram</a>
-            <a href="#" class="hover:opacity-100 transition">Privacy</a>
+    <!-- SEKCJA 4: MANIFEST (Połączona ze stopką na samym dole) -->
+    <section id="manifesto" class="h-screen w-full bg-norien-dark text-white flex flex-col justify-between pt-24">
+        
+        <!-- Wyśrodkowana zawartość manifestu -->
+        <div class="flex-grow flex flex-col justify-center items-center px-6">
+            <div class="max-w-3xl mx-auto space-y-10 text-center">
+                <h2 id="manifesto-sub" class="text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
+                <p id="manifesto-text" class="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight">
+                    Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.
+                </p>
+                <div class="pt-8">
+                    <div class="inline-block border border-white/20 px-8 py-5 text-[9px] tracking-ultra uppercase opacity-60">
+                        Designed for Galleries & Concept Stores
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>Berlin, GER</div>
-    </footer>
+
+        <!-- Stopka przyklejona do dołu sekcji (100vh) -->
+        <footer class="py-10 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full">
+            <div>&copy; 2026 Norien Berlin — Olfactory Archives</div>
+            <div class="flex gap-10">
+                <a href="#" class="hover:opacity-100 transition">Instagram</a>
+                <a href="#" class="hover:opacity-100 transition">Privacy</a>
+            </div>
+            <div>Berlin, GER</div>
+        </footer>
+    </section>
 
     <!-- WYSUWANY PANEL BOCZNY (DRAWER) -->
     <div id="side-drawer">
@@ -463,6 +477,16 @@
                 document.getElementById(archiveId).scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 400);
         }
+
+        // Zamykanie drawera po kliknięciu w tło strony (oprócz drawera i mapy)
+        document.addEventListener('click', function(event) {
+            const drawer = document.getElementById('side-drawer');
+            const mapExplore = document.getElementById('map-explore');
+            if (drawer.classList.contains('open') && !drawer.contains(event.target) && !mapExplore.contains(event.target)) {
+                closeDrawer();
+            }
+        });
+
     </script>
 </body>
 </html>
