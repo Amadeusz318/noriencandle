@@ -1,11 +1,20 @@
 <!DOCTYPE html>
-<html lang="pl" class="snap-y snap-mandatory scroll-smooth">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NORIEN BERLIN | Olfactory Cartography</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    
+    <!-- Biblioteki wymagane do płynnych animacji (UX/UI Master) -->
+    <!-- GSAP do animacji -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- GSAP ScrollTrigger do animacji opartych na scrollu -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lenis do "maślanego" płynnego przewijania -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -27,7 +36,8 @@
     <style>
         ::-webkit-scrollbar { display: none; }
         html { -ms-overflow-style: none; scrollbar-width: none; }
-        body { overflow-x: hidden; background-color: #fcfaf7; }
+        /* Usunięto overflox-x: hidden na body, Lenis zarządza scrollem */
+        body { background-color: #fcfaf7; }
 
         @media (pointer: fine) {
             body, a, button, input, select { cursor: none !important; }
@@ -37,9 +47,7 @@
         #preloader {
             position: fixed; inset: 0; background-color: #fcfaf7; z-index: 10000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
         }
-        #preloader.hide { transform: translateY(-100%); }
 
         /* 2. TEKSTURA FILMOWEGO ZIARNA */
         .noise-overlay {
@@ -53,20 +61,25 @@
             display: inline-block;
         }
 
-        /* CUSTOM CURSOR */
+        /* CUSTOM CURSOR - Usunięto transition, ponieważ GSAP będzie nim zarządzał płynniej */
         .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 10px; height: 10px; 
+            position: fixed; top: 0; left: 0; width: 12px; height: 12px; 
             background-color: #fff; border-radius: 50%; pointer-events: none; z-index: 9999;
             transform: translate(-50%, -50%); border: 1px solid transparent; mix-blend-mode: difference; 
-            transition: background-color 0.2s ease, border-color 0.2s ease; 
+            transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease, border-color 0.3s ease; 
+            will-change: transform;
         }
-        .custom-cursor.hover-state { background-color: transparent; border-color: #fff; }
+        .custom-cursor.hover-state { 
+            background-color: transparent; border-color: #fff; 
+            width: 40px; height: 40px;
+        }
 
-        .text-reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        /* Ulepszone krzywe przejść (Cubic Bezier z Premium Awwards) */
+        .text-reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1); }
         .is-revealed .text-reveal { opacity: 1; transform: translateY(0); }
         
-        .delay-1 { transition-delay: 0.2s; } .delay-2 { transition-delay: 0.6s; }
-        .delay-3 { transition-delay: 1.0s; } .delay-4 { transition-delay: 1.4s; }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; } .delay-4 { transition-delay: 0.4s; }
 
         nav { background-color: rgba(252, 250, 247, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(15, 15, 15, 0.05); z-index: 1000; opacity: 0; animation: fadeInNav 2s ease forwards 1s; }
         @keyframes fadeInNav { to { opacity: 1; } }
@@ -77,12 +90,12 @@
             .mobile-scroll::-webkit-scrollbar { display: none; }
         }
 
-        /* WARSTWOWA MAPA - SZYBSZE ANIMACJE */
+        /* WARSTWOWA MAPA */
         #map-explore::before {
             content: ''; position: absolute; inset: 0;
             background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px);
             background-size: 36px 36px; opacity: 0; z-index: 0; 
-            transition: opacity 1s ease 0.1s; /* Przyspieszone pojawianie się kropek */
+            transition: opacity 1.5s ease;
         }
         #map-explore.is-revealed::before { opacity: 1; }
         
@@ -90,11 +103,10 @@
             opacity: 0; 
             transform: translateY(30px) scale(0.95); 
             transform-origin: center; 
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); /* Przyspieszony wjazd z 1.2s do 0.8s */
+            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
         }
         .is-revealed .map-layer { opacity: 1; transform: translateY(0) scale(1); }
         
-        /* ZNACZNIE skrócone opóźnienia */
         .delay-map-1 { transition-delay: 0.1s; } 
         .delay-map-2 { transition-delay: 0.25s; } 
         .delay-map-3 { transition-delay: 0.4s; } 
@@ -104,11 +116,11 @@
         .label-bg { font-size: 11px; fill: #1a1a1a; opacity: 0.15; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
         #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.05; }
         .active-group { transition: opacity 0.5s ease; }
-        .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s ease, fill 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; }
+        .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), fill 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; }
         
         .path-mitte { stroke: #b35a2d; } .path-prenzl { stroke: #8a7b8e; }
         .path-kreuz { stroke: #005f63; } .path-neukolln { stroke: #631b2b; }
-        .label-active { font-size: 13px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.8; transition: transform 0.4s ease; text-anchor: middle; pointer-events: none; }
+        .label-active { font-size: 13px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.8; transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1); text-anchor: middle; pointer-events: none; }
         .text-mitte { fill: #b35a2d; } .text-prenzl { fill: #8a7b8e; }
         .text-kreuz { fill: #005f63; } .text-neukolln { fill: #631b2b; }
 
@@ -138,14 +150,14 @@
         .qty-btn { display: inline-block; padding: 0 8px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease; }
         .qty-btn:hover { transform: scale(1.6); font-weight: 600; }
 
-        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh; background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06); z-index: 1050; transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
+        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh; background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06); z-index: 1050; transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; }
         .drawer-panel.open { transform: translateX(0); }
         .drawer-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: #0f0f0f; opacity: 0.4; transition: opacity 0.3s; z-index: 10; }
         .drawer-close:hover { opacity: 1; }
         .drawer-inner { overflow-y: auto; flex-grow: 1; padding: 4rem 2rem 2rem 2rem; display: flex; flex-direction: column; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
         .drawer-inner.loaded { opacity: 1; transform: translateY(0); }
 
-        #checkout-overlay { position: fixed; inset: 0; background-color: #fcfaf7; z-index: 2000; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; }
+        #checkout-overlay { position: fixed; inset: 0; background-color: #fcfaf7; z-index: 2000; transform: translateY(100%); transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1); display: flex; }
         #checkout-overlay.open { transform: translateY(0); }
         .input-minimal { width: 100%; border-bottom: 1px solid rgba(15,15,15,0.2); padding: 10px 0; font-size: 12px; font-weight: 300; outline: none; transition: border-color 0.3s; background: transparent; }
         .input-minimal:focus { border-color: #0f0f0f; }
@@ -195,7 +207,7 @@
     </nav>
 
     <!-- SEKCJA 1: HERO -->
-    <section id="hero" class="observe-section h-[100dvh] w-full snap-start snap-always flex flex-col justify-center items-center text-center px-6 relative overflow-hidden">
+    <section id="hero" class="observe-section min-h-[100vh] w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden py-32">
         <div class="z-10">
             <p id="hero-sub" class="text-[9px] md:text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Exclusive Souvenir from Berlin</p>
             <h1 class="text-5xl md:text-8xl font-thin tracking-tighter mb-10 leading-tight">
@@ -212,7 +224,7 @@
     </section>
 
     <!-- SEKCJA 2: MAPA -->
-    <section id="map-explore" class="observe-section h-[100dvh] w-full snap-start snap-always flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 pt-20">
+    <section id="map-explore" class="observe-section min-h-[100vh] w-full flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 py-32">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
                 <div id="map-mobile-hint" class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[8px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
@@ -264,9 +276,10 @@
     </section>
 
     <!-- SEKCJA 3: THE CRAFT / PŁYNĄCY WOSK -->
-    <section id="the-craft" class="observe-section h-[100dvh] w-full snap-start snap-always relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white">
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="w-full h-full object-cover opacity-30 filter grayscale">
+    <section id="the-craft" class="observe-section min-h-[100vh] w-full relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white py-32">
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <!-- Dodana klasa craft-bg-img do efektu paralaksy -->
+            <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="craft-bg-img w-full h-[130%] object-cover opacity-30 filter grayscale -translate-y-[15%]">
         </div>
         <div class="wax-flow-bg"></div>
         
@@ -281,7 +294,7 @@
     </section>
 
     <!-- SEKCJA 4: ARCHIWUM -->
-    <section id="archives" class="observe-section h-[100dvh] w-full snap-start snap-always flex flex-col items-center justify-center px-6 overflow-hidden pt-20">
+    <section id="archives" class="observe-section min-h-[100vh] w-full flex flex-col items-center justify-center px-6 overflow-hidden py-32">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 
@@ -382,8 +395,8 @@
     </section>
 
     <!-- SEKCJA 5: MANIFEST + NEWSLETTER -->
-    <section id="manifesto" class="observe-section h-[100dvh] w-full snap-start snap-always bg-norien-dark text-white flex flex-col justify-between pt-24 relative">
-        <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10">
+    <section id="manifesto" class="observe-section min-h-[100vh] w-full bg-norien-dark text-white flex flex-col justify-between pt-24 pb-0 relative">
+        <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10 py-20">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
                 <h2 id="manifesto-sub" class="text-[10px] tracking-ultra uppercase opacity-40 text-reveal delay-1">The Studio</h2>
                 <p id="manifesto-text" class="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight text-reveal delay-2">
@@ -397,7 +410,7 @@
             </div>
         </div>
 
-        <div class="w-full max-w-xl mx-auto px-6 pb-12 text-center relative z-10 text-reveal delay-4">
+        <div class="w-full max-w-xl mx-auto px-6 pb-20 text-center relative z-10 text-reveal delay-4">
             <p id="news-title" class="text-[10px] tracking-widest uppercase mb-4 opacity-60">Join the Archive</p>
             <p id="news-desc" class="text-xs font-light opacity-50 mb-6">Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.</p>
             <div class="flex items-end justify-center border-b border-white/30 pb-2">
@@ -406,7 +419,7 @@
             </div>
         </div>
 
-        <footer class="py-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10">
+        <footer class="py-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10 mt-auto">
             <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
             
             <div class="flex md:hidden gap-3 text-[8px] tracking-widest uppercase">
@@ -538,7 +551,26 @@
     </div>
 
     <script>
-        // 1. PRELOADER LOGIC
+        // --- 0. INICJALIZACJA LENIS (SMOOTH SCROLL) ---
+        // To jest serce kinowego przewijania znanego z Awwwards
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // standardowa krzywa awwwards
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        // Integracja Lenis z GSAP ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time)=>{ lenis.raf(time * 1000) });
+        gsap.ticker.lagSmoothing(0, 0);
+
+        // --- 1. PRELOADER (Kinowa animacja wyjścia GSAP) ---
         window.addEventListener('load', () => {
             let perc = 0;
             const loaderPerc = document.getElementById('loader-perc');
@@ -550,17 +582,24 @@
                     perc = 100;
                     clearInterval(interval);
                     loaderPerc.innerText = perc + '%';
-                    setTimeout(() => {
-                        preloader.classList.add('hide');
-                        document.getElementById('hero').classList.add('is-revealed');
-                    }, 400);
+                    
+                    // Używamy GSAP do płynnego odsłonięcia (wipe up)
+                    gsap.to(preloader, {
+                        yPercent: -100,
+                        duration: 1.5,
+                        ease: "power4.inOut",
+                        delay: 0.2,
+                        onComplete: () => {
+                            document.getElementById('hero').classList.add('is-revealed');
+                        }
+                    });
                 } else {
                     loaderPerc.innerText = perc + '%';
                 }
             }, 80);
         });
 
-        // 2. MAGNETIC HOVER
+        // --- 2. MAGNETIC HOVER ---
         document.querySelectorAll('.magnetic').forEach(el => {
             el.addEventListener('mousemove', (e) => {
                 const rect = el.getBoundingClientRect();
@@ -573,7 +612,7 @@
             });
         });
 
-        // 3. INTERSECTION OBSERVER - SZYBSZA REAKCJA DLA MAPY (Threshold z 0.4 na 0.15)
+        // --- 3. INTERSECTION OBSERVER ---
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -586,39 +625,51 @@
             document.querySelectorAll('.observe-section:not(#hero)').forEach(section => {
                 observer.observe(section);
             });
+
+            // --- 3.5 GSAP SCROLLTRIGGER (PARALAKSA ZDJĘCIA) ---
+            // Używamy zintegrowanego ze scrollem przesunięcia zdjęcia
+            gsap.to(".craft-bg-img", {
+                yPercent: 30, // Obraz przesunie się o 30% w dół w trakcie scrollowania przez sekcję
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#the-craft",
+                    start: "top bottom", 
+                    end: "bottom top",
+                    scrub: true // Animacja jest połączona ze scrollem
+                }
+            });
         });
 
-        // --- CUSTOM CURSOR ---
+        // --- 4. ZAAWANSOWANY KURSOR GSAP (Jelly/Lerp Effect) ---
         const cursor = document.getElementById('custom-cursor');
         if (window.matchMedia("(pointer: fine)").matches) {
-            document.addEventListener('mousemove', e => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
+            
+            // GSAP 'quickTo' optymalizuje wydajność przy podążaniu za myszą
+            let xTo = gsap.quickTo(cursor, "x", {duration: 0.5, ease: "power3"});
+            let yTo = gsap.quickTo(cursor, "y", {duration: 0.5, ease: "power3"});
+
+            window.addEventListener("mousemove", e => {
+                xTo(e.clientX);
+                yTo(e.clientY);
             });
+
             document.querySelectorAll('.nav-hover').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('hover-state'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state'));
             });
         }
 
-        // --- TRANSLACJE ---
+        // --- TRANSLACJE (Bez zmian logicznych) ---
         let currentLang = 'pl';
         const translations = {
-            pl: {
-                navMap: "Mapa", navCraft: "Rzemiosło", navArchives: "Archiwum", navManifesto: "Manifest", cartWord: "KOSZYK", scrollText: "Przewiń by odkryć", heroSub: "Exclusive Souvenir from Berlin", heroDesc: "Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.", guideHint: "Dotknij dzielnicy", guideSub: "The Urban Guide", guideTitle: "Twoja dzielnica. <br> Twój zapach.", guideDesc: "Nasze kompozycje pełnią rolę przewodników. Najedź na kolorowy obrys, aby aktywować interakcję i poznać sensoryczny kod danej dzielnicy.", guideAction: "Kliknij na mapę, aby wysunąć detale.", craftSub: "The Craft", craftTitle: "Czysta forma.", craftDesc: "Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. Ręcznie zalewane w berlińskim atelier. Zestawione z rzadkimi esencjami, by rezonować bez zakłóceń.", manifestoSub: "The Studio", manifestoText: "Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.", newsInput: "Twój adres e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Twój koszyk jest pusty.", cartShipping: "Wysyłka", cartFree: "Gratis", checkoutBack: "Wróć do sklepu", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Kontakt", inEmail: "Adres e-mail", checkAddress: "Adres Dostawy", inFname: "Imię", inLname: "Nazwisko", inStreet: "Ulica i numer domu", inZip: "Kod pocztowy", inCity: "Miasto", checkPayment: "Płatność", checkSys: "System płatności (Demo)", btnPay: "Zapłać i Zamów"
-            },
-            en: {
-                navMap: "The Map", navCraft: "The Craft", navArchives: "Archives", navManifesto: "Manifesto", cartWord: "CART", scrollText: "Scroll to explore", heroSub: "Exclusive Souvenir from Berlin", heroDesc: "We don't sell candles. We archive Berlin's identity. Each scent represents geographic coordinates and an emotional record of a specific district.", guideHint: "Tap a district", guideSub: "The Urban Guide", guideTitle: "Your district. <br> Your scent.", guideDesc: "Our compositions serve as guides. Hover over the colored outline to activate interaction and discover the sensory code of the district.", guideAction: "Click the map to open details.", craftSub: "The Craft", craftTitle: "Pure form.", craftDesc: "We abandoned paraffin in favor of a vegan rapeseed and coconut wax blend. Hand-poured in our Berlin atelier. Paired with rare essences to resonate without interference.", manifestoSub: "The Studio", manifestoText: "Our compositions are created in our Berlin atelier. We use plant wax as a clean carrier for rare essences that define the city's architecture.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Receive private notes from our lab and early access to limited fragrance editions.", newsInput: "Your email address", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Your cart is empty.", cartShipping: "Shipping", cartFree: "Free", checkoutBack: "Back to store", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Contact", inEmail: "Email address", checkAddress: "Delivery Address", inFname: "First name", inLname: "Last name", inStreet: "Street and house number", inZip: "ZIP code", inCity: "City", checkPayment: "Payment", checkSys: "Payment System (Demo)", btnPay: "Pay & Order"
-            },
-            de: {
-                navMap: "Karte", navCraft: "Handwerk", navArchives: "Archiv", navManifesto: "Manifest", cartWord: "WARENKORB", scrollText: "Scrollen zum Entdecken", heroSub: "Exklusives Souvenir aus Berlin", heroDesc: "Wir verkaufen keine Kerzen. Wir archivieren die Identität Berlins. Jeder Duft ist eine geografische Koordinate und eine emotionale Aufzeichnung.", guideHint: "Bezirk antippen", guideSub: "The Urban Guide", guideTitle: "Dein Viertel. <br> Dein Duft.", guideDesc: "Unsere Kompositionen dienen als Wegweiser. Fahre über die farbige Kontur, um die Interaktion zu aktivieren und den sensorischen Code zu entdecken.", guideAction: "Auf die Karte klicken für Details.", craftSub: "The Craft", craftTitle: "Reine Form.", craftDesc: "Wir verzichten auf Paraffin zugunsten einer veganen Raps- und Kokoswachsmischung. Handgegossen im Berliner Atelier.", manifestoSub: "Das Studio", manifestoText: "Unsere Kompositionen entstehen im Berliner Atelier. Wir verwenden Pflanzenwachs als reinen Träger für seltene Essenzen.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Erhalte private Notizen aus unserem Labor und frühen Zugang zu limitierten Editionen.", newsInput: "Deine E-Mail Adresse", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Kaufen", btnAdded: "Hinzugefügt", cartEmpty: "Dein Warenkorb ist leer.", cartShipping: "Versand", cartFree: "Kostenlos", checkoutBack: "Zurück zum Shop", checkoutOrderSum: "Bestellübersicht", checkoutDue: "Gesamtsumme", checkContact: "Kontakt", inEmail: "E-Mail-Adresse", checkAddress: "Lieferadresse", inFname: "Vorname", inLname: "Nachname", inStreet: "Straße und Hausnummer", inZip: "PLZ", inCity: "Stadt", checkPayment: "Zahlung", checkSys: "Zahlungssystem (Demo)", btnPay: "Zahlen & Bestellen"
-            }
+            pl: { navMap: "Mapa", navCraft: "Rzemiosło", navArchives: "Archiwum", navManifesto: "Manifest", cartWord: "KOSZYK", scrollText: "Przewiń by odkryć", heroSub: "Exclusive Souvenir from Berlin", heroDesc: "Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.", guideHint: "Dotknij dzielnicy", guideSub: "The Urban Guide", guideTitle: "Twoja dzielnica. <br> Twój zapach.", guideDesc: "Nasze kompozycje pełnią rolę przewodników. Najedź na kolorowy obrys, aby aktywować interakcję i poznać sensoryczny kod danej dzielnicy.", guideAction: "Kliknij na mapę, aby wysunąć detale.", craftSub: "The Craft", craftTitle: "Czysta forma.", craftDesc: "Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. Ręcznie zalewane w berlińskim atelier. Zestawione z rzadkimi esencjami, by rezonować bez zakłóceń.", manifestoSub: "The Studio", manifestoText: "Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.", newsInput: "Twój adres e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Twój koszyk jest pusty.", cartShipping: "Wysyłka", cartFree: "Gratis", checkoutBack: "Wróć do sklepu", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Kontakt", inEmail: "Adres e-mail", checkAddress: "Adres Dostawy", inFname: "Imię", inLname: "Nazwisko", inStreet: "Ulica i numer domu", inZip: "Kod pocztowy", inCity: "Miasto", checkPayment: "Płatność", checkSys: "System płatności (Demo)", btnPay: "Zapłać i Zamów" },
+            en: { navMap: "The Map", navCraft: "The Craft", navArchives: "Archives", navManifesto: "Manifesto", cartWord: "CART", scrollText: "Scroll to explore", heroSub: "Exclusive Souvenir from Berlin", heroDesc: "We don't sell candles. We archive Berlin's identity. Each scent represents geographic coordinates and an emotional record of a specific district.", guideHint: "Tap a district", guideSub: "The Urban Guide", guideTitle: "Your district. <br> Your scent.", guideDesc: "Our compositions serve as guides. Hover over the colored outline to activate interaction and discover the sensory code of the district.", guideAction: "Click the map to open details.", craftSub: "The Craft", craftTitle: "Pure form.", craftDesc: "We abandoned paraffin in favor of a vegan rapeseed and coconut wax blend. Hand-poured in our Berlin atelier. Paired with rare essences to resonate without interference.", manifestoSub: "The Studio", manifestoText: "Our compositions are created in our Berlin atelier. We use plant wax as a clean carrier for rare essences that define the city's architecture.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Receive private notes from our lab and early access to limited fragrance editions.", newsInput: "Your email address", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Your cart is empty.", cartShipping: "Shipping", cartFree: "Free", checkoutBack: "Back to store", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Contact", inEmail: "Email address", checkAddress: "Delivery Address", inFname: "First name", inLname: "Last name", inStreet: "Street and house number", inZip: "ZIP code", inCity: "City", checkPayment: "Payment", checkSys: "Payment System (Demo)", btnPay: "Pay & Order" },
+            de: { navMap: "Karte", navCraft: "Handwerk", navArchives: "Archiv", navManifesto: "Manifest", cartWord: "WARENKORB", scrollText: "Scrollen zum Entdecken", heroSub: "Exklusives Souvenir aus Berlin", heroDesc: "Wir verkaufen keine Kerzen. Wir archivieren die Identität Berlins. Jeder Duft ist eine geografische Koordinate und eine emotionale Aufzeichnung.", guideHint: "Bezirk antippen", guideSub: "The Urban Guide", guideTitle: "Dein Viertel. <br> Dein Duft.", guideDesc: "Unsere Kompositionen dienen als Wegweiser. Fahre über die farbige Kontur, um die Interaktion zu aktivieren und den sensorischen Code zu entdecken.", guideAction: "Auf die Karte klicken für Details.", craftSub: "The Craft", craftTitle: "Reine Form.", craftDesc: "Wir verzichten auf Paraffin zugunsten einer veganen Raps- und Kokoswachsmischung. Handgegossen im Berliner Atelier.", manifestoSub: "Das Studio", manifestoText: "Unsere Kompositionen entstehen im Berliner Atelier. Wir verwenden Pflanzenwachs als reinen Träger für seltene Essenzen.", manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Erhalte private Notizen aus unserem Labor und frühen Zugang zu limitierten Editionen.", newsInput: "Deine E-Mail Adresse", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Kaufen", btnAdded: "Hinzugefügt", cartEmpty: "Dein Warenkorb ist leer.", cartShipping: "Versand", cartFree: "Kostenlos", checkoutBack: "Zurück zum Shop", checkoutOrderSum: "Bestellübersicht", checkoutDue: "Gesamtsumme", checkContact: "Kontakt", inEmail: "E-Mail-Adresse", checkAddress: "Lieferadresse", inFname: "Vorname", inLname: "Nachname", inStreet: "Straße und Hausnummer", inZip: "PLZ", inCity: "Stadt", checkPayment: "Zahlung", checkSys: "Zahlungssystem (Demo)", btnPay: "Zahlen & Bestellen" }
         };
 
         function changeLang(lang) {
             currentLang = lang;
             const t = translations[lang] || translations['en'];
-
             document.getElementById('nav-map').innerText = t.navMap; document.getElementById('nav-craft').innerText = t.navCraft; document.getElementById('nav-archives').innerText = t.navArchives; document.getElementById('nav-manifesto').innerText = t.navManifesto; document.getElementById('hero-scroll').innerText = t.scrollText; document.getElementById('hero-sub').innerText = t.heroSub; document.getElementById('hero-desc').innerText = t.heroDesc; document.getElementById('map-mobile-hint').innerText = t.guideHint; document.getElementById('guide-sub').innerText = t.guideSub; document.getElementById('guide-title').innerHTML = t.guideTitle; document.getElementById('guide-desc').innerText = t.guideDesc; document.getElementById('guide-action').innerText = t.guideAction; document.getElementById('craft-sub').innerText = t.craftSub; document.getElementById('craft-title').innerText = t.craftTitle; document.getElementById('craft-desc').innerText = t.craftDesc; document.getElementById('manifesto-sub').innerText = t.manifestoSub; document.getElementById('manifesto-text').innerText = t.manifestoText; document.getElementById('manifesto-badge').innerText = t.manifestoBadge; document.getElementById('news-title').innerText = t.newsTitle; document.getElementById('news-desc').innerText = t.newsDesc; document.getElementById('news-input').placeholder = t.newsInput; document.getElementById('footer-copy').innerText = t.footerCopy; document.getElementById('cart-title').innerText = t.cartWord; document.getElementById('cart-shipping').innerText = t.cartShipping; document.getElementById('cart-shipping-val').innerText = t.cartFree; document.getElementById('checkout-back').innerText = t.checkoutBack; document.getElementById('checkout-summary-title').innerText = t.checkoutOrderSum; document.getElementById('checkout-due-label').innerText = t.checkoutDue; document.getElementById('check-contact').innerText = t.checkContact; document.getElementById('in-email').placeholder = t.inEmail; document.getElementById('check-address').innerText = t.checkAddress; document.getElementById('in-fname').placeholder = t.inFname; document.getElementById('in-lname').placeholder = t.inLname; document.getElementById('in-street').placeholder = t.inStreet; document.getElementById('in-zip').placeholder = t.inZip; document.getElementById('in-city').placeholder = t.inCity; document.getElementById('check-payment').innerText = t.checkPayment; document.getElementById('check-sys').innerText = t.checkSys; document.getElementById('btn-pay').innerText = t.btnPay;
             
             document.querySelectorAll('.btn-checkout').forEach(el => el.innerText = 'CHECKOUT');
@@ -736,21 +787,30 @@
         function openCart(e) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
             closeDrawer(); 
+            // Zatrzymujemy lenis na czas otwartego modala
+            lenis.stop();
             document.getElementById('cart-drawer').classList.add('open');
             setTimeout(() => document.getElementById('cart-inner').classList.add('loaded'), 10);
         }
 
         function closeCart() {
+            // Wznawiamy scroll
+            lenis.start();
             document.getElementById('cart-drawer').classList.remove('open');
             document.getElementById('cart-inner').classList.remove('loaded');
         }
 
         function openCheckout() {
             if (Object.keys(cartState).length === 0) { alert(translations[currentLang].cartEmpty); return; }
-            closeCart(); document.getElementById('checkout-overlay').classList.add('open');
+            closeCart(); 
+            lenis.stop();
+            document.getElementById('checkout-overlay').classList.add('open');
         }
 
-        function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); }
+        function closeCheckout() { 
+            lenis.start();
+            document.getElementById('checkout-overlay').classList.remove('open'); 
+        }
 
         function updateDrawerUI(p) {
             document.getElementById('drawer-title').innerText = p.title;
