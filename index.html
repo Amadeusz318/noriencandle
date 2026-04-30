@@ -146,10 +146,6 @@
         #drawer-inner::-webkit-scrollbar { width: 3px; }
         #drawer-inner::-webkit-scrollbar-thumb { background: #e0e0e0; }
 
-        /* Klasy pomocnicze dla zdjęcia w panelu */
-        .img-overlay {
-            mix-blend-mode: multiply;
-        }
     </style>
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
@@ -228,7 +224,7 @@
         </div>
     </section>
 
-    <!-- SEKCJA 3: ARCHIWUM -->
+    <!-- SEKCJA 3: ARCHIWUM Z TWOIMI ZDJĘCIAMI -->
     <section id="archives" class="h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden pt-24 pb-12">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
@@ -236,12 +232,9 @@
                 <div id="prod-mitte-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#b35a2d] transition-all duration-700 flex flex-col">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 01</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center p-4 lg:p-6 bg-norien-canvas shadow-sm">
-                            <div>
-                                <h4 class="text-xl xl:text-3xl font-extralight tracking-ultra mb-4 lg:mb-6 text-[#b35a2d]">MITTE</h4>
-                                <div class="h-px w-8 bg-norien-dark mx-auto mb-4 lg:mb-6 opacity-20"></div>
-                                <p class="text-[7px] tracking-widest leading-loose uppercase">Lavender / Myrrh<br>Suede</p>
-                            </div>
+                        <!-- Twoja grafika M I T T E -->
+                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
+                            <img src="M I T T E_2.png" alt="Mitte" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -256,12 +249,9 @@
                 <div id="prod-prenzlauer-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#8a7b8e] transition-all duration-700 flex flex-col">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 02</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center p-4 lg:p-6 bg-norien-canvas shadow-sm">
-                            <div>
-                                <h4 class="text-lg xl:text-2xl font-extralight tracking-ultra mb-4 lg:mb-6 uppercase text-[#8a7b8e]">Prenzl. Berg</h4>
-                                <div class="h-px w-8 bg-norien-dark mx-auto mb-4 lg:mb-6 opacity-20"></div>
-                                <p class="text-[7px] tracking-widest leading-loose uppercase">Lemon / Jasmine<br>Sandalwood</p>
-                            </div>
+                        <!-- Twoja grafika PRENZLAUER BERG -->
+                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
+                            <img src="P R E N Z L A U E R B E R G_2.png" alt="Prenzlauer Berg" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -276,12 +266,9 @@
                 <div id="prod-kreuzberg-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#005f63] transition-all duration-700 flex flex-col">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 36</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center p-4 lg:p-6 bg-norien-canvas shadow-sm">
-                            <div>
-                                <h4 class="text-lg xl:text-2xl font-extralight tracking-ultra mb-4 lg:mb-6 uppercase text-[#005f63]">Kreuzberg</h4>
-                                <div class="h-px w-8 bg-norien-dark mx-auto mb-4 lg:mb-6 opacity-20"></div>
-                                <p class="text-[7px] tracking-widest leading-loose uppercase">Bergamot / Patchouli<br>Vetiver</p>
-                            </div>
+                        <!-- Twoja grafika KREUZBERG -->
+                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
+                            <img src="K R E U Z B E R G_2.png" alt="Kreuzberg" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -296,12 +283,9 @@
                 <div id="prod-neukoln-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#631b2b] transition-all duration-700 flex flex-col">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 03</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center p-4 lg:p-6 bg-norien-canvas shadow-sm">
-                            <div>
-                                <h4 class="text-xl xl:text-3xl font-extralight tracking-ultra mb-4 lg:mb-6 text-[#631b2b]">NEUKÖLLN</h4>
-                                <div class="h-px w-8 bg-norien-dark mx-auto mb-4 lg:mb-6 opacity-20"></div>
-                                <p class="text-[7px] tracking-widest leading-loose uppercase">Cardamom / Myrtle<br>Amber</p>
-                            </div>
+                        <!-- Twoja grafika NEUKÖLLN -->
+                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
+                            <img src="N E U K Ö L L N_2.png" alt="Neukölln" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -352,12 +336,10 @@
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
 
         <div id="drawer-inner" class="drawer-content">
-            <!-- MIEJSCE NA ZDJĘCIE (Obecnie z pięknymi placeholderami z Unsplash) -->
-            <div id="drawer-img-container" class="w-full aspect-[4/3] bg-[#f8f8f8] mb-8 relative overflow-hidden shadow-sm">
-                <!-- Zdjęcie z Unsplash -->
-                <img id="drawer-image" src="" alt="Norien Candle" class="w-full h-full object-cover opacity-90 transition-opacity duration-500 hidden">
-                <!-- Delikatny tint w kolorze dzielnicy dodający klimatu -->
-                <div id="drawer-tint" class="absolute inset-0 img-overlay opacity-20 transition-colors duration-500"></div>
+            <!-- Miejsce na zdjęcie zaciągane z Twoich plików graficznych -->
+            <div id="drawer-img-container" class="w-full aspect-[4/3] bg-white border border-gray-100 mb-8 relative overflow-hidden shadow-sm flex items-center justify-center p-6">
+                <!-- Twoja grafika ładująca się z dysku -->
+                <img id="drawer-image" src="" alt="Norien Candle" class="w-full h-full object-contain mix-blend-multiply opacity-90 transition-opacity duration-500 hidden">
                 <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[9px] uppercase tracking-widest text-gray-300">Loading...</span>
             </div>
 
@@ -433,31 +415,31 @@
         let currentActiveId = '';
         const mapSvg = document.getElementById('map-svg');
 
-        // BAZA PRODUKTÓW WRAZ Z LINKAMI DO ZDJĘĆ Z UNSPLASH
+        // BAZA PRODUKTÓW Z TWOIMI LOKALNYMI ZDJĘCIAMI
         const mapProducts = {
             mitte: { 
                 title: 'MITTE', sub: 'Archive No. 01', color: '#b35a2d', coords: '52°31\'12.0"N 13°24\'18.0"E',
                 notes: 'Lavender / Myrrh / Suede',
                 desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy. Dedykowane dla tych, którzy cenią nowoczesną surowość i historię.',
-                image: 'https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=800&q=80' // Surowy, luksusowy słoik
+                image: 'M I T T E_2.png'
             },
             prenzl: { 
                 title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E',
                 notes: 'Lemon / Jasmine / Sandalwood',
                 desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą. Delikatna cytryna spotyka głębokie, uspokajające drewno sandałowe.',
-                image: 'https://images.unsplash.com/photo-1608181114410-db2aa03d7d8b?auto=format&fit=crop&w=800&q=80' // Jasne, spokojne tło
+                image: 'P R E N Z L A U E R B E R G_2.png'
             },
             kreuz: { 
                 title: 'KREUZBERG', sub: 'Archive No. 36', color: '#005f63', coords: '52°29\'56.0"N 13°23\'20.0"E',
                 notes: 'Bergamot / Patchouli / Vetiver',
                 desc: 'Energia kanałów i nocne powietrze. Mocny, nieustępliwy i pełen charakteru zapach wetiwerii i paczuli.',
-                image: 'https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=800&q=80' // Ciemne, mocne szkło
+                image: 'K R E U Z B E R G_2.png'
             },
             neukolln: { 
                 title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E',
                 notes: 'Cardamom / Myrtle / Amber',
                 desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy z targu przy Maybachufer połączone z ciepłym, wibrującym bursztynem.',
-                image: 'https://images.unsplash.com/photo-1612198188060-b7c191cb3dc6?auto=format&fit=crop&w=800&q=80' // Głęboki, ciepły klimat
+                image: 'N E U K Ö L L N_2.png'
             }
         };
 
@@ -470,10 +452,9 @@
             document.getElementById('drawer-desc').innerText = p.desc;
             
             document.getElementById('drawer-top-line').style.backgroundColor = p.color;
-            document.getElementById('drawer-tint').style.backgroundColor = p.color;
             document.getElementById('drawer-line').style.backgroundColor = p.color;
 
-            // Zmiana zdjęcia
+            // Zmiana zdjęcia z dysku
             const imgEl = document.getElementById('drawer-image');
             imgEl.src = p.image;
             imgEl.onload = () => {
