@@ -25,18 +25,34 @@
         }
     </script>
     <style>
-        html { 
-            scroll-snap-type: y mandatory;
-        }
-        
-        body { 
-            overflow-x: hidden; 
-            background-color: #fcfaf7; 
+        html { scroll-snap-type: y mandatory; }
+        body { overflow-x: hidden; background-color: #fcfaf7; }
+
+        /* Ukrycie systemowego kursora dla urządzeń z myszką */
+        @media (pointer: fine) {
+            body, a, button, input { cursor: none !important; }
         }
 
-        section {
-            scroll-snap-align: start;
+        /* CUSTOM CURSOR */
+        .custom-cursor {
+            position: fixed; top: 0; left: 0; width: 10px; height: 10px;
+            background-color: #0f0f0f; border-radius: 50%;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
         }
+        .custom-cursor.hover-state {
+            width: 40px; height: 40px;
+            background-color: rgba(15, 15, 15, 0.05);
+            border: 1px solid rgba(15, 15, 15, 0.2);
+        }
+        .custom-cursor.hover-state-light {
+            width: 40px; height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        section { scroll-snap-align: start; }
 
         nav { 
             background-color: rgba(252, 250, 247, 0.9); 
@@ -50,10 +66,6 @@
         
         body::-webkit-scrollbar { width: 4px; }
         body::-webkit-scrollbar-thumb { background: #0f0f0f; }
-
-        .lang-btn { transition: all 0.3s; opacity: 0.4; }
-        .lang-btn:hover { opacity: 1; }
-        .lang-btn.active { opacity: 1; font-weight: 600; border-bottom: 1px solid currentColor; }
 
         @media (max-width: 768px) {
             .mobile-scroll {
@@ -71,19 +83,13 @@
             background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px);
             background-size: 36px 36px;
         }
-
         #map-svg { transition: all 0.5s ease; max-height: 70vh; }
-
         .district-bg { fill: transparent; stroke: #e8e8e8; stroke-width: 0.8; transition: opacity 0.5s ease; }
         .label-bg { font-size: 11px; fill: #1a1a1a; opacity: 0.15; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
-        
         #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.05; }
-
         .active-group { transition: opacity 0.5s ease; }
         .active-path { 
-            fill: transparent; 
-            stroke-width: 3.5; 
-            cursor: pointer; 
+            fill: transparent; stroke-width: 3.5; 
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), fill 0.5s ease, filter 0.5s ease;
             transform-origin: center; transform-box: fill-box;
         }
@@ -104,7 +110,6 @@
 
         .active-group:hover .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 15px rgba(0,0,0,0.08)); }
         .active-group:hover .label-active { transform: translateY(-8px); opacity: 1; }
-        
         .active-group[data-id="mitte"]:hover .active-path { fill: rgba(179, 90, 45, 0.1); }
         .active-group[data-id="prenzl"]:hover .active-path { fill: rgba(138, 123, 142, 0.1); }
         .active-group[data-id="kreuz"]:hover .active-path { fill: rgba(0, 95, 99, 0.1); }
@@ -119,52 +124,72 @@
         .active-group.is-selected .label-active { transform: translateY(-8px); opacity: 1; }
 
         /* ------------------------------------- */
-        /* WYSUWANY PANEL BOCZNY                 */
+        /* WYSUWANE PANELE (MAPA & KOSZYK)       */
         /* ------------------------------------- */
-        #side-drawer {
+        .drawer-panel {
             position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh;
             background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06);
             z-index: 1050; transform: translateX(100%);
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex; flex-direction: column;
         }
-        #side-drawer.open { transform: translateX(0); }
+        .drawer-panel.open { transform: translateX(0); }
         
         .drawer-close {
             position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none;
-            color: #0f0f0f; opacity: 0.4; transition: opacity 0.3s; z-index: 10; cursor: pointer;
+            color: #0f0f0f; opacity: 0.4; transition: opacity 0.3s; z-index: 10;
         }
         .drawer-close:hover { opacity: 1; }
         
-        #drawer-inner {
+        .drawer-inner {
             overflow-y: auto; flex-grow: 1; padding: 4rem 2rem 2rem 2rem;
             display: flex; flex-direction: column;
             opacity: 0; transform: translateY(15px);
             transition: opacity 0.4s ease, transform 0.4s ease;
         }
-        #drawer-inner.loaded { opacity: 1; transform: translateY(0); }
-        #drawer-inner::-webkit-scrollbar { width: 3px; }
-        #drawer-inner::-webkit-scrollbar-thumb { background: #e0e0e0; }
+        .drawer-inner.loaded { opacity: 1; transform: translateY(0); }
+        .drawer-inner::-webkit-scrollbar { width: 3px; }
+        .drawer-inner::-webkit-scrollbar-thumb { background: #e0e0e0; }
+
+        /* ------------------------------------- */
+        /* CHECKOUT OVERLAY (Pełnoekranowy wyjazd)*/
+        /* ------------------------------------- */
+        #checkout-overlay {
+            position: fixed; inset: 0; background-color: #fcfaf7; z-index: 2000;
+            transform: translateY(100%);
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+        }
+        #checkout-overlay.open { transform: translateY(0); }
+
+        .input-minimal {
+            width: 100%; bg-transparent; border-bottom: 1px solid rgba(15,15,15,0.2);
+            padding: 10px 0; font-size: 12px; font-weight: 300; outline: none; transition: border-color 0.3s;
+            background: transparent;
+        }
+        .input-minimal:focus { border-color: #0f0f0f; }
 
     </style>
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
 
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
+
     <!-- NAWIGACJA -->
     <nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
-        
-        <div class="flex flex-col items-center justify-center pt-1 cursor-pointer" onclick="smoothScroll('#hero', 2500)">
+        <div class="flex flex-col items-center justify-center pt-1 nav-hover" onclick="smoothScroll('#hero', 2500)">
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.25rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 9px; letter-spacing: 0.23em; margin-top: 0.45rem; margin-right: -0.23em; color: #555;">BERLIN</span>
         </div>
 
         <div class="hidden lg:flex gap-10 text-[10px] tracking-widest uppercase font-light">
-            <a href="#map-explore" class="hover:opacity-50 transition nav-link">Mapa</a>
-            <a href="#the-craft" class="hover:opacity-50 transition nav-link">Rzemiosło</a>
-            <a href="#archives" class="hover:opacity-50 transition nav-link">Archiwum</a>
-            <a href="#manifesto" class="hover:opacity-50 transition nav-link">Manifest</a>
+            <a href="#map-explore" class="hover:opacity-50 transition nav-link nav-hover">Mapa</a>
+            <a href="#the-craft" class="hover:opacity-50 transition nav-link nav-hover">Rzemiosło</a>
+            <a href="#archives" class="hover:opacity-50 transition nav-link nav-hover">Archiwum</a>
+            <a href="#manifesto" class="hover:opacity-50 transition nav-link nav-hover">Manifest</a>
         </div>
-        <div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap cursor-pointer">KOSZYK (0)</div>
+        <div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap nav-hover" onclick="openCart()">KOSZYK (0)</div>
     </nav>
 
     <!-- SEKCJA 1: HERO -->
@@ -176,7 +201,7 @@
                 Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.
             </p>
         </div>
-        <a href="#map-explore" class="nav-link absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
+        <a href="#map-explore" class="nav-link nav-hover absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
     </section>
 
     <!-- SEKCJA 2: MAPA -->
@@ -184,6 +209,9 @@
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
+                <!-- Informacja na mobile -->
+                <div class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[8px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
+                
                 <svg id="map-svg" viewBox="0 0 1000 850" class="w-full overflow-visible">
                     <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
                     <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
@@ -195,19 +223,19 @@
                     <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z" /> <text x="780" y="650" class="label-bg">Treptow-Köp.</text>
 
                     <g class="active-group" data-id="mitte" onclick="showDrawer('mitte')">
-                        <path class="active-path path-mitte" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
+                        <path class="active-path path-mitte nav-hover" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
                         <text x="390" y="405" class="label-active text-mitte">MITTE</text>
                     </g>
                     <g class="active-group" data-id="prenzl" onclick="showDrawer('prenzl')">
-                        <path class="active-path path-prenzl" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
+                        <path class="active-path path-prenzl nav-hover" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
                         <text x="545" y="395" class="label-active text-prenzl">PRENZL. BERG</text>
                     </g>
                     <g class="active-group" data-id="kreuz" onclick="showDrawer('kreuz')">
-                        <path class="active-path path-kreuz" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
+                        <path class="active-path path-kreuz nav-hover" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
                         <text x="540" y="515" class="label-active text-kreuz">KREUZBERG</text>
                     </g>
                     <g class="active-group" data-id="neukolln" onclick="showDrawer('neukolln')">
-                        <path class="active-path path-neukolln" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
+                        <path class="active-path path-neukolln nav-hover" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
                         <text x="530" y="710" class="label-active text-neukolln">NEUKÖLLN</text>
                     </g>
                 </svg>
@@ -226,15 +254,13 @@
         </div>
     </section>
 
-    <!-- SEKCJA 3 (NOWA): THE CRAFT / RZEMIOSŁO -->
-    <section id="the-craft" class="h-screen w-full relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-norien-dark">
-        <!-- Zmieniłem jasność i nasycenie by zbudować mocny kinowy kontrast -->
-        <div class="absolute inset-0 z-0">
-            <!-- Placeholder ciemnego, nastrojowego detalu szkła/betonu -->
+    <!-- SEKCJA 3: THE CRAFT / RZEMIOSŁO -->
+    <section id="the-craft" class="h-screen w-full relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-norien-dark text-white">
+        <div class="absolute inset-0 z-0 nav-hover-light">
             <img src="https://images.unsplash.com/photo-1596433809252-260c38afaf53?auto=format&fit=crop&w=1920&q=80" alt="Norien Craft" class="w-full h-full object-cover opacity-40 filter brightness-50 contrast-125">
         </div>
         
-        <div class="relative z-10 text-white max-w-2xl mx-auto flex flex-col items-center">
+        <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center pointer-events-none">
             <p class="text-[10px] tracking-[0.6em] uppercase mb-12 opacity-60" style="font-family: 'Montserrat', sans-serif;">The Craft</p>
             <h2 class="text-4xl md:text-6xl font-thin mb-10 tracking-wide">Czysta forma.</h2>
             <div class="h-px w-10 bg-white/20 mx-auto mb-10"></div>
@@ -249,7 +275,8 @@
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 
-                <div id="prod-mitte-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#b35a2d] transition-all duration-700 flex flex-col">
+                <!-- MITTE -->
+                <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#b35a2d] transition-all duration-700 flex flex-col nav-hover">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 01</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
@@ -260,12 +287,13 @@
                         <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Where everything meets."</p>
                         <div class="flex justify-between items-center pt-4 border-t border-gray-50">
                             <span class="text-xs font-light">€ 55.00</span>
-                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
+                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer acquire-btn" onclick="addToCart('mitte', this)">Acquire</span>
                         </div>
                     </div>
                 </div>
 
-                <div id="prod-prenzlauer-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#8a7b8e] transition-all duration-700 flex flex-col">
+                <!-- PRENZLAUER BERG -->
+                <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#8a7b8e] transition-all duration-700 flex flex-col nav-hover">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 02</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
@@ -276,12 +304,13 @@
                         <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"A morning in Mauerpark."</p>
                         <div class="flex justify-between items-center pt-4 border-t border-gray-50">
                             <span class="text-xs font-light">€ 55.00</span>
-                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
+                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer acquire-btn" onclick="addToCart('prenzl', this)">Acquire</span>
                         </div>
                     </div>
                 </div>
 
-                <div id="prod-kreuzberg-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#005f63] transition-all duration-700 flex flex-col">
+                <!-- KREUZBERG -->
+                <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#005f63] transition-all duration-700 flex flex-col nav-hover">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 36</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
@@ -292,12 +321,13 @@
                         <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Resistance & Rhythm."</p>
                         <div class="flex justify-between items-center pt-4 border-t border-gray-50">
                             <span class="text-xs font-light">€ 55.00</span>
-                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
+                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer acquire-btn" onclick="addToCart('kreuz', this)">Acquire</span>
                         </div>
                     </div>
                 </div>
 
-                <div id="prod-neukoln-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#631b2b] transition-all duration-700 flex flex-col">
+                <!-- NEUKOLLN -->
+                <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#631b2b] transition-all duration-700 flex flex-col nav-hover">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 03</p>
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
@@ -308,7 +338,7 @@
                         <p class="text-[9px] leading-relaxed font-light uppercase italic opacity-60 text-center">"Not polished, but real."</p>
                         <div class="flex justify-between items-center pt-4 border-t border-gray-50">
                             <span class="text-xs font-light">€ 55.00</span>
-                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer">Acquire</span>
+                            <span class="text-[9px] tracking-widest border-b border-norien-dark uppercase cursor-pointer acquire-btn" onclick="addToCart('neukolln', this)">Acquire</span>
                         </div>
                     </div>
                 </div>
@@ -317,12 +347,13 @@
         </div>
     </section>
 
-    <!-- SEKCJA 5: MANIFEST -->
+    <!-- SEKCJA 5: MANIFEST + KRAWIEC / NEWSLETTER ZINTEGROWANY -->
     <section id="manifesto" class="h-screen w-full bg-norien-dark text-white flex flex-col justify-between pt-24">
+        
         <div class="flex-grow flex flex-col justify-center items-center px-6">
             <div class="max-w-3xl mx-auto space-y-10 text-center">
-                <h2 id="manifesto-sub" class="text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
-                <p id="manifesto-text" class="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight">
+                <h2 class="text-[10px] tracking-ultra uppercase opacity-40">The Studio</h2>
+                <p class="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight">
                     Nasze kompozycje powstają w berlińskim atelier. Używamy wosku roślinnego jako czystego nośnika dla rzadkich esencji, które definiują architekturę miasta.
                 </p>
                 <div class="pt-8">
@@ -333,81 +364,190 @@
             </div>
         </div>
 
-        <footer class="py-10 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full">
+        <!-- THE ARCHIVE CLUB (Newsletter) -->
+        <div class="w-full max-w-xl mx-auto px-6 pb-16 text-center nav-hover-light">
+            <p class="text-[10px] tracking-widest uppercase mb-4 opacity-60">Join the Archive</p>
+            <p class="text-xs font-light opacity-50 mb-6">Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.</p>
+            <div class="flex items-end justify-center border-b border-white/30 pb-2">
+                <input type="email" placeholder="Twój adres e-mail" class="bg-transparent text-xs font-light outline-none text-center text-white placeholder-white/30 w-full">
+                <button class="text-[9px] tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4">-></button>
+            </div>
+        </div>
+
+        <footer class="py-8 px-10 border-t border-white/10 text-[8px] md:text-[9px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full">
             <div>&copy; 2026 Norien Berlin — Olfactory Archives</div>
             <div class="flex gap-10">
-                <a href="#" class="hover:opacity-100 transition">Instagram</a>
-                <a href="#" class="hover:opacity-100 transition">Privacy</a>
+                <a href="#" class="hover:opacity-100 transition nav-hover-light">Instagram</a>
+                <a href="#" class="hover:opacity-100 transition nav-hover-light">Privacy</a>
             </div>
             <div>Berlin, GER</div>
         </footer>
     </section>
 
-    <!-- WYSUWANY PANEL BOCZNY (DRAWER) -->
-    <div id="side-drawer">
-        <button class="drawer-close" onclick="closeDrawer()">
+    <!-- WYSUWANY PANEL BOCZNY (DETALE Z MAPY) -->
+    <div id="side-drawer" class="drawer-panel">
+        <button class="drawer-close nav-hover" onclick="closeDrawer()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
-        
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
-
-        <div id="drawer-inner" class="drawer-content">
+        <div id="drawer-inner" class="drawer-inner">
             <div id="drawer-img-container" class="w-full aspect-[4/3] bg-white border border-gray-100 mb-8 relative overflow-hidden shadow-sm flex items-center justify-center p-6">
                 <img id="drawer-image" src="" alt="Norien Candle" class="w-full h-full object-contain mix-blend-multiply opacity-90 transition-opacity duration-500 hidden">
                 <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[9px] uppercase tracking-widest text-gray-300">Loading...</span>
             </div>
-
             <div class="flex-grow">
                 <div class="flex items-center gap-2 mb-4 opacity-40">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
                     <p id="drawer-coords" class="text-[8px] tracking-micro uppercase"></p>
                 </div>
-
                 <p id="drawer-subtitle" class="text-[9px] tracking-ultra uppercase opacity-40 mb-2"></p>
                 <h3 id="drawer-title" class="text-3xl font-extralight tracking-widest uppercase mb-4 transition-colors duration-500"></h3>
-                
                 <div class="flex items-center gap-4 mb-6">
                     <div id="drawer-line" class="h-px w-6 transition-colors duration-500"></div>
                     <p id="drawer-notes" class="text-[9px] tracking-widest uppercase font-semibold"></p>
                 </div>
-                
                 <p id="drawer-desc" class="text-xs font-light leading-relaxed text-gray-600 mb-8"></p>
             </div>
-
             <div class="mt-auto pt-6 border-t border-gray-100 flex justify-between items-center bg-norien-canvas">
                 <span class="text-base font-light">€ 55.00</span>
-                <button class="bg-black text-white text-[9px] px-8 py-4 tracking-[0.2em] uppercase hover:bg-gray-800 transition" onclick="scrollToArchiveFromDrawer()">ARCHIWUM</button>
+                <button class="bg-black text-white text-[9px] px-8 py-4 tracking-[0.2em] uppercase hover:bg-gray-800 transition nav-hover" onclick="scrollToArchiveFromDrawer()">ARCHIWUM</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WYSUWANY PANEL KOSZYKA (CART) -->
+    <div id="cart-drawer" class="drawer-panel">
+        <button class="drawer-close nav-hover" onclick="closeCart()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="h-1 w-full bg-norien-dark"></div>
+        <div id="cart-inner" class="drawer-inner flex flex-col">
+            <h3 class="text-2xl font-extralight tracking-widest uppercase mb-10 mt-4">Koszyk</h3>
+            
+            <!-- Lista produktów w koszyku generowana przez JS -->
+            <div id="cart-items" class="flex-grow space-y-6 overflow-y-auto mb-6">
+                <p class="text-xs font-light opacity-50 italic">Twój koszyk jest pusty.</p>
+            </div>
+
+            <!-- Podsumowanie -->
+            <div class="mt-auto pt-6 border-t border-gray-100">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[9px] tracking-widest uppercase opacity-50">Wysyłka</span>
+                    <span class="text-[9px] tracking-widest uppercase">Gratis</span>
+                </div>
+                <div class="flex justify-between items-center mb-8">
+                    <span class="text-xs tracking-widest uppercase font-semibold">Total</span>
+                    <span id="cart-total" class="text-lg font-light">€ 0.00</span>
+                </div>
+                <button onclick="openCheckout()" class="w-full bg-black text-white text-[10px] py-5 tracking-[0.25em] uppercase hover:bg-gray-800 transition nav-hover">
+                    CHECKOUT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT OVERLAY (Pełnoekranowy wyjazd do płatności) -->
+    <div id="checkout-overlay">
+        <!-- Przycisk powrotu -->
+        <button class="absolute top-8 right-10 text-[9px] tracking-widest uppercase opacity-50 hover:opacity-100 transition z-50 nav-hover flex items-center gap-2" onclick="closeCheckout()">
+            <span>Wróć do sklepu</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+
+        <div class="w-full flex flex-col md:flex-row h-full">
+            <!-- LEWA STRONA: Podsumowanie (Ciemna) -->
+            <div class="w-full md:w-5/12 bg-[#0a0a0a] text-white p-10 md:p-20 flex flex-col justify-center border-r border-white/5">
+                <h3 class="text-xs tracking-ultra uppercase opacity-40 mb-12">Order Summary</h3>
+                <div id="checkout-items" class="space-y-6 mb-12">
+                    <!-- Wygenerowane z JS -->
+                </div>
+                <div class="border-t border-white/10 pt-8 mt-auto flex justify-between items-end">
+                    <span class="text-[9px] tracking-widest uppercase opacity-40">Total due</span>
+                    <span id="checkout-total" class="text-3xl font-thin tracking-widest">€ 0.00</span>
+                </div>
+            </div>
+
+            <!-- PRAWA STRONA: Formularz Płatności (Jasna) -->
+            <div class="w-full md:w-7/12 bg-white p-10 md:p-20 overflow-y-auto flex flex-col justify-center">
+                <div class="max-w-md w-full mx-auto">
+                    <h2 class="text-2xl font-extralight tracking-widest uppercase mb-10">Checkout</h2>
+                    
+                    <form class="space-y-8" onsubmit="event.preventDefault(); alert('Koniec dema płatności. Projekt gotowy!');">
+                        <div>
+                            <p class="text-[9px] tracking-widest uppercase opacity-40 mb-2">Kontakt</p>
+                            <input type="email" placeholder="Adres e-mail" class="input-minimal nav-hover" required>
+                        </div>
+                        
+                        <div>
+                            <p class="text-[9px] tracking-widest uppercase opacity-40 mb-2 mt-8">Adres Dostawy</p>
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="Imię" class="input-minimal nav-hover" required>
+                                    <input type="text" placeholder="Nazwisko" class="input-minimal nav-hover" required>
+                                </div>
+                                <input type="text" placeholder="Ulica i numer domu" class="input-minimal nav-hover" required>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="Kod pocztowy" class="input-minimal nav-hover" required>
+                                    <input type="text" placeholder="Miasto" class="input-minimal nav-hover" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-[9px] tracking-widest uppercase opacity-40 mb-2 mt-8">Płatność</p>
+                            <div class="p-4 border border-gray-200 bg-gray-50 flex items-center justify-center opacity-50 mb-8">
+                                <span class="text-[9px] tracking-widest uppercase">System płatności (Demo)</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-black text-white text-[10px] py-5 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-xl nav-hover">
+                            Zapłać i Zamów
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- SKRYPTY -->
     <script>
+        // --- CUSTOM CURSOR ---
+        const cursor = document.getElementById('custom-cursor');
+        if (window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener('mousemove', e => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            // Dodawanie klasy dla elementów klikalnych i ciemnego tła
+            document.querySelectorAll('.nav-hover').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover-state'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state'));
+            });
+            document.querySelectorAll('.nav-hover-light').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover-state-light'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover-state-light'));
+            });
+        }
+
+        // --- CUSTOM SMOOTH SCROLL ---
         function smoothScroll(targetId, duration) {
             const targetElement = document.querySelector(targetId);
             if (!targetElement) return;
-
             document.documentElement.style.scrollSnapType = 'none';
-
             const targetPosition = targetElement.getBoundingClientRect().top;
             const startPosition = window.pageYOffset;
             let startTime = null;
-
             function easeInOutQuint(t, b, c, d) {
                 t /= d / 2;
                 if (t < 1) return c / 2 * t * t * t * t * t + b;
                 t -= 2;
                 return c / 2 * (t * t * t * t * t + 2) + b;
             }
-
             function animation(currentTime) {
                 if (startTime === null) startTime = currentTime;
                 const timeElapsed = currentTime - startTime;
-                
                 const run = easeInOutQuint(timeElapsed, startPosition, targetPosition, duration);
-                
                 window.scrollTo(0, run);
-                
                 if (timeElapsed < duration) {
                     requestAnimationFrame(animation);
                 } else {
@@ -418,44 +558,118 @@
             requestAnimationFrame(animation);
         }
 
-        document.querySelectorAll('.nav-link').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = this.getAttribute('href');
-                smoothScroll(target, 3500); 
-            });
-        });
-
-        let currentActiveId = '';
-        const mapSvg = document.getElementById('map-svg');
-
+        // --- BAZA PRODUKTÓW ---
         const mapProducts = {
-            mitte: { 
-                title: 'MITTE', sub: 'Archive No. 01', color: '#b35a2d', coords: '52°31\'12.0"N 13°24\'18.0"E',
-                notes: 'Lavender / Myrrh / Suede',
-                desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy. Dedykowane dla tych, którzy cenią nowoczesną surowość i historię.',
-                image: 'mitte.png'
-            },
-            prenzl: { 
-                title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E',
-                notes: 'Lemon / Jasmine / Sandalwood',
-                desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą. Delikatna cytryna spotyka głębokie, uspokajające drewno sandałowe.',
-                image: 'prenzlauer.png'
-            },
-            kreuz: { 
-                title: 'KREUZBERG', sub: 'Archive No. 36', color: '#005f63', coords: '52°29\'56.0"N 13°23\'20.0"E',
-                notes: 'Bergamot / Patchouli / Vetiver',
-                desc: 'Energia kanałów i nocne powietrze. Mocny, nieustępliwy i pełen charakteru zapach wetiwerii i paczuli.',
-                image: 'kreuzberg.png'
-            },
-            neukolln: { 
-                title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E',
-                notes: 'Cardamom / Myrtle / Amber',
-                desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy z targu przy Maybachufer połączone z ciepłym, wibrującym bursztynem.',
-                image: 'neukolln.png'
-            }
+            mitte: { id: 'mitte', title: 'MITTE', sub: 'Archive No. 01', color: '#b35a2d', coords: '52°31\'12.0"N 13°24\'18.0"E', notes: 'Lavender / Myrrh / Suede', desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy.', image: 'mitte.png' },
+            prenzl: { id: 'prenzl', title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E', notes: 'Lemon / Jasmine / Sandalwood', desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą.', image: 'prenzlauer.png' },
+            kreuz: { id: 'kreuz', title: 'KREUZBERG', sub: 'Archive No. 36', color: '#005f63', coords: '52°29\'56.0"N 13°23\'20.0"E', notes: 'Bergamot / Patchouli / Vetiver', desc: 'Energia kanałów i nocne powietrze. Mocny i nieustępliwy.', image: 'kreuzberg.png' },
+            neukolln: { id: 'neukolln', title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E', notes: 'Cardamom / Myrtle / Amber', desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy.', image: 'neukolln.png' }
         };
 
+        let currentActiveId = '';
+
+        // --- KOSZYK (CART LOGIC) ---
+        let cart = [];
+        
+        function addToCart(id, btnElement) {
+            cart.push(mapProducts[id]);
+            document.getElementById('nav-cart').innerText = `KOSZYK (${cart.length})`;
+            
+            // Animacja guzika
+            const originalText = btnElement.innerText;
+            btnElement.innerText = 'ADDED';
+            btnElement.style.fontWeight = '600';
+            btnElement.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                btnElement.innerText = originalText;
+                btnElement.style.fontWeight = 'normal';
+                btnElement.style.opacity = '1';
+            }, 1500);
+
+            renderCart();
+        }
+
+        function renderCart() {
+            const itemsContainer = document.getElementById('cart-items');
+            const totalEl = document.getElementById('cart-total');
+            const checkoutTotalEl = document.getElementById('checkout-total');
+            const checkoutItemsContainer = document.getElementById('checkout-items');
+            
+            itemsContainer.innerHTML = '';
+            checkoutItemsContainer.innerHTML = '';
+            
+            let total = 0;
+
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = '<p class="text-xs font-light opacity-50 italic">Twój koszyk jest pusty.</p>';
+                checkoutItemsContainer.innerHTML = '<p class="text-xs font-light opacity-50 italic">Brak produktów.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    total += 55;
+                    
+                    // Render dla szuflady koszyka
+                    itemsContainer.innerHTML += `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-sm tracking-widest uppercase">${item.title}</h4>
+                                <p class="text-[8px] tracking-widest uppercase opacity-40">${item.sub}</p>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-sm font-light">€ 55.00</span>
+                                <button onclick="removeFromCart(${index})" class="text-[8px] tracking-widest uppercase border-b border-gray-300 opacity-50 hover:opacity-100 nav-hover">Usuń</button>
+                            </div>
+                        </div>
+                    `;
+
+                    // Render dla checkoutu
+                    checkoutItemsContainer.innerHTML += `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-sm tracking-widest uppercase">${item.title}</h4>
+                                <p class="text-[8px] tracking-widest uppercase opacity-40">${item.sub}</p>
+                            </div>
+                            <span class="text-sm font-light">€ 55.00</span>
+                        </div>
+                    `;
+                });
+            }
+
+            totalEl.innerText = `€ ${total.toFixed(2)}`;
+            checkoutTotalEl.innerText = `€ ${total.toFixed(2)}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            document.getElementById('nav-cart').innerText = `KOSZYK (${cart.length})`;
+            renderCart();
+        }
+
+        function openCart() {
+            closeDrawer(); // Zamyka detale mapy, jeśli są otwarte
+            document.getElementById('cart-drawer').classList.add('open');
+            document.getElementById('cart-inner').classList.add('loaded');
+        }
+
+        function closeCart() {
+            document.getElementById('cart-drawer').classList.remove('open');
+            document.getElementById('cart-inner').classList.remove('loaded');
+        }
+
+        function openCheckout() {
+            if (cart.length === 0) {
+                alert("Koszyk jest pusty!");
+                return;
+            }
+            closeCart();
+            document.getElementById('checkout-overlay').classList.add('open');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkout-overlay').classList.remove('open');
+        }
+
+        // --- MAP DRAWER LOGIC ---
         function updateDrawerUI(p) {
             document.getElementById('drawer-title').innerText = p.title;
             document.getElementById('drawer-title').style.color = p.color;
@@ -463,7 +677,6 @@
             document.getElementById('drawer-coords').innerText = p.coords;
             document.getElementById('drawer-notes').innerHTML = p.notes;
             document.getElementById('drawer-desc').innerText = p.desc;
-            
             document.getElementById('drawer-top-line').style.backgroundColor = p.color;
             document.getElementById('drawer-line').style.backgroundColor = p.color;
 
@@ -480,25 +693,20 @@
             const inner = document.getElementById('drawer-inner');
             const p = mapProducts[id];
 
+            closeCart(); // Zamyka koszyk jeśli otwarty
+            
             mapSvg.classList.add('is-focused');
             document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected'));
             document.querySelector(`.active-group[data-id="${id}"]`).classList.add('is-selected');
 
             if (drawer.classList.contains('open')) {
                 if (currentActiveId === id) return;
-                
                 inner.classList.remove('loaded');
-                setTimeout(() => {
-                    updateDrawerUI(p);
-                    inner.classList.add('loaded');
-                }, 300); 
+                setTimeout(() => { updateDrawerUI(p); inner.classList.add('loaded'); }, 300); 
             } else {
                 updateDrawerUI(p);
                 drawer.classList.add('open');
-                
-                setTimeout(() => {
-                    inner.classList.add('loaded');
-                }, 200);
+                setTimeout(() => { inner.classList.add('loaded'); }, 200);
             }
             currentActiveId = id;
         }
@@ -506,7 +714,6 @@
         function closeDrawer() {
             document.getElementById('side-drawer').classList.remove('open');
             document.getElementById('drawer-inner').classList.remove('loaded');
-            
             mapSvg.classList.remove('is-focused');
             document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected'));
             currentActiveId = '';
@@ -518,34 +725,36 @@
             if(currentActiveId === 'prenzl') archiveId = '#prod-prenzlauer-archive';
             if(currentActiveId === 'kreuz') archiveId = '#prod-kreuzberg-archive';
             if(currentActiveId === 'neukolln') archiveId = '#prod-neukoln-archive';
-            
             closeDrawer();
-            
-            setTimeout(() => {
-                smoothScroll(archiveId, 3500);
-            }, 300);
+            setTimeout(() => { smoothScroll(archiveId, 3500); }, 300);
         }
 
+        // --- ZAMYKANIE PANELI (KLIKNIĘCIE / SCROLL) ---
         document.addEventListener('click', function(event) {
             const drawer = document.getElementById('side-drawer');
-            const isClickInsideDrawer = drawer.contains(event.target);
+            const cartDrawer = document.getElementById('cart-drawer');
             const isClickOnDistrict = event.target.closest('.active-group');
+            const isClickOnNavCart = event.target.closest('#nav-cart');
 
-            if (drawer.classList.contains('open') && !isClickInsideDrawer && !isClickOnDistrict) {
+            // Zamykanie mapy
+            if (drawer.classList.contains('open') && !drawer.contains(event.target) && !isClickOnDistrict) {
                 closeDrawer();
+            }
+            // Zamykanie koszyka
+            if (cartDrawer.classList.contains('open') && !cartDrawer.contains(event.target) && !isClickOnNavCart) {
+                closeCart();
             }
         });
 
+        // Scroll zamyka panele boczne
         window.addEventListener('wheel', function() {
-            if (document.getElementById('side-drawer').classList.contains('open')) {
-                closeDrawer();
-            }
+            if (document.getElementById('side-drawer').classList.contains('open')) closeDrawer();
+            if (document.getElementById('cart-drawer').classList.contains('open')) closeCart();
         }, { passive: true });
 
         window.addEventListener('touchmove', function() {
-            if (document.getElementById('side-drawer').classList.contains('open')) {
-                closeDrawer();
-            }
+            if (document.getElementById('side-drawer').classList.contains('open')) closeDrawer();
+            if (document.getElementById('cart-drawer').classList.contains('open')) closeCart();
         }, { passive: true });
 
     </script>
