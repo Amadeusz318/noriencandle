@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="pl">
+<!-- Zmiana na snap-proximity (Magnes działa tylko, gdy jesteś blisko krawędzi) -->
+<html lang="pl" class="snap-y snap-proximity">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,16 +26,16 @@
         }
     </script>
     <style>
-        /* Natywny, systemowy płynny scroll */
-        html { scroll-behavior: smooth; }
+        /* Przywracamy natywny, superpłynny scroll i magnetyczne łapanie */
+        html { 
+            scroll-behavior: smooth; 
+        }
         body { overflow-x: hidden; background-color: #fcfaf7; }
 
-        /* Ukrycie systemowego kursora dla urządzeń z myszką */
         @media (pointer: fine) {
             body, a, button, input { cursor: none !important; }
         }
 
-        /* CUSTOM CURSOR */
         .custom-cursor {
             position: fixed; top: 0; left: 0; width: 10px; height: 10px;
             background-color: #0f0f0f; border-radius: 50%;
@@ -52,6 +53,8 @@
             background-color: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
+
+        section { scroll-snap-align: start; }
 
         nav { 
             background-color: rgba(252, 250, 247, 0.9); 
@@ -75,9 +78,6 @@
             .mobile-scroll::-webkit-scrollbar { display: none; }
         }
 
-        /* ------------------------------------- */
-        /* STYLIZACJA MAPY                       */
-        /* ------------------------------------- */
         .bg-dots {
             background-image: radial-gradient(#d1d1d1 0.8px, transparent 0.8px);
             background-size: 36px 36px;
@@ -122,9 +122,6 @@
         .active-group.is-selected[data-id="neukolln"] .active-path { fill: rgba(99, 27, 43, 0.15); }
         .active-group.is-selected .label-active { transform: translateY(-8px); opacity: 1; }
 
-        /* ------------------------------------- */
-        /* WYSUWANE PANELE (MAPA & KOSZYK)       */
-        /* ------------------------------------- */
         .drawer-panel {
             position: fixed; top: 0; right: 0; width: 100%; max-width: 360px; height: 100vh;
             background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06);
@@ -150,9 +147,6 @@
         .drawer-inner::-webkit-scrollbar { width: 3px; }
         .drawer-inner::-webkit-scrollbar-thumb { background: #e0e0e0; }
 
-        /* ------------------------------------- */
-        /* CHECKOUT OVERLAY                      */
-        /* ------------------------------------- */
         #checkout-overlay {
             position: fixed; inset: 0; background-color: #fcfaf7; z-index: 2000;
             transform: translateY(100%);
@@ -167,7 +161,6 @@
             background: transparent;
         }
         .input-minimal:focus { border-color: #0f0f0f; }
-
     </style>
 </head>
 <body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
@@ -177,23 +170,21 @@
 
     <!-- NAWIGACJA -->
     <nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
-        <!-- Zwykły link w logo bez sztucznego scrolla -->
         <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover">
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.25rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 9px; letter-spacing: 0.23em; margin-top: 0.45rem; margin-right: -0.23em; color: #555;">BERLIN</span>
         </a>
 
         <div class="hidden lg:flex gap-10 text-[10px] tracking-widest uppercase font-light">
-            <a href="#map-explore" class="hover:opacity-50 transition nav-link nav-hover">Mapa</a>
-            <a href="#the-craft" class="hover:opacity-50 transition nav-link nav-hover">Rzemiosło</a>
-            <a href="#archives" class="hover:opacity-50 transition nav-link nav-hover">Archiwum</a>
-            <a href="#manifesto" class="hover:opacity-50 transition nav-link nav-hover">Manifest</a>
+            <a href="#map-explore" class="hover:opacity-50 transition nav-hover">Mapa</a>
+            <a href="#the-craft" class="hover:opacity-50 transition nav-hover">Rzemiosło</a>
+            <a href="#archives" class="hover:opacity-50 transition nav-hover">Archiwum</a>
+            <a href="#manifesto" class="hover:opacity-50 transition nav-hover">Manifest</a>
         </div>
-        <div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap nav-hover cursor-pointer" onclick="openCart()">KOSZYK (0)</div>
+        <div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap nav-hover cursor-pointer">KOSZYK (0)</div>
     </nav>
 
     <!-- SEKCJA 1: HERO -->
-    <!-- Zmieniono h-screen na min-h-screen -->
     <section id="hero" class="min-h-screen w-full flex flex-col justify-center items-center text-center px-6 relative py-32">
         <div class="z-10 fade-in">
             <p id="hero-sub" class="text-[9px] md:text-[10px] tracking-[0.6em] uppercase mb-8 opacity-60">Exclusive Souvenir from Berlin</p>
@@ -202,7 +193,7 @@
                 Nie sprzedajemy świec. Archiwizujemy tożsamość Berlina. Każdy zapach to współrzędne geograficzne i emocjonalny zapis konkretnej dzielnicy.
             </p>
         </div>
-        <a href="#map-explore" class="nav-link nav-hover absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
+        <a href="#map-explore" class="nav-hover absolute bottom-12 left-1/2 -translate-x-1/2 text-[9px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
     </section>
 
     <!-- SEKCJA 2: MAPA -->
@@ -591,11 +582,14 @@
             renderCart();
         }
 
-        function openCart() {
+        // Naprawione bezpieczne otwieranie koszyka
+        document.getElementById('nav-cart').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // Blokuje natychmiastowe zamykanie przez główny event listener
             closeDrawer(); 
             document.getElementById('cart-drawer').classList.add('open');
             document.getElementById('cart-inner').classList.add('loaded');
-        }
+        });
 
         function closeCart() {
             document.getElementById('cart-drawer').classList.remove('open');
@@ -674,24 +668,22 @@
             
             closeDrawer();
             
-            // Płynny przeskok za pomocą natywnego scrollIntoView
             setTimeout(() => { 
                 document.querySelector(archiveId).scrollIntoView({ behavior: 'smooth' });
             }, 300);
         }
 
-        // ZAMYKANIE PANELI TYLKO KLIKNIĘCIEM POZA
+        // ZAMYKANIE PANELI TYLKO KLIKNIĘCIEM POZA LUB NA X
         document.addEventListener('click', function(event) {
             const drawer = document.getElementById('side-drawer');
             const cartDrawer = document.getElementById('cart-drawer');
             const isClickOnDistrict = event.target.closest('.active-group');
-            const isClickOnNavCart = event.target.closest('#nav-cart');
             const isDrawerCloseBtn = event.target.closest('.drawer-close');
 
             if (drawer && drawer.classList.contains('open') && !drawer.contains(event.target) && !isClickOnDistrict && !isDrawerCloseBtn) {
                 closeDrawer();
             }
-            if (cartDrawer && cartDrawer.classList.contains('open') && !cartDrawer.contains(event.target) && !isClickOnNavCart && !isDrawerCloseBtn) {
+            if (cartDrawer && cartDrawer.classList.contains('open') && !cartDrawer.contains(event.target) && !isDrawerCloseBtn) {
                 closeCart();
             }
         });
