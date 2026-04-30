@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NORIEN BERLIN | Olfactory Cartography</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&display=swap" rel="stylesheet">
+    <!-- Zaktualizowane fonty: Dodano Montserrat dla logo -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -152,9 +153,12 @@
 
     <!-- NAWIGACJA -->
     <nav class="fixed w-full px-6 md:px-10 py-6 flex justify-between items-center text-norien-dark">
-        <div class="flex flex-col">
-            <span class="text-lg md:text-xl font-extralight tracking-ultra uppercase leading-none">Norien</span>
-            <span class="text-[9px] md:text-[10px] tracking-[0.4em] uppercase opacity-50">Berlin</span>
+        
+        <!-- NOWE LOGO: Zbudowane w HTML z odpowiednimi parametrami Montserrat -->
+        <div class="flex flex-col items-center justify-center pt-1 cursor-pointer" onclick="smoothScroll('#hero', 2500)">
+            <!-- margin-right kompensuje domyślne dodawanie odstępu na końcu wyrazu przez letter-spacing -->
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.25rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 9px; letter-spacing: 0.23em; margin-top: 0.45rem; margin-right: -0.23em; color: #555;">BERLIN</span>
         </div>
 
         <div class="hidden lg:flex gap-12 text-[10px] tracking-widest uppercase font-light">
@@ -162,7 +166,7 @@
             <a href="#archives" class="hover:opacity-50 transition nav-link">Archiwum</a>
             <a href="#manifesto" class="hover:opacity-50 transition nav-link">Manifest</a>
         </div>
-        <div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap">KOSZYK (0)</div>
+        <div id="nav-cart" class="text-[9px] md:text-[10px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap cursor-pointer">KOSZYK (0)</div>
     </nav>
 
     <!-- SEKCJA 1: HERO -->
@@ -232,9 +236,8 @@
                 <div id="prod-mitte-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#b35a2d] transition-all duration-700 flex flex-col">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 01</p>
-                        <!-- Twoja grafika M I T T E -->
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="M I T T E_2.png" alt="Mitte" class="w-full h-full object-contain mix-blend-multiply p-2">
+                            <img src="mitte.png" alt="Mitte" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -249,9 +252,8 @@
                 <div id="prod-prenzlauer-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#8a7b8e] transition-all duration-700 flex flex-col">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 02</p>
-                        <!-- Twoja grafika PRENZLAUER BERG -->
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="P R E N Z L A U E R B E R G_2.png" alt="Prenzlauer Berg" class="w-full h-full object-contain mix-blend-multiply p-2">
+                            <img src="prenzlauer.png" alt="Prenzlauer Berg" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -266,9 +268,8 @@
                 <div id="prod-kreuzberg-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#005f63] transition-all duration-700 flex flex-col">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 36</p>
-                        <!-- Twoja grafika KREUZBERG -->
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="K R E U Z B E R G_2.png" alt="Kreuzberg" class="w-full h-full object-contain mix-blend-multiply p-2">
+                            <img src="kreuzberg.png" alt="Kreuzberg" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -283,9 +284,8 @@
                 <div id="prod-neukoln-archive" class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-[#631b2b] transition-all duration-700 flex flex-col">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[8px] tracking-ultra mb-4 lg:mb-6 opacity-40 uppercase">Archive No. 03</p>
-                        <!-- Twoja grafika NEUKÖLLN -->
                         <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="N E U K Ö L L N_2.png" alt="Neukölln" class="w-full h-full object-contain mix-blend-multiply p-2">
+                            <img src="neukolln.png" alt="Neukölln" class="w-full h-full object-contain mix-blend-multiply p-2">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -336,9 +336,7 @@
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
 
         <div id="drawer-inner" class="drawer-content">
-            <!-- Miejsce na zdjęcie zaciągane z Twoich plików graficznych -->
             <div id="drawer-img-container" class="w-full aspect-[4/3] bg-white border border-gray-100 mb-8 relative overflow-hidden shadow-sm flex items-center justify-center p-6">
-                <!-- Twoja grafika ładująca się z dysku -->
                 <img id="drawer-image" src="" alt="Norien Candle" class="w-full h-full object-contain mix-blend-multiply opacity-90 transition-opacity duration-500 hidden">
                 <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[9px] uppercase tracking-widest text-gray-300">Loading...</span>
             </div>
@@ -369,6 +367,7 @@
 
     <!-- SKRYPTY -->
     <script>
+        // --- CUSTOM SMOOTH SCROLL ---
         function smoothScroll(targetId, duration) {
             const targetElement = document.querySelector(targetId);
             if (!targetElement) return;
@@ -421,25 +420,25 @@
                 title: 'MITTE', sub: 'Archive No. 01', color: '#b35a2d', coords: '52°31\'12.0"N 13°24\'18.0"E',
                 notes: 'Lavender / Myrrh / Suede',
                 desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy. Dedykowane dla tych, którzy cenią nowoczesną surowość i historię.',
-                image: 'M I T T E_2.png'
+                image: 'mitte.png'
             },
             prenzl: { 
                 title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E',
                 notes: 'Lemon / Jasmine / Sandalwood',
                 desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą. Delikatna cytryna spotyka głębokie, uspokajające drewno sandałowe.',
-                image: 'P R E N Z L A U E R B E R G_2.png'
+                image: 'prenzlauer.png'
             },
             kreuz: { 
                 title: 'KREUZBERG', sub: 'Archive No. 36', color: '#005f63', coords: '52°29\'56.0"N 13°23\'20.0"E',
                 notes: 'Bergamot / Patchouli / Vetiver',
                 desc: 'Energia kanałów i nocne powietrze. Mocny, nieustępliwy i pełen charakteru zapach wetiwerii i paczuli.',
-                image: 'K R E U Z B E R G_2.png'
+                image: 'kreuzberg.png'
             },
             neukolln: { 
                 title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E',
                 notes: 'Cardamom / Myrtle / Amber',
                 desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy z targu przy Maybachufer połączone z ciepłym, wibrującym bursztynem.',
-                image: 'N E U K Ö L L N_2.png'
+                image: 'neukolln.png'
             }
         };
 
@@ -454,7 +453,6 @@
             document.getElementById('drawer-top-line').style.backgroundColor = p.color;
             document.getElementById('drawer-line').style.backgroundColor = p.color;
 
-            // Zmiana zdjęcia z dysku
             const imgEl = document.getElementById('drawer-image');
             imgEl.src = p.image;
             imgEl.onload = () => {
@@ -514,13 +512,30 @@
             }, 300);
         }
 
+        // 1. ZAMYKANIE SZUFLADY KLIKNIĘCIEM GDZIEKOLWIEK POZA NIĄ I POZA DZIELNICAMI
         document.addEventListener('click', function(event) {
             const drawer = document.getElementById('side-drawer');
-            const mapExplore = document.getElementById('map-explore');
-            if (drawer.classList.contains('open') && !drawer.contains(event.target) && !mapExplore.contains(event.target)) {
+            const isClickInsideDrawer = drawer.contains(event.target);
+            const isClickOnDistrict = event.target.closest('.active-group'); // Sprawdza, czy kliknięto w dzielnicę na mapie
+
+            if (drawer.classList.contains('open') && !isClickInsideDrawer && !isClickOnDistrict) {
                 closeDrawer();
             }
         });
+
+        // 2. ZAMYKANIE SZUFLADY PRZY ROZPOCZĘCIU SCROLLOWANIA PRZEZ UŻYTKOWNIKA
+        window.addEventListener('wheel', function() {
+            if (document.getElementById('side-drawer').classList.contains('open')) {
+                closeDrawer();
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', function() {
+            if (document.getElementById('side-drawer').classList.contains('open')) {
+                closeDrawer();
+            }
+        }, { passive: true });
+
     </script>
 </body>
 </html>
