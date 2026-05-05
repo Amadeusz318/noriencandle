@@ -10,7 +10,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: { sans: ['Montserrat', 'sans-serif'], inter: ['Inter', 'sans-serif'] },
                     colors: {
                         norien: {
                             gold: '#b88b4a',
@@ -109,15 +109,8 @@
         .delay-map-1 { transition-delay: 0.1s; } .delay-map-2 { transition-delay: 0.25s; } .delay-map-3 { transition-delay: 0.4s; } 
 
         #map-svg { transition: all 0.5s ease; max-height: 60vh; position: relative; z-index: 2; }
-        .district-bg { 
-            fill: rgba(0, 0, 0, 0.015); 
-            stroke: #d4d4d4; 
-            stroke-width: 1.5; 
-            transition: opacity 0.5s ease; 
-        }
-        .label-bg { 
-            font-size: 12px; font-weight: 500; fill: #1a1a1a; opacity: 0.45; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; 
-        }
+        .district-bg { fill: rgba(0, 0, 0, 0.015); stroke: #d4d4d4; stroke-width: 1.5; transition: opacity 0.5s ease; }
+        .label-bg { font-size: 12px; font-weight: 500; fill: #1a1a1a; opacity: 0.45; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
         #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.15; }
         
         .active-group { transition: opacity 0.5s ease; }
@@ -190,7 +183,7 @@
     <div class="noise-overlay"></div>
     <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
 
-    <!-- NAWIGACJA -->
+    <!-- NAWIGACJA DIOR -->
     <nav id="main-nav" class="nav-top px-6 md:px-10 py-5 flex justify-between items-center text-norien-dark">
         <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover magnetic">
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.3rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
@@ -201,7 +194,7 @@
             <div class="magnetic"><a href="#map-explore" id="nav-map" class="hover:opacity-50 transition nav-hover">Mapa</a></div>
             <div class="magnetic"><a href="#the-craft" id="nav-craft" class="hover:opacity-50 transition nav-hover">Rzemiosło</a></div>
             <div class="magnetic"><a href="#archives" id="nav-archives" class="hover:opacity-50 transition nav-hover">Archiwum</a></div>
-            <div class="magnetic"><a href="#manifesto" id="nav-manifesto" class="hover:opacity-50 transition nav-hover">Manifest</a></div>
+            <div class="magnetic"><a href="#manifesto" id="nav-manifesto" class="hover:opacity-50 transition nav-hover">Podejście</a></div>
         </div>
         
         <div class="flex items-center gap-6 md:gap-10">
@@ -312,11 +305,12 @@
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 
+                <!-- TUTAJ ZAMIENIONE NAZWY PLIKÓW ZE SPACJAMI (%20) -->
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-1">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 01</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="mitte.png" alt="Mitte" class="w-full h-full object-contain mix-blend-multiply p-3">
+                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
+                            <img src="assets/images/M%20I%20T%20T%20E.png" alt="Mitte" class="w-full h-full object-cover">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -338,8 +332,8 @@
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-2">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 02</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="prenzlauer.png" alt="Prenzlauer Berg" class="w-full h-full object-contain mix-blend-multiply p-3">
+                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
+                            <img src="assets/images/P%20R%20E%20N%20Z%20L%20A%20U%20E%20R%20B%20E%20R%20G.png" alt="Prenzlauer Berg" class="w-full h-full object-cover">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -361,8 +355,8 @@
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-3">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 36</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="kreuzberg.png" alt="Kreuzberg" class="w-full h-full object-contain mix-blend-multiply p-3">
+                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
+                            <img src="assets/images/K%20R%20E%20U%20Z%20B%20E%20R%20G.png" alt="Kreuzberg" class="w-full h-full object-cover">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -384,8 +378,8 @@
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-4">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 03</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="neukolln.png" alt="Neukölln" class="w-full h-full object-contain mix-blend-multiply p-3">
+                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
+                            <img src="assets/images/N%20E%20U%20K%20Ö%20L%20L%20N.png" alt="Neukölln" class="w-full h-full object-cover">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -457,8 +451,8 @@
         </button>
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
         <div id="drawer-inner" class="drawer-inner">
-            <div id="drawer-img-container" class="w-full aspect-[4/3] bg-white border border-gray-100 mb-8 relative overflow-hidden shadow-sm flex items-center justify-center p-6">
-                <img id="drawer-image" src="" alt="Norien Candle" class="w-full h-full object-contain mix-blend-multiply opacity-90 transition-opacity duration-500 hidden">
+            <div id="drawer-img-container" class="w-full aspect-square bg-white mb-8 relative overflow-hidden flex items-center justify-center p-0">
+                <img id="drawer-image" src="" alt="Norien Label" class="w-full h-full object-cover opacity-100 transition-opacity duration-500 hidden">
                 <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[10px] uppercase tracking-widest text-gray-300">Loading...</span>
             </div>
             <div class="flex-grow">
@@ -614,7 +608,6 @@
                 lastScrollY = currentScrollY;
             });
             
-            // Zainicjuj poprawny stan przy ładowaniu, jeśli strona była przewinięta
             if (window.scrollY <= 50) {
                 navbar.classList.add('nav-top');
             } else {
@@ -729,11 +722,12 @@
             renderCart(); 
         }
 
+        /* TUTAJ ZMODYFIKOWANE LINKI ZE SPACJAMI (%20) */
         const mapProducts = {
-            mitte: { id: 'mitte', title: 'MITTE', sub: 'Archive No. 01', color: '#b88b4a', coords: '52°31\'12.0"N 13°24\'18.0"E', notes: 'Lavender / Myrrh / Suede', desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy.', image: 'mitte.png' },
-            prenzl: { id: 'prenzl', title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E', notes: 'Lemon / Jasmine / Sandalwood', desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą.', image: 'prenzlauer.png' },
-            kreuz: { id: 'kreuz', title: 'KREUZBERG', sub: 'Archive No. 36', color: '#005f63', coords: '52°29\'56.0"N 13°23\'20.0"E', notes: 'Bergamot / Patchouli / Vetiver', desc: 'Energia kanałów i nocne powietrze. Mocny i nieustępliwy.', image: 'kreuzberg.png' },
-            neukolln: { id: 'neukolln', title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E', notes: 'Cardamom / Myrtle / Amber', desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy.', image: 'neukolln.png' }
+            mitte: { id: 'mitte', title: 'MITTE', sub: 'Archive No. 01', color: '#b88b4a', coords: '52°31\'12.0"N 13°24\'18.0"E', notes: 'Lavender / Myrrh / Suede', desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy.', image: 'assets/images/M%20I%20T%20T%20E.png' },
+            prenzl: { id: 'prenzl', title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E', notes: 'Lemon / Jasmine / Sandalwood', desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą.', image: 'assets/images/P%20R%20E%20N%20Z%20L%20A%20U%20E%20R%20B%20E%20R%20G.png' },
+            kreuz: { id: 'kreuz', title: 'KREUZBERG', sub: 'Archive No. 36', color: '#005f63', coords: '52°29\'56.0"N 13°23\'20.0"E', notes: 'Bergamot / Patchouli / Vetiver', desc: 'Energia kanałów i nocne powietrze. Mocny i nieustępliwy.', image: 'assets/images/K%20R%20E%20U%20Z%20B%20E%20R%20G.png' },
+            neukolln: { id: 'neukolln', title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E', notes: 'Cardamom / Myrtle / Amber', desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy.', image: 'assets/images/N%20E%20U%20K%20Ö%20L%20L%20N.png' }
         };
 
         let currentActiveId = '';
