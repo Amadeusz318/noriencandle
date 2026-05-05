@@ -10,7 +10,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Montserrat', 'sans-serif'], inter: ['Inter', 'sans-serif'] },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         norien: {
                             gold: '#b88b4a',
@@ -305,12 +305,11 @@
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 
-                <!-- TUTAJ ZAMIENIONE NAZWY PLIKÓW ZE SPACJAMI (%20) -->
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-1">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 01</p>
-                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
-                            <img src="assets/images/M%20I%20T%20T%20E.png" alt="Mitte" class="w-full h-full object-cover">
+                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
+                            <img src="assets/images/M%20I%20T%20T%20E.png" alt="Mitte" class="w-full h-full object-contain mix-blend-multiply p-3">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -332,8 +331,8 @@
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-2">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 02</p>
-                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
-                            <img src="assets/images/P%20R%20E%20N%20Z%20L%20A%20U%20E%20R%20B%20E%20R%20G.png" alt="Prenzlauer Berg" class="w-full h-full object-cover">
+                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
+                            <img src="assets/images/P%20R%20E%20N%20Z%20L%20A%20U%20E%20R%20B%20E%20R%20G.png" alt="Prenzlauer Berg" class="w-full h-full object-contain mix-blend-multiply p-3">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -355,8 +354,8 @@
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-3">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 36</p>
-                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
-                            <img src="assets/images/K%20R%20E%20U%20Z%20B%20E%20R%20G.png" alt="Kreuzberg" class="w-full h-full object-cover">
+                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
+                            <img src="assets/images/K%20R%20E%20U%20Z%20B%20E%20R%20G.png" alt="Kreuzberg" class="w-full h-full object-contain mix-blend-multiply p-3">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -378,8 +377,8 @@
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-4">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 03</p>
-                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
-                            <img src="assets/images/N%20E%20U%20K%20Ö%20L%20L%20N.png" alt="Neukölln" class="w-full h-full object-cover">
+                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
+                            <img src="assets/images/N%20E%20U%20K%20Ö%20L%20L%20N.png" alt="Neukölln" class="w-full h-full object-contain mix-blend-multiply p-3">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -451,8 +450,8 @@
         </button>
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
         <div id="drawer-inner" class="drawer-inner">
-            <div id="drawer-img-container" class="w-full aspect-square bg-white mb-8 relative overflow-hidden flex items-center justify-center p-0">
-                <img id="drawer-image" src="" alt="Norien Label" class="w-full h-full object-cover opacity-100 transition-opacity duration-500 hidden">
+            <div id="drawer-img-container" class="w-full aspect-[4/3] bg-white border border-gray-100 mb-8 relative overflow-hidden shadow-sm flex items-center justify-center p-6">
+                <img id="drawer-image" src="" alt="Norien Label" class="w-full h-full object-contain mix-blend-multiply opacity-90 transition-opacity duration-500 hidden">
                 <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[10px] uppercase tracking-widest text-gray-300">Loading...</span>
             </div>
             <div class="flex-grow">
@@ -589,22 +588,18 @@
             window.addEventListener('scroll', () => {
                 const currentScrollY = window.scrollY;
                 
-                // Kiedy jesteśmy na samej górze strony
                 if (currentScrollY <= 50) {
                     navbar.classList.remove('nav-scrolled-up', 'nav-scrolled-down');
                     navbar.classList.add('nav-top');
                 } 
-                // Kiedy zjeżdżamy w dół
                 else if (currentScrollY > lastScrollY) {
                     navbar.classList.remove('nav-top', 'nav-scrolled-up');
                     navbar.classList.add('nav-scrolled-down');
                 } 
-                // Kiedy podciągamy w górę (poza samą górą)
                 else {
                     navbar.classList.remove('nav-top', 'nav-scrolled-down');
                     navbar.classList.add('nav-scrolled-up');
                 }
-                
                 lastScrollY = currentScrollY;
             });
             
@@ -722,7 +717,6 @@
             renderCart(); 
         }
 
-        /* TUTAJ ZMODYFIKOWANE LINKI ZE SPACJAMI (%20) */
         const mapProducts = {
             mitte: { id: 'mitte', title: 'MITTE', sub: 'Archive No. 01', color: '#b88b4a', coords: '52°31\'12.0"N 13°24\'18.0"E', notes: 'Lavender / Myrrh / Suede', desc: 'Serce Berlina uchwycone w nutach miedzi, zamszu i lawendy.', image: 'assets/images/M%20I%20T%20T%20E.png' },
             prenzl: { id: 'prenzl', title: 'PRENZL. BERG', sub: 'Archive No. 02', color: '#8a7b8e', coords: '52°32\'21.0"N 13°25\'27.0"E', notes: 'Lemon / Jasmine / Sandalwood', desc: 'Spacer po Kollwitzplatz zalanym poranną mgłą.', image: 'assets/images/P%20R%20E%20N%20Z%20L%20A%20U%20E%20R%20B%20E%20R%20G.png' },
