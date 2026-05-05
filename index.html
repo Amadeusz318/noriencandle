@@ -221,11 +221,11 @@
             <video autoplay loop muted playsinline class="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover -translate-x-1/2 -translate-y-1/2 opacity-70">
                 <source src="assets/images/7191254-hd_1920_1080_30fps.mp4" type="video/mp4">
             </video>
-            <!-- Overlay przyciemniający, żeby wideo nie zjadało białego tekstu -->
+            <!-- Overlay przyciemniający -->
             <div class="absolute inset-0 bg-[#0f0f0f] mix-blend-multiply opacity-40"></div>
         </div>
 
-        <!-- Teksty na wideo (z-10 żeby były nad filmem, tekst biały) -->
+        <!-- Teksty na wideo -->
         <div class="relative z-10 text-white">
             <p id="hero-sub" class="text-[10px] md:text-[11px] tracking-[0.6em] uppercase mb-8 opacity-70 text-reveal delay-1">Roślinne świece z Berlina.</p>
             <h1 class="text-6xl md:text-7xl lg:text-8xl font-thin tracking-tighter mb-10 leading-tight">
@@ -245,7 +245,6 @@
     <!-- SEKCJA 2: MAPA -->
     <section id="map-explore" class="observe-section min-h-[100dvh] w-full flex flex-col justify-center bg-white relative overflow-hidden bg-gray-50/50 py-20">
         <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
-            
             <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
                 <div id="map-mobile-hint" class="md:hidden absolute top-0 left-1/2 -translate-x-1/2 text-[10px] tracking-widest uppercase opacity-40 animate-pulse">Dotknij dzielnicy</div>
                 
@@ -254,22 +253,12 @@
                         <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z" /> <text x="360" y="210" class="label-bg">Reinickendorf</text>
                         <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 L 500,200 Z" /> <text x="560" y="220" class="label-bg">Pankow</text>
                         <path class="district-bg" d="M 50,350 L 180,280 L 260,520 L 120,600 L 40,480 Z" /> <text x="130" y="450" class="label-bg">Spandau</text>
-                        
-                        <path class="district-bg" d="M 260,520 L 340,460 L 280,390 L 320,320 L 250,220 L 180,280 Z" /> 
-                        <text x="240" y="350" class="label-bg"><tspan x="240" dy="0">CHARL.-</tspan><tspan x="240" dy="14">WILM.</tspan></text>
-                        
-                        <path class="district-bg" d="M 120,600 L 260,520 L 320,750 L 280,850 L 100,800 Z" /> 
-                        <text x="190" y="710" class="label-bg"><tspan x="190" dy="0">STEGLITZ-</tspan><tspan x="190" dy="14">ZEHL.</tspan></text>
-                        
-                        <path class="district-bg" d="M 340,460 L 430,480 L 460,550 L 430,650 L 450,800 L 320,750 L 260,520 Z" /> 
-                        <text x="380" y="610" class="label-bg"><tspan x="380" dy="0">TEMP.-</tspan><tspan x="380" dy="14">SCHÖN.</tspan></text>
-                        
+                        <path class="district-bg" d="M 260,520 L 340,460 L 280,390 L 320,320 L 250,220 L 180,280 Z" /> <text x="240" y="350" class="label-bg"><tspan x="240" dy="0">CHARL.-</tspan><tspan x="240" dy="14">WILM.</tspan></text>
+                        <path class="district-bg" d="M 120,600 L 260,520 L 320,750 L 280,850 L 100,800 Z" /> <text x="190" y="710" class="label-bg"><tspan x="190" dy="0">STEGLITZ-</tspan><tspan x="190" dy="14">ZEHL.</tspan></text>
+                        <path class="district-bg" d="M 340,460 L 430,480 L 460,550 L 430,650 L 450,800 L 320,750 L 260,520 Z" /> <text x="380" y="610" class="label-bg"><tspan x="380" dy="0">TEMP.-</tspan><tspan x="380" dy="14">SCHÖN.</tspan></text>
                         <path class="district-bg" d="M 640,350 L 750,320 L 820,450 L 650,550 L 600,450 Z" /> <text x="710" y="410" class="label-bg">Lichtenberg</text>
-                        
-                        <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z" /> 
-                        <text x="750" y="630" class="label-bg"><tspan x="750" dy="0">TREPTOW-</tspan><tspan x="750" dy="14">KÖP.</tspan></text>
+                        <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z" /> <text x="750" y="630" class="label-bg"><tspan x="750" dy="0">TREPTOW-</tspan><tspan x="750" dy="14">KÖP.</tspan></text>
                     </g>
-
                     <g class="map-layer delay-map-2">
                         <g class="active-group" data-id="mitte" onclick="showDrawer('mitte')">
                             <path class="active-path path-mitte nav-hover" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
@@ -307,7 +296,6 @@
     <!-- SEKCJA 3: THE CRAFT -->
     <section id="the-craft" class="observe-section min-h-[100dvh] w-full relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white py-24">
         <div class="wax-liquid-bg"></div>
-        
         <div class="relative z-10 max-w-3xl mx-auto flex flex-col items-center pointer-events-none">
             <p id="craft-sub" class="text-[10px] md:text-[11px] tracking-[0.6em] uppercase mb-10 opacity-60 text-reveal delay-1" style="font-family: 'Montserrat', sans-serif;">Forma i Materiał</p>
             <h2 id="craft-title" class="text-4xl md:text-5xl font-thin mb-10 tracking-wide text-reveal delay-2">Świadomy wybór.</h2>
@@ -318,16 +306,34 @@
         </div>
     </section>
 
+    <!-- SEKCJA NOWA: THE RITUAL -->
+    <section id="ritual" class="observe-section w-full py-24 md:py-32 px-6 bg-white relative overflow-hidden">
+        <div class="container mx-auto max-w-6xl flex flex-col md:flex-row items-center gap-16 lg:gap-24">
+            <div class="w-full md:w-1/2 aspect-square md:aspect-[4/5] bg-[#F0EFEA] relative overflow-hidden flex items-center justify-center text-reveal delay-1">
+                <span class="text-[10px] tracking-widest uppercase opacity-30">Image: Unboxing / Bag</span>
+                <!-- Miejsce na zdjęcie opakowania: <img src="assets/images/opakowanie.jpg" class="w-full h-full object-cover"> -->
+            </div>
+            <div class="w-full md:w-1/2 space-y-8 text-reveal delay-2">
+                <h2 id="ritual-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase opacity-40 font-bold">Doświadczenie</h2>
+                <h3 id="ritual-title" class="text-3xl lg:text-4xl font-extralight leading-tight">Szacunek <br> do detalu.</h3>
+                <p id="ritual-desc" class="text-norien-text/70 leading-relaxed font-light text-sm text-gray-500 max-w-md">
+                    Każde archiwum pakujemy ręcznie w naszej berlińskiej pracowni. Używamy surowego, niebielonego kartonu, a sama świeca spoczywa w bawełnianym woreczku. Zero plastiku. Tylko to, co niezbędne.
+                </p>
+            </div>
+        </div>
+    </section>
+
     <!-- SEKCJA 4: ARCHIWUM -->
-    <section id="archives" class="observe-section min-h-[100dvh] w-full flex flex-col items-center justify-center px-6 overflow-hidden py-24">
+    <section id="archives" class="observe-section min-h-[100dvh] w-full flex flex-col items-center justify-center px-6 overflow-hidden py-24 bg-norien-canvas">
         <div class="container mx-auto w-full max-w-[1400px]">
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-1">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 01</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="assets/images/M%20I%20T%20T%20E.png" alt="Mitte" class="w-full h-full object-contain mix-blend-multiply p-3">
+                        <!-- Dodano powolny ZOOM na HOVER: transition-transform duration-[1.5s] ease-out group-hover:scale-105 -->
+                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
+                            <img src="assets/images/M%20I%20T%20T%20E.png" alt="Mitte" class="w-full h-full object-cover transform transition-transform duration-[1.5s] ease-out group-hover:scale-105">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -349,8 +355,8 @@
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-2">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 02</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="assets/images/P%20R%20E%20N%20Z%20L%20A%20U%20E%20R%20B%20E%20R%20G.png" alt="Prenzlauer Berg" class="w-full h-full object-contain mix-blend-multiply p-3">
+                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
+                            <img src="assets/images/P%20R%20E%20N%20Z%20L%20A%20U%20E%20R%20B%20E%20R%20G.png" alt="Prenzlauer Berg" class="w-full h-full object-cover transform transition-transform duration-[1.5s] ease-out group-hover:scale-105">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -372,8 +378,8 @@
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-3">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 36</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="assets/images/K%20R%20E%20U%20Z%20B%20E%20R%20G.png" alt="Kreuzberg" class="w-full h-full object-contain mix-blend-multiply p-3">
+                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
+                            <img src="assets/images/K%20R%20E%20U%20Z%20B%20E%20R%20G.png" alt="Kreuzberg" class="w-full h-full object-cover transform transition-transform duration-[1.5s] ease-out group-hover:scale-105">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -395,8 +401,8 @@
                 <div class="group relative bg-white p-6 lg:p-8 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col nav-hover text-reveal delay-4">
                     <div class="flex-grow flex flex-col items-center text-center">
                         <p class="text-[9px] tracking-ultra mb-4 opacity-40 uppercase">Archive No. 03</p>
-                        <div class="w-full aspect-[3/4] border border-norien-dark/5 flex items-center justify-center bg-norien-canvas shadow-sm relative overflow-hidden">
-                            <img src="assets/images/N%20E%20U%20K%20Ö%20L%20L%20N.png" alt="Neukölln" class="w-full h-full object-contain mix-blend-multiply p-3">
+                        <div class="w-full aspect-square flex items-center justify-center bg-norien-canvas relative overflow-hidden">
+                            <img src="assets/images/N%20E%20U%20K%20Ö%20L%20L%20N.png" alt="Neukölln" class="w-full h-full object-cover transform transition-transform duration-[1.5s] ease-out group-hover:scale-105">
                         </div>
                     </div>
                     <div class="mt-6 space-y-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -444,20 +450,27 @@
             </div>
         </div>
 
-        <footer class="py-8 px-10 border-t border-white/10 text-[9px] md:text-[10px] tracking-widest uppercase opacity-50 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left w-full relative z-10">
-            <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
+        <!-- ROZBUDOWANA STOPKA -->
+        <footer class="py-12 px-6 md:px-10 border-t border-white/10 text-[9px] md:text-[10px] tracking-widest uppercase opacity-50 flex flex-col items-center gap-10 w-full relative z-10">
             
-            <div class="flex md:hidden gap-3 text-[9px] tracking-widest uppercase">
+            <div class="grid grid-cols-2 md:flex md:flex-row gap-6 md:gap-12 text-center">
+                <a href="#" class="hover:opacity-100 transition nav-hover" id="ft-shipping">Wysyłka i Zwroty</a>
+                <a href="#" class="hover:opacity-100 transition nav-hover" id="ft-faq">FAQ</a>
+                <a href="#" class="hover:opacity-100 transition nav-hover" id="ft-contact">Kontakt</a>
+                <a href="#" class="hover:opacity-100 transition nav-hover" id="ft-impressum">Impressum</a>
+                <a href="#" class="hover:opacity-100 transition nav-hover" id="ft-privacy">Polityka Prywatności</a>
+            </div>
+
+            <div class="flex md:hidden gap-3 text-[9px] tracking-widest uppercase mt-4 border-t border-white/10 pt-6 w-full justify-center">
                 <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
                 <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
                 <button onclick="changeLang('de')" class="lang-btn lang-de">DE</button>
             </div>
 
-            <div class="flex gap-10">
-                <a href="#" class="hover:opacity-100 transition nav-hover">Instagram</a>
-                <a href="#" class="hover:opacity-100 transition nav-hover">Privacy</a>
+            <div class="flex flex-col md:flex-row justify-between w-full mt-4 items-center gap-4 text-center md:text-left">
+                <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
+                <div>Berlin-Mitte, GER</div>
             </div>
-            <div>Berlin-Mitte, GER</div>
         </footer>
     </section>
 
@@ -468,8 +481,8 @@
         </button>
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
         <div id="drawer-inner" class="drawer-inner">
-            <div id="drawer-img-container" class="w-full aspect-[4/3] bg-white border border-gray-100 mb-8 relative overflow-hidden shadow-sm flex items-center justify-center p-6">
-                <img id="drawer-image" src="" alt="Norien Label" class="w-full h-full object-contain mix-blend-multiply opacity-90 transition-opacity duration-500 hidden">
+            <div id="drawer-img-container" class="w-full aspect-square bg-white mb-8 relative overflow-hidden flex items-center justify-center p-0">
+                <img id="drawer-image" src="" alt="Norien Label" class="w-full h-full object-cover opacity-100 transition-opacity duration-500 hidden">
                 <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[10px] uppercase tracking-widest text-gray-300">Loading...</span>
             </div>
             <div class="flex-grow">
@@ -669,7 +682,7 @@
             });
         }
 
-        // --- TRANSLACJE ---
+        // --- TRANSLACJE Z UWZGLĘDNIENIEM NOWEJ SEKCJI I STOPKI ---
         let currentLang = 'pl';
         const translations = {
             pl: {
@@ -682,9 +695,11 @@
                 guideAction: "Wybierz obszar na mapie, aby poznać detale.", 
                 craftSub: "Forma i Materiał", craftTitle: "Świadomy wybór.", 
                 craftDesc: "Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. To naturalna baza, która pozwala zapachom w pełni wybrzmieć. Surowe szkło i starannie zbalansowane esencje tworzą harmonijną całość.", 
+                ritualSub: "Doświadczenie", ritualTitle: "Szacunek <br> do detalu.", ritualDesc: "Każde archiwum pakujemy ręcznie w naszej berlińskiej pracowni. Używamy surowego, niebielonego kartonu, a sama świeca spoczywa w bawełnianym woreczku. Zero plastiku. Tylko to, co niezbędne.",
                 manifestoSub: "Nasze Podejście", 
                 manifestoText: "Wierzymy, że zapach to najlepsze zaproszenie do odkrywania. Łącząc wegański wosk ze starannie zbalansowanymi esencjami, chcemy po prostu rozbudzać Twoją ciekawość. Projektujemy z szacunkiem do rzemiosła, oddając Ci produkt, który naturalnie przyciąga uwagę.", 
-                manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.", newsInput: "Twój adres e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Twój koszyk jest pusty.", cartShipping: "Wysyłka", cartFree: "Gratis", checkoutBack: "Wróć do sklepu", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Kontakt", inEmail: "Adres e-mail", checkAddress: "Adres Dostawy", inFname: "Imię", inLname: "Nazwisko", inStreet: "Ulica i numer domu", inZip: "Kod pocztowy", inCity: "Miasto", checkPayment: "Płatność", checkSys: "System płatności (Demo)", btnPay: "Zapłać i Zamów"
+                manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Otrzymuj prywatne notatki z naszego laboratorium i wczesny dostęp do limitowanych edycji zapachowych.", newsInput: "Twój adres e-mail", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Twój koszyk jest pusty.", cartShipping: "Wysyłka", cartFree: "Gratis", checkoutBack: "Wróć do sklepu", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Kontakt", inEmail: "Adres e-mail", checkAddress: "Adres Dostawy", inFname: "Imię", inLname: "Nazwisko", inStreet: "Ulica i numer domu", inZip: "Kod pocztowy", inCity: "Miasto", checkPayment: "Płatność", checkSys: "System płatności (Demo)", btnPay: "Zapłać i Zamów",
+                ftShipping: "Wysyłka i Zwroty", ftFaq: "FAQ", ftContact: "Kontakt", ftImpressum: "Impressum", ftPrivacy: "Polityka Prywatności"
             },
             en: {
                 navMap: "Map", navCraft: "Craft", navArchives: "Archives", navManifesto: "Approach", cartWord: "CART", scrollText: "Scroll to explore", heroSub: "Plant-based candles from Berlin.", 
@@ -696,9 +711,11 @@
                 guideAction: "Select an area on the map to explore details.", 
                 craftSub: "Form and Material", craftTitle: "Conscious choice.", 
                 craftDesc: "We abandoned paraffin in favor of a vegan blend of rapeseed and coconut wax. It is a natural base that lets fragrances fully resonate. Raw glass and carefully balanced essences create a harmonious whole.", 
+                ritualSub: "The Experience", ritualTitle: "Respect <br> for detail.", ritualDesc: "Each archive is hand-packed in our Berlin studio. We use raw, unbleached cardboard, and the candle itself rests in a cotton bag. Zero plastic. Only what is essential.",
                 manifestoSub: "Our Approach", 
                 manifestoText: "We believe that scent is the best invitation to explore. By combining vegan wax with carefully balanced essences, we simply want to awaken your curiosity. We design with respect for the craft, giving you a product that naturally draws attention.", 
-                manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Receive private notes from our lab and early access to limited fragrance editions.", newsInput: "Your email address", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Your cart is empty.", cartShipping: "Shipping", cartFree: "Free", checkoutBack: "Back to store", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Contact", inEmail: "Email address", checkAddress: "Delivery Address", inFname: "First name", inLname: "Last name", inStreet: "Street and house number", inZip: "ZIP code", inCity: "City", checkPayment: "Payment", checkSys: "Payment System (Demo)", btnPay: "Pay & Order"
+                manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Receive private notes from our lab and early access to limited fragrance editions.", newsInput: "Your email address", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Acquire", btnAdded: "Added", cartEmpty: "Your cart is empty.", cartShipping: "Shipping", cartFree: "Free", checkoutBack: "Back to store", checkoutOrderSum: "Order Summary", checkoutDue: "Total due", checkContact: "Contact", inEmail: "Email address", checkAddress: "Delivery Address", inFname: "First name", inLname: "Last name", inStreet: "Street and house number", inZip: "ZIP code", inCity: "City", checkPayment: "Payment", checkSys: "Payment System (Demo)", btnPay: "Pay & Order",
+                ftShipping: "Shipping & Returns", ftFaq: "FAQ", ftContact: "Contact", ftImpressum: "Impressum", ftPrivacy: "Privacy Policy"
             },
             de: {
                 navMap: "Karte", navCraft: "Handwerk", navArchives: "Archiv", navManifesto: "Ansatz", cartWord: "WARENKORB", scrollText: "Scrollen zum Entdecken", heroSub: "Pflanzliche Kerzen aus Berlin.", 
@@ -710,9 +727,11 @@
                 guideAction: "Wähle einen Bereich auf der Karte aus für Details.", 
                 craftSub: "Form und Material", craftTitle: "Bewusste Wahl.", 
                 craftDesc: "Wir verzichten auf Paraffin zugunsten einer veganen Raps- und Kokoswachsmischung. Diese natürliche Basis lässt Düfte voll entfalten. Rohes Glas und sorgfältig abgestimmte Essenzen bilden eine harmonische Einheit.", 
+                ritualSub: "Die Erfahrung", ritualTitle: "Respekt <br> fürs Detail.", ritualDesc: "Jedes Archiv wird in unserem Berliner Atelier handverpackt. Wir verwenden rohen, ungebleichten Karton und die Kerze ruht in einem Baumwollsäckchen. Kein Plastik. Nur das Wesentliche.",
                 manifestoSub: "Unser Ansatz", 
                 manifestoText: "Wir glauben, dass Duft die beste Einladung zum Entdecken ist. Indem wir veganes Wachs mit sorgfältig abgestimmten Essenzen kombinieren, möchten wir einfach deine Neugier wecken. Wir entwerfen mit Respekt vor dem Handwerk und übergeben dir ein Produkt, das natürlich die Blicke auf sich zieht.", 
-                manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Erhalte private Notizen aus unserem Labor und frühen Zugang zu limitierten Editionen.", newsInput: "Deine E-Mail Adresse", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Kaufen", btnAdded: "Hinzugefügt", cartEmpty: "Dein Warenkorb ist leer.", cartShipping: "Versand", cartFree: "Kostenlos", checkoutBack: "Zurück zum Shop", checkoutOrderSum: "Bestellübersicht", checkoutDue: "Gesamtsumme", checkContact: "Kontakt", inEmail: "E-Mail-Adresse", checkAddress: "Lieferadresse", inFname: "Vorname", inLname: "Nachname", inStreet: "Straße und Hausnummer", inZip: "PLZ", inCity: "Stadt", checkPayment: "Zahlung", checkSys: "Zahlungssystem (Demo)", btnPay: "Zahlen & Bestellen"
+                manifestoBadge: "Designed for Galleries & Concept Stores", newsTitle: "Join the Archive", newsDesc: "Erhalte private Notizen aus unserem Labor und frühen Zugang zu limitierten Editionen.", newsInput: "Deine E-Mail Adresse", footerCopy: `© ${new Date().getFullYear()} Norien Berlin — Olfactory Archives`, btnAcquire: "Kaufen", btnAdded: "Hinzugefügt", cartEmpty: "Dein Warenkorb ist leer.", cartShipping: "Versand", cartFree: "Kostenlos", checkoutBack: "Zurück zum Shop", checkoutOrderSum: "Bestellübersicht", checkoutDue: "Gesamtsumme", checkContact: "Kontakt", inEmail: "E-Mail-Adresse", checkAddress: "Lieferadresse", inFname: "Vorname", inLname: "Nachname", inStreet: "Straße und Hausnummer", inZip: "PLZ", inCity: "Stadt", checkPayment: "Zahlung", checkSys: "Zahlungssystem (Demo)", btnPay: "Zahlen & Bestellen",
+                ftShipping: "Versand & Retouren", ftFaq: "FAQ", ftContact: "Kontakt", ftImpressum: "Impressum", ftPrivacy: "Datenschutz"
             }
         };
 
@@ -727,6 +746,16 @@
             
             document.getElementById('hero-desc').innerText = t.heroDesc; document.getElementById('map-mobile-hint').innerText = t.guideHint; document.getElementById('guide-sub').innerText = t.guideSub; document.getElementById('guide-title').innerHTML = t.guideTitle; document.getElementById('guide-desc').innerText = t.guideDesc; document.getElementById('guide-action').innerText = t.guideAction; document.getElementById('craft-sub').innerText = t.craftSub; document.getElementById('craft-title').innerText = t.craftTitle; document.getElementById('craft-desc').innerText = t.craftDesc; document.getElementById('manifesto-sub').innerText = t.manifestoSub; document.getElementById('manifesto-text').innerText = t.manifestoText; document.getElementById('manifesto-badge').innerText = t.manifestoBadge; document.getElementById('news-title').innerText = t.newsTitle; document.getElementById('news-desc').innerText = t.newsDesc; document.getElementById('news-input').placeholder = t.newsInput; document.getElementById('footer-copy').innerHTML = t.footerCopy; document.getElementById('cart-title').innerText = t.cartWord; document.getElementById('cart-shipping').innerText = t.cartShipping; document.getElementById('cart-shipping-val').innerText = t.cartFree; document.getElementById('checkout-back').innerText = t.checkoutBack; document.getElementById('checkout-summary-title').innerText = t.checkoutOrderSum; document.getElementById('checkout-due-label').innerText = t.checkoutDue; document.getElementById('check-contact').innerText = t.checkContact; document.getElementById('in-email').placeholder = t.inEmail; document.getElementById('check-address').innerText = t.checkAddress; document.getElementById('in-fname').placeholder = t.inFname; document.getElementById('in-lname').placeholder = t.inLname; document.getElementById('in-street').placeholder = t.inStreet; document.getElementById('in-zip').placeholder = t.inZip; document.getElementById('in-city').placeholder = t.inCity; document.getElementById('check-payment').innerText = t.checkPayment; document.getElementById('check-sys').innerText = t.checkSys; document.getElementById('btn-pay').innerText = t.btnPay;
             
+            // Nowe elementy The Ritual i Footer
+            document.getElementById('ritual-sub').innerText = t.ritualSub;
+            document.getElementById('ritual-title').innerHTML = t.ritualTitle;
+            document.getElementById('ritual-desc').innerText = t.ritualDesc;
+            document.getElementById('ft-shipping').innerText = t.ftShipping;
+            document.getElementById('ft-faq').innerText = t.ftFaq;
+            document.getElementById('ft-contact').innerText = t.ftContact;
+            document.getElementById('ft-impressum').innerText = t.ftImpressum;
+            document.getElementById('ft-privacy').innerText = t.ftPrivacy;
+
             document.querySelectorAll('.btn-checkout').forEach(el => el.innerText = 'CHECKOUT');
             document.querySelectorAll('.btn-acquire').forEach(el => el.innerText = t.btnAcquire);
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
