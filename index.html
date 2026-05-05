@@ -65,20 +65,22 @@
         .delay-1 { transition-delay: 0.2s; } .delay-2 { transition-delay: 0.6s; }
         .delay-3 { transition-delay: 1.0s; } .delay-4 { transition-delay: 1.4s; }
 
-        /* NOWA NAWIGACJA W STYLU DIORA */
+        /* NOWA NAWIGACJA W STYLU DIORA + DYNAMICZNY KOLOR */
         nav { 
             position: fixed; width: 100%; top: 0; z-index: 1000;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease, border-color 0.4s ease;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
             opacity: 0; animation: fadeInNav 2s ease forwards 1s; 
         }
         nav.nav-top {
             background-color: transparent;
-            border-bottom: 1px solid transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff; /* Biały tekst na ciemnym filmie */
             backdrop-filter: none;
         }
         nav.nav-scrolled-up {
             background-color: rgba(252, 250, 247, 0.98);
             border-bottom: 1px solid rgba(15, 15, 15, 0.05);
+            color: #0f0f0f; /* Ciemny tekst na jasnym tle */
             transform: translateY(0);
             backdrop-filter: blur(12px);
         }
@@ -88,6 +90,10 @@
             border-bottom: 1px solid transparent;
             backdrop-filter: none;
         }
+
+        /* Linia pod koszykiem zależna od koloru nav */
+        nav.nav-top #nav-cart { border-color: rgba(255,255,255,0.4); }
+        nav.nav-scrolled-up #nav-cart { border-color: rgba(15,15,15,0.4); }
 
         @keyframes fadeInNav { to { opacity: 1; } }
 
@@ -138,7 +144,7 @@
         .active-group.is-selected[data-id="neukolln"] .active-path { fill: rgba(99, 27, 43, 0.15); }
         .active-group.is-selected .label-active { transform: translateY(-8px); opacity: 1; }
 
-        /* WOSK W TLE */
+        /* WOSK W TLE (DO SEKCJI CRAFT) */
         .wax-liquid-bg {
             position: absolute; inset: -50%; z-index: 0;
             background: 
@@ -152,16 +158,16 @@
         .qty-btn { display: inline-block; padding: 0 8px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease; cursor: pointer; }
         .qty-btn:hover { transform: scale(1.6); font-weight: 600; }
 
-        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 380px; height: 100vh; background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06); z-index: 1050; transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
+        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 380px; height: 100vh; background-color: #fcfaf7; box-shadow: -15px 0 50px rgba(0,0,0,0.06); z-index: 1050; transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; color: #0f0f0f; }
         .drawer-panel.open { transform: translateX(0); }
-        .drawer-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: #0f0f0f; opacity: 0.4; transition: opacity 0.3s; z-index: 10; }
+        .drawer-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: currentColor; opacity: 0.4; transition: opacity 0.3s; z-index: 10; }
         .drawer-close:hover { opacity: 1; }
         .drawer-inner { overflow-y: auto; flex-grow: 1; padding: 4rem 2.5rem 2rem 2.5rem; display: flex; flex-direction: column; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
         .drawer-inner.loaded { opacity: 1; transform: translateY(0); }
         .drawer-inner::-webkit-scrollbar { width: 3px; }
         .drawer-inner::-webkit-scrollbar-thumb { background: #e0e0e0; }
 
-        #checkout-overlay { position: fixed; inset: 0; background-color: #fcfaf7; z-index: 2000; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; }
+        #checkout-overlay { position: fixed; inset: 0; background-color: #fcfaf7; z-index: 2000; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; color: #0f0f0f;}
         #checkout-overlay.open { transform: translateY(0); }
         .input-minimal { width: 100%; border-bottom: 1px solid rgba(15,15,15,0.2); padding: 12px 10px; font-size: 14px; font-weight: 300; outline: none; transition: all 0.3s; background: transparent; }
         .input-minimal:hover, .input-minimal:focus { border-color: #0f0f0f; background-color: rgba(15,15,15,0.02); }
@@ -176,18 +182,18 @@
 
     <!-- PRELOADER -->
     <div id="preloader">
-        <div class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light">Loading Archives</div>
+        <div class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light text-norien-dark">Loading Archives</div>
         <div id="loader-perc" class="text-4xl md:text-5xl font-thin tracking-widest text-norien-dark">0%</div>
     </div>
 
     <div class="noise-overlay"></div>
     <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
 
-    <!-- NAWIGACJA DIOR -->
-    <nav id="main-nav" class="nav-top px-6 md:px-10 py-5 flex justify-between items-center text-norien-dark">
+    <!-- NAWIGACJA DIOR (Zmienia kolor w zależności od tła) -->
+    <nav id="main-nav" class="nav-top px-6 md:px-10 py-5 flex justify-between items-center">
         <a href="#hero" class="flex flex-col items-center justify-center pt-1 nav-hover magnetic">
-            <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.3rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: #333;">NORIEN</span>
-            <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 10px; letter-spacing: 0.23em; margin-top: 0.5rem; margin-right: -0.23em; color: #555;">BERLIN</span>
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.3rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: currentColor;">NORIEN</span>
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 10px; letter-spacing: 0.23em; margin-top: 0.5rem; margin-right: -0.23em; color: currentColor; opacity: 0.7;">BERLIN</span>
         </a>
 
         <div class="hidden lg:flex gap-10 text-[11px] tracking-widest uppercase font-light ml-8">
@@ -203,14 +209,25 @@
                 <div class="magnetic"><button onclick="changeLang('en')" class="lang-btn nav-hover lang-en">EN</button></div>
                 <div class="magnetic"><button onclick="changeLang('de')" class="lang-btn nav-hover lang-de">DE</button></div>
             </div>
-            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b border-norien-dark pb-1 uppercase whitespace-nowrap nav-hover cursor-pointer" onclick="openCart(event)">KOSZYK (0)</div></div>
+            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b pb-1 uppercase whitespace-nowrap nav-hover cursor-pointer" onclick="openCart(event)">KOSZYK (0)</div></div>
         </div>
     </nav>
 
-    <!-- SEKCJA 1: HERO -->
-    <section id="hero" class="observe-section min-h-[100dvh] w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden py-24">
-        <div class="z-10">
-            <p id="hero-sub" class="text-[10px] md:text-[11px] tracking-[0.6em] uppercase mb-8 opacity-60 text-reveal delay-1">Roślinne świece z Berlina.</p>
+    <!-- SEKCJA 1: HERO Z WIDEO W TLE -->
+    <section id="hero" class="observe-section min-h-[100dvh] w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden pt-24 pb-20">
+        
+        <!-- Tło Wideo -->
+        <div class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-[#0a0a0a]">
+            <video autoplay loop muted playsinline class="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover -translate-x-1/2 -translate-y-1/2 opacity-70">
+                <source src="assets/images/7191254-hd_1920_1080_30fps.mp4" type="video/mp4">
+            </video>
+            <!-- Overlay przyciemniający, żeby wideo nie zjadało białego tekstu -->
+            <div class="absolute inset-0 bg-[#0f0f0f] mix-blend-multiply opacity-40"></div>
+        </div>
+
+        <!-- Teksty na wideo (z-10 żeby były nad filmem, tekst biały) -->
+        <div class="relative z-10 text-white">
+            <p id="hero-sub" class="text-[10px] md:text-[11px] tracking-[0.6em] uppercase mb-8 opacity-70 text-reveal delay-1">Roślinne świece z Berlina.</p>
             <h1 class="text-6xl md:text-7xl lg:text-8xl font-thin tracking-tighter mb-10 leading-tight">
                 <span class="block text-reveal delay-2" id="hero-title-1">Prawdziwy Berlin.</span>
                 <span class="block text-reveal delay-3 italic" id="hero-title-2">Zamknięty w szkle.</span>
@@ -219,8 +236,9 @@
                 Tworzymy zapachy, które oddają charakter berlińskich dzielnic. Używamy czystego wosku roślinnego i starannie wyselekcjonowanych esencji, by zamknąć w szkle to, co w mieście najbardziej intrygujące.
             </p>
         </div>
-        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4">
-            <a href="#map-explore" id="hero-scroll" class="nav-hover text-[10px] tracking-widest uppercase animate-bounce italic opacity-40">Przewiń by odkryć</a>
+        
+        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4 z-10 text-white">
+            <a href="#map-explore" id="hero-scroll" class="nav-hover text-[10px] tracking-widest uppercase animate-bounce italic opacity-60 hover:opacity-100 transition-opacity">Przewiń by odkryć</a>
         </div>
     </section>
 
