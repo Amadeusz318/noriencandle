@@ -13,8 +13,11 @@
         ::-webkit-scrollbar { display: none; }
         html { -ms-overflow-style: none; scrollbar-width: none; }
         body { overflow-x: hidden; background-color: #fdfcf9; }
-        /* Mocne wymuszenie ukrycia kursora systemowego dla wszystkich elementów, w tym SVG */
-        @media (pointer: fine) { *, body, a, button, input, select, svg, path, text, g { cursor: none !important; } }
+        
+        /* AGRESYWNE UKRYCIE SYSTEMOWEGO KURSORA WSZĘDZIE (DLA PC) */
+        @media (pointer: fine) { 
+            *, html, body, a, button, input, select, svg, path, text, g { cursor: none !important; } 
+        }
 
         /* PRELOADER & NOISE */
         #preloader { position: fixed; inset: 0; background-color: #fdfcf9; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1); }
@@ -51,8 +54,8 @@
         .district-bg { fill: rgba(0, 0, 0, 0.015); stroke: #d4d4d4; stroke-width: 1.5; transition: opacity 0.5s ease; }
         .label-bg { font-size: 12px; font-weight: 500; fill: #1a1a1a; opacity: 0.45; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
         #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.15; }
-        .active-group { transition: opacity 0.5s ease; cursor: none !important; }
-        .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s ease, fill 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; }
+        .active-group { transition: opacity 0.5s ease; }
+        .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s ease, fill 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; pointer-events: none; }
         .path-mitte { stroke: #b35a2d; } .path-prenzl { stroke: #8a7b8e; } .path-kreuz { stroke: #005f63; } .path-neukolln { stroke: #631b2b; }
         .label-active { font-size: 16px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.85; transition: transform 0.4s ease; text-anchor: middle; pointer-events: none; }
         .text-mitte { fill: #b35a2d; } .text-prenzl { fill: #8a7b8e; } .text-kreuz { fill: #005f63; } .text-neukolln { fill: #631b2b; }
@@ -112,24 +115,24 @@
     </div>
 
     <nav id="main-nav" class="nav-top px-6 md:px-10 py-5 flex justify-between items-center">
-        <a href="/" class="flex flex-col items-center justify-center pt-1 magnetic cursor-expand">
+        <a href="/" class="flex flex-col items-center justify-center pt-1 magnetic">
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.3rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: currentColor;">NORIEN</span>
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 10px; letter-spacing: 0.23em; margin-top: 0.5rem; margin-right: -0.23em; color: currentColor; opacity: 0.7;">BERLIN</span>
         </a>
         <div class="hidden lg:flex gap-10 text-[11px] tracking-widest uppercase font-light ml-8">
-            <div class="magnetic"><a href="/sklep" id="nav-shop" class="hover:opacity-50 transition cursor-expand">Sklep</a></div>
-            <div class="magnetic"><a href="/o-nas" id="nav-about" class="hover:opacity-50 transition cursor-expand">O nas</a></div>
-            <div class="magnetic"><a href="/kontakt" id="nav-contact" class="hover:opacity-50 transition cursor-expand">Kontakt</a></div>
+            <div class="magnetic"><a href="/sklep" id="nav-shop" class="hover:opacity-50 transition">Sklep</a></div>
+            <div class="magnetic"><a href="/o-nas" id="nav-about" class="hover:opacity-50 transition">O nas</a></div>
+            <div class="magnetic"><a href="/kontakt" id="nav-contact" class="hover:opacity-50 transition">Kontakt</a></div>
         </div>
         <div class="flex items-center gap-6 md:gap-10">
             <div class="hidden md:flex gap-4 text-[10px] tracking-widest uppercase">
-                <div class="magnetic"><button onclick="changeLang('pl')" class="lang-btn active lang-pl cursor-expand">PL</button></div>
-                <div class="magnetic"><button onclick="changeLang('en')" class="lang-btn lang-en cursor-expand">EN</button></div>
-                <div class="magnetic"><button onclick="changeLang('de')" class="lang-btn lang-de cursor-expand">DE</button></div>
-                <div class="magnetic"><button onclick="changeLang('fr')" class="lang-btn lang-fr cursor-expand">FR</button></div>
-                <div class="magnetic"><button onclick="changeLang('es')" class="lang-btn lang-es cursor-expand">ES</button></div>
+                <div class="magnetic"><button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button></div>
+                <div class="magnetic"><button onclick="changeLang('en')" class="lang-btn lang-en">EN</button></div>
+                <div class="magnetic"><button onclick="changeLang('de')" class="lang-btn lang-de">DE</button></div>
+                <div class="magnetic"><button onclick="changeLang('fr')" class="lang-btn lang-fr">FR</button></div>
+                <div class="magnetic"><button onclick="changeLang('es')" class="lang-btn lang-es">ES</button></div>
             </div>
-            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b pb-1 uppercase whitespace-nowrap hover:opacity-50 transition cursor-expand" onclick="openCart(event)">KOSZYK (0)</div></div>
+            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b pb-1 uppercase whitespace-nowrap hover:opacity-50 transition" onclick="openCart(event)">KOSZYK (0)</div></div>
         </div>
     </nav>
 
@@ -148,7 +151,7 @@
             </h1>
             <p id="hero-desc" class="max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed opacity-80 text-reveal delay-4">Tworzymy zapachy, które oddają charakter berlińskich dzielnic. Używamy czystego wosku roślinnego i starannie wyselekcjonowanych esencji, by zamknąć w szkle to, co w mieście najbardziej intrygujące.</p>
         </div>
-        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4 z-10 text-white cursor-expand">
+        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4 z-10 text-white">
             <a href="#map-explore" id="hero-scroll" class="text-[10px] tracking-widest uppercase animate-bounce italic opacity-60 hover:opacity-100 transition-opacity">Przewiń by odkryć</a>
         </div>
     </section>
@@ -169,21 +172,21 @@
                         <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z"/> <text x="750" y="630" class="label-bg"><tspan x="750" dy="0">TREPTOW-</tspan><tspan x="750" dy="14">KÖP.</tspan></text>
                     </g>
                     <g class="map-layer delay-map-2">
-                        <g class="active-group" data-id="mitte" onclick="showDrawer('mitte')">
-                            <path class="active-path path-mitte cursor-expand" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
-                            <text x="390" y="405" class="label-active text-mitte cursor-expand">MITTE</text>
+                        <g class="active-group cursor-expand" data-id="mitte" onclick="showDrawer('mitte')">
+                            <path class="active-path path-mitte" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
+                            <text x="390" y="405" class="label-active text-mitte">MITTE</text>
                         </g>
-                        <g class="active-group" data-id="prenzl" onclick="showDrawer('prenzl')">
-                            <path class="active-path path-prenzl cursor-expand" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
-                            <text x="545" y="385" class="label-active text-prenzl cursor-expand"><tspan x="545" dy="0">PRENZL.</tspan><tspan x="545" dy="20">BERG</tspan></text>
+                        <g class="active-group cursor-expand" data-id="prenzl" onclick="showDrawer('prenzl')">
+                            <path class="active-path path-prenzl" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
+                            <text x="545" y="385" class="label-active text-prenzl"><tspan x="545" dy="0">PRENZL.</tspan><tspan x="545" dy="20">BERG</tspan></text>
                         </g>
-                        <g class="active-group" data-id="kreuz" onclick="showDrawer('kreuz')">
-                            <path class="active-path path-kreuz cursor-expand" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
-                            <text x="530" y="505" class="label-active text-kreuz cursor-expand">KREUZBERG</text>
+                        <g class="active-group cursor-expand" data-id="kreuz" onclick="showDrawer('kreuz')">
+                            <path class="active-path path-kreuz" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
+                            <text x="530" y="505" class="label-active text-kreuz">KREUZBERG</text>
                         </g>
-                        <g class="active-group" data-id="neukolln" onclick="showDrawer('neukolln')">
-                            <path class="active-path path-neukolln cursor-expand" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
-                            <text x="520" y="690" class="label-active text-neukolln cursor-expand">NEUKÖLLN</text>
+                        <g class="active-group cursor-expand" data-id="neukolln" onclick="showDrawer('neukolln')">
+                            <path class="active-path path-neukolln" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
+                            <text x="520" y="690" class="label-active text-neukolln">NEUKÖLLN</text>
                         </g>
                     </g>
                 </svg>
@@ -237,12 +240,12 @@
                         <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
                             <span class="text-sm font-light">€ 55.00</span>
                             <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
-                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 cursor-expand">
+                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none qty-btn" onmousedown="startQty('qty-mitte', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('qty-mitte', -1, event)" ontouchend="stopQty()">-</button>
                                     <span id="qty-mitte" class="w-6 text-center">1</span>
                                     <button class="outline-none qty-btn" onmousedown="startQty('qty-mitte', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('qty-mitte', 1, event)" ontouchend="stopQty()">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300 cursor-expand" onclick="addToCart('mitte', 'qty-mitte', this)">Acquire</button></div>
+                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('mitte', 'qty-mitte', this)">Acquire</button></div>
                             </div>
                         </div>
                     </div>
@@ -260,12 +263,12 @@
                         <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
                             <span class="text-sm font-light">€ 55.00</span>
                             <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
-                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 cursor-expand">
+                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none qty-btn" onmousedown="startQty('qty-prenzl', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('qty-prenzl', -1, event)" ontouchend="stopQty()">-</button>
                                     <span id="qty-prenzl" class="w-6 text-center">1</span>
                                     <button class="outline-none qty-btn" onmousedown="startQty('qty-prenzl', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('qty-prenzl', 1, event)" ontouchend="stopQty()">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300 cursor-expand" onclick="addToCart('prenzl', 'qty-prenzl', this)">Acquire</button></div>
+                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('prenzl', 'qty-prenzl', this)">Acquire</button></div>
                             </div>
                         </div>
                     </div>
@@ -283,12 +286,12 @@
                         <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
                             <span class="text-sm font-light">€ 55.00</span>
                             <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
-                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 cursor-expand">
+                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none qty-btn" onmousedown="startQty('qty-kreuz', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('qty-kreuz', -1, event)" ontouchend="stopQty()">-</button>
                                     <span id="qty-kreuz" class="w-6 text-center">1</span>
                                     <button class="outline-none qty-btn" onmousedown="startQty('qty-kreuz', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('qty-kreuz', 1, event)" ontouchend="stopQty()">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300 cursor-expand" onclick="addToCart('kreuz', 'qty-kreuz', this)">Acquire</button></div>
+                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('kreuz', 'qty-kreuz', this)">Acquire</button></div>
                             </div>
                         </div>
                     </div>
@@ -306,12 +309,12 @@
                         <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
                             <span class="text-sm font-light">€ 55.00</span>
                             <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
-                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 cursor-expand">
+                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                     <button class="outline-none qty-btn" onmousedown="startQty('qty-neukolln', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('qty-neukolln', -1, event)" ontouchend="stopQty()">-</button>
                                     <span id="qty-neukolln" class="w-6 text-center">1</span>
                                     <button class="outline-none qty-btn" onmousedown="startQty('qty-neukolln', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('qty-neukolln', 1, event)" ontouchend="stopQty()">+</button>
                                 </div>
-                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300 cursor-expand" onclick="addToCart('neukolln', 'qty-neukolln', this)">Acquire</button></div>
+                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('neukolln', 'qty-neukolln', this)">Acquire</button></div>
                             </div>
                         </div>
                     </div>
@@ -330,26 +333,26 @@
         <div class="w-full max-w-xl mx-auto px-6 pb-20 text-center relative z-10 text-reveal delay-4">
             <p id="news-title" class="text-[10px] md:text-[11px] tracking-widest uppercase mb-6 opacity-60">Join the Archive</p>
             <p id="news-desc" class="text-sm font-light opacity-50 mb-8">Zapisz się, aby otrzymywać informacje o nowych zapachach i przedpremierowym dostępie do limitowanych kolekcji.</p>
-            <div class="flex items-end justify-center border-b border-white/30 pb-3 cursor-expand">
+            <div class="flex items-end justify-center border-b border-white/30 pb-3">
                 <input id="news-input" type="email" placeholder="Twój adres e-mail" class="bg-transparent text-sm font-light outline-none text-center text-white placeholder-white/30 w-full">
-                <button class="text-xs tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4 cursor-expand">-></button>
+                <button class="text-xs tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4">-></button>
             </div>
         </div>
 
         <footer class="py-16 px-6 md:px-10 border-t border-white/10 text-[9px] md:text-[10px] tracking-widest uppercase opacity-50 flex flex-col items-center gap-12 w-full relative z-10">
             <div class="grid grid-cols-2 md:flex md:flex-row gap-8 md:gap-16 text-center">
-                <a href="/wysylka" class="hover:opacity-100 transition cursor-expand" id="ft-shipping">Wysyłka i Zwroty</a>
-                <a href="/faq" class="hover:opacity-100 transition cursor-expand" id="ft-faq">FAQ</a>
-                <a href="/kontakt" class="hover:opacity-100 transition cursor-expand" id="ft-contact">Kontakt</a>
-                <a href="/impressum" class="hover:opacity-100 transition cursor-expand" id="ft-impressum">Impressum</a>
-                <a href="/polityka-prywatnosci" class="hover:opacity-100 transition cursor-expand" id="ft-privacy">Polityka Prywatności</a>
+                <a href="/wysylka" class="hover:opacity-100 transition" id="ft-shipping">Wysyłka i Zwroty</a>
+                <a href="/faq" class="hover:opacity-100 transition" id="ft-faq">FAQ</a>
+                <a href="/kontakt" class="hover:opacity-100 transition" id="ft-contact">Kontakt</a>
+                <a href="/impressum" class="hover:opacity-100 transition" id="ft-impressum">Impressum</a>
+                <a href="/polityka-prywatnosci" class="hover:opacity-100 transition" id="ft-privacy">Polityka Prywatności</a>
             </div>
             <div class="flex md:hidden gap-4 text-[9px] tracking-widest uppercase mt-6 border-t border-white/10 pt-8 w-full justify-center">
-                <button onclick="changeLang('pl')" class="lang-btn active lang-pl cursor-expand">PL</button>
-                <button onclick="changeLang('en')" class="lang-btn lang-en cursor-expand">EN</button>
-                <button onclick="changeLang('de')" class="lang-btn lang-de cursor-expand">DE</button>
-                <button onclick="changeLang('fr')" class="lang-btn lang-fr cursor-expand">FR</button>
-                <button onclick="changeLang('es')" class="lang-btn lang-es cursor-expand">ES</button>
+                <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
+                <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
+                <button onclick="changeLang('de')" class="lang-btn lang-de">DE</button>
+                <button onclick="changeLang('fr')" class="lang-btn lang-fr">FR</button>
+                <button onclick="changeLang('es')" class="lang-btn lang-es">ES</button>
             </div>
             <div class="flex flex-col md:flex-row justify-between w-full mt-6 items-center gap-6 text-center md:text-left">
                 <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
@@ -359,7 +362,7 @@
     </section>
 
     <div id="side-drawer" class="drawer-panel">
-        <button class="drawer-close cursor-expand" onclick="closeDrawer()">
+        <button class="drawer-close" onclick="closeDrawer()">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
@@ -380,24 +383,24 @@
                     <p id="drawer-notes" class="text-[10px] tracking-widest uppercase font-semibold"></p>
                 </div>
                 <p id="drawer-desc" class="text-sm font-light leading-relaxed text-gray-600 mb-10"></p>
-                <a id="drawer-link" href="#" class="inline-block text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition border-b border-norien-dark/20 pb-1 cursor-expand">Odkryj pełną historię -></a>
+                <a id="drawer-link" href="#" class="inline-block text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition border-b border-norien-dark/20 pb-1">Odkryj pełną historię -></a>
             </div>
             <div class="mt-auto pt-8 border-t border-gray-100 flex justify-between items-center bg-transparent">
                 <span class="text-xl font-light">€ 55.00</span>
                 <div class="flex items-center gap-6">
-                    <div class="flex items-center text-sm opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 relative z-10 cursor-expand">
+                    <div class="flex items-center text-sm opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 relative z-10">
                         <button class="outline-none qty-btn" onmousedown="startQty('drawer-qty', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('drawer-qty', -1, event)" ontouchend="stopQty()">-</button>
                         <span id="drawer-qty" class="w-8 text-center">1</span>
                         <button class="outline-none qty-btn" onmousedown="startQty('drawer-qty', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('drawer-qty', 1, event)" ontouchend="stopQty()">+</button>
                     </div>
-                    <button id="drawer-btn-acquire" class="btn-acquire bg-black text-white text-[10px] px-8 py-4 tracking-[0.2em] uppercase hover:bg-gray-800 transition shadow-lg relative z-10 cursor-expand" onclick="addFromDrawer(this)">ACQUIRE</button>
+                    <button id="drawer-btn-acquire" class="btn-acquire bg-black text-white text-[10px] px-8 py-4 tracking-[0.2em] uppercase hover:bg-gray-800 transition shadow-lg relative z-10" onclick="addFromDrawer(this)">ACQUIRE</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="cart-drawer" class="drawer-panel">
-        <button class="drawer-close cursor-expand" onclick="closeCart()">
+        <button class="drawer-close" onclick="closeCart()">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div class="h-1 w-full bg-norien-dark"></div>
@@ -413,13 +416,13 @@
                     <span id="cart-total-label" class="text-sm tracking-widest uppercase font-semibold">Total</span>
                     <span id="cart-total" class="text-2xl font-light">€ 0.00</span>
                 </div>
-                <button onclick="openCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-lg relative z-10 btn-checkout cursor-expand">CHECKOUT</button>
+                <button onclick="openCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-lg relative z-10 btn-checkout">CHECKOUT</button>
             </div>
         </div>
     </div>
 
     <div id="checkout-overlay">
-        <button class="absolute top-10 right-12 text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition flex items-center gap-3 z-50 cursor-expand" onclick="closeCheckout()">
+        <button class="absolute top-10 right-12 text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition flex items-center gap-3 z-50" onclick="closeCheckout()">
             <span id="checkout-back">Wróć do sklepu</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
@@ -441,7 +444,7 @@
                         <li>• Ekologiczne opakowanie</li>
                         <li>• Bezpieczne płatności (SSL)</li>
                     </ul>
-                    <button onclick="openStripeCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-2xl btn-final-pay cursor-expand">
+                    <button onclick="openStripeCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-2xl btn-final-pay">
                         PRZEJDŹ DO PŁATNOŚCI
                     </button>
                 </div>
@@ -450,7 +453,6 @@
     </div>
 
     <script>
-        // --- OBSŁUGA POWROTU ZE STRIPE ---
         window.addEventListener('load', () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('status') === 'success') {
@@ -496,7 +498,6 @@
             });
         }
 
-        // --- TŁUMACZENIA Z NOWYMI JĘZYKAMI I NAWIGACJĄ ---
         let currentLang = 'pl';
         const tAll = {
             pl: { shop: "Sklep", about: "O nas", contact: "Kontakt", cart: "KOSZYK", acq: "Acquire", add: "Added", emp: "Twój koszyk jest pusty.", ship: "Wysyłka", free: "Gratis", toast: "Dodano do koszyka" },
@@ -556,7 +557,7 @@
                     <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
                         <div><h4 class="text-sm tracking-widest uppercase">${product.title}</h4><p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p></div>
                         <div class="flex items-center gap-4">
-                            <div class="flex items-center gap-2 text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 cursor-expand">
+                            <div class="flex items-center gap-2 text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                 <button class="outline-none qty-btn" onmousedown="startCartQty('${id}', -1, event)" onmouseup="stopCartQty()" onmouseleave="stopCartQty()" ontouchstart="startCartQty('${id}', -1, event)" ontouchend="stopCartQty()">-</button>
                                 <span class="w-8 text-center">${qty}</span>
                                 <button class="outline-none qty-btn" onmousedown="startCartQty('${id}', 1, event)" onmouseup="stopCartQty()" onmouseleave="stopCartQty()" ontouchstart="startCartQty('${id}', 1, event)" ontouchend="stopCartQty()">+</button>
