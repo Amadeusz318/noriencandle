@@ -44,8 +44,11 @@
         .district-bg { fill: rgba(0, 0, 0, 0.015); stroke: #d4d4d4; stroke-width: 1.5; transition: opacity 0.5s ease; }
         .label-bg { font-size: 12px; font-weight: 500; fill: #1a1a1a; opacity: 0.45; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
         #map-svg.is-focused .district-bg, #map-svg.is-focused .label-bg { opacity: 0.15; }
+        
         .active-group { transition: opacity 0.5s ease; cursor: none !important; }
-        .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s ease, fill 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; pointer-events: none; }
+        /* NAPRAWIONA ZASADA: pointer-events: all; zamiast none, żeby mapa łapała kliknięcia w przezroczyste wypełnienie */
+        .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s ease, fill 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; pointer-events: all; }
+        
         .path-mitte { stroke: #b35a2d; } .path-prenzl { stroke: #8a7b8e; } .path-kreuz { stroke: #005f63; } .path-neukolln { stroke: #631b2b; }
         .label-active { font-size: 16px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.85; transition: transform 0.4s ease; text-anchor: middle; pointer-events: none; }
         .text-mitte { fill: #b35a2d; } .text-prenzl { fill: #8a7b8e; } .text-kreuz { fill: #005f63; } .text-neukolln { fill: #631b2b; }
@@ -120,7 +123,7 @@
                 <div class="magnetic"><button onclick="changeLang('fr')" class="lang-btn lang-fr">FR</button></div>
                 <div class="magnetic"><button onclick="changeLang('es')" class="lang-btn lang-es">ES</button></div>
             </div>
-            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b pb-1 uppercase whitespace-nowrap hover:opacity-50 transition cursor-expand" onclick="openCart(event)">KOSZYK (0)</div></div>
+            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b pb-1 uppercase whitespace-nowrap hover:opacity-50 transition" onclick="openCart(event)">KOSZYK (0)</div></div>
         </div>
     </nav>
 
@@ -139,7 +142,7 @@
             </h1>
             <p id="hero-desc" class="max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed opacity-80 text-reveal delay-4">Tworzymy zapachy, które oddają charakter berlińskich dzielnic. Używamy czystego wosku roślinnego i starannie wyselekcjonowanych esencji, by zamknąć w szkle to, co w mieście najbardziej intrygujące.</p>
         </div>
-        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4 z-10 text-white cursor-expand">
+        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4 z-10 text-white">
             <a href="#map-explore" id="hero-scroll" class="text-[10px] tracking-widest uppercase animate-bounce italic opacity-60 hover:opacity-100 transition-opacity">Przewiń by odkryć</a>
         </div>
     </section>
@@ -160,19 +163,19 @@
                         <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z"/> <text x="750" y="630" class="label-bg"><tspan x="750" dy="0">TREPTOW-</tspan><tspan x="750" dy="14">KÖP.</tspan></text>
                     </g>
                     <g class="map-layer delay-map-2">
-                        <g class="active-group cursor-expand" data-id="mitte" onclick="showDrawer('mitte')">
+                        <g class="active-group" data-id="mitte" onclick="showDrawer('mitte')">
                             <path class="active-path path-mitte" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
                             <text x="390" y="405" class="label-active text-mitte">MITTE</text>
                         </g>
-                        <g class="active-group cursor-expand" data-id="prenzl" onclick="showDrawer('prenzl')">
+                        <g class="active-group" data-id="prenzl" onclick="showDrawer('prenzl')">
                             <path class="active-path path-prenzl" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
                             <text x="545" y="385" class="label-active text-prenzl"><tspan x="545" dy="0">PRENZL.</tspan><tspan x="545" dy="20">BERG</tspan></text>
                         </g>
-                        <g class="active-group cursor-expand" data-id="kreuz" onclick="showDrawer('kreuz')">
+                        <g class="active-group" data-id="kreuz" onclick="showDrawer('kreuz')">
                             <path class="active-path path-kreuz" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
                             <text x="530" y="505" class="label-active text-kreuz">KREUZBERG</text>
                         </g>
-                        <g class="active-group cursor-expand" data-id="neukolln" onclick="showDrawer('neukolln')">
+                        <g class="active-group" data-id="neukolln" onclick="showDrawer('neukolln')">
                             <path class="active-path path-neukolln" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
                             <text x="520" y="690" class="label-active text-neukolln">NEUKÖLLN</text>
                         </g>
@@ -222,7 +225,7 @@
 
             <div class="mobile-scroll md:grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
                 
-                <a href="mitte.html" class="group block cursor-expand text-reveal delay-1">
+                <a href="mitte.html" class="group block text-reveal delay-1">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden relative mb-8 shadow-sm group-hover:shadow-xl transition-shadow duration-700">
                         <img src="assets/images/mitteprodukt.jpg" alt="Mitte" class="w-full h-full object-cover transform transition-transform duration-[2s] ease-out group-hover:scale-105">
                         <div class="absolute inset-0 bg-norien-dark/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
@@ -236,7 +239,7 @@
                     </div>
                 </a>
 
-                <a href="prenzlauer-berg.html" class="group block cursor-expand text-reveal delay-2">
+                <a href="prenzlauer-berg.html" class="group block text-reveal delay-2">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden relative mb-8 shadow-sm group-hover:shadow-xl transition-shadow duration-700">
                         <img src="assets/images/prenzlauerbergprodukt.jpg" alt="Prenzlauer Berg" class="w-full h-full object-cover transform transition-transform duration-[2s] ease-out group-hover:scale-105">
                         <div class="absolute inset-0 bg-norien-dark/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
@@ -250,7 +253,7 @@
                     </div>
                 </a>
 
-                <a href="kreuzberg.html" class="group block cursor-expand text-reveal delay-3">
+                <a href="kreuzberg.html" class="group block text-reveal delay-3">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden relative mb-8 shadow-sm group-hover:shadow-xl transition-shadow duration-700">
                         <img src="assets/images/kreuzbergprodukt.jpg" alt="Kreuzberg" class="w-full h-full object-cover transform transition-transform duration-[2s] ease-out group-hover:scale-105">
                         <div class="absolute inset-0 bg-norien-dark/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
@@ -264,7 +267,7 @@
                     </div>
                 </a>
 
-                <a href="neukoelln.html" class="group block cursor-expand text-reveal delay-4">
+                <a href="neukoelln.html" class="group block text-reveal delay-4">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden relative mb-8 shadow-sm group-hover:shadow-xl transition-shadow duration-700">
                         <img src="assets/images/neukollnprodukt.jpg" alt="Neukölln" class="w-full h-full object-cover transform transition-transform duration-[2s] ease-out group-hover:scale-105">
                         <div class="absolute inset-0 bg-norien-dark/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
@@ -292,26 +295,26 @@
         <div class="w-full max-w-xl mx-auto px-6 pb-20 text-center relative z-10 text-reveal delay-4">
             <p id="news-title" class="text-[10px] md:text-[11px] tracking-widest uppercase mb-6 opacity-60">Dołącz do archiwum</p>
             <p id="news-desc" class="text-sm font-light opacity-50 mb-8">Zapisz się, aby otrzymywać informacje o nowych zapachach i przedpremierowym dostępie do limitowanych kolekcji.</p>
-            <div class="flex items-end justify-center border-b border-white/30 pb-3 cursor-expand">
-                <input id="news-input" type="email" placeholder="Twój adres e-mail" class="bg-transparent text-sm font-light outline-none text-center text-white placeholder-white/30 w-full cursor-expand">
-                <button class="text-xs tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4 cursor-expand">-></button>
+            <div class="flex items-end justify-center border-b border-white/30 pb-3">
+                <input id="news-input" type="email" placeholder="Twój adres e-mail" class="bg-transparent text-sm font-light outline-none text-center text-white placeholder-white/30 w-full">
+                <button class="text-xs tracking-widest uppercase opacity-60 hover:opacity-100 transition pl-4">-></button>
             </div>
         </div>
 
         <footer class="py-16 px-6 md:px-10 border-t border-white/10 text-[9px] md:text-[10px] tracking-widest uppercase opacity-50 flex flex-col items-center gap-12 w-full relative z-10">
             <div class="grid grid-cols-2 md:flex md:flex-row gap-8 md:gap-16 text-center">
-                <a href="wysylka.html" class="hover:opacity-100 transition cursor-expand" id="ft-shipping">Wysyłka i Zwroty</a>
-                <a href="faq.html" class="hover:opacity-100 transition cursor-expand" id="ft-faq">FAQ</a>
-                <a href="kontakt.html" class="hover:opacity-100 transition cursor-expand" id="ft-contact">Kontakt</a>
-                <a href="impressum.html" class="hover:opacity-100 transition cursor-expand" id="ft-impressum">Impressum</a>
-                <a href="polityka-prywatnosci.html" class="hover:opacity-100 transition cursor-expand" id="ft-privacy">Polityka Prywatności</a>
+                <a href="wysylka.html" class="hover:opacity-100 transition" id="ft-shipping">Wysyłka i Zwroty</a>
+                <a href="faq.html" class="hover:opacity-100 transition" id="ft-faq">FAQ</a>
+                <a href="kontakt.html" class="hover:opacity-100 transition" id="ft-contact">Kontakt</a>
+                <a href="impressum.html" class="hover:opacity-100 transition" id="ft-impressum">Impressum</a>
+                <a href="polityka-prywatnosci.html" class="hover:opacity-100 transition" id="ft-privacy">Polityka Prywatności</a>
             </div>
             <div class="flex md:hidden gap-4 text-[9px] tracking-widest uppercase mt-6 border-t border-white/10 pt-8 w-full justify-center">
-                <button onclick="changeLang('pl')" class="lang-btn active lang-pl cursor-expand">PL</button>
-                <button onclick="changeLang('en')" class="lang-btn lang-en cursor-expand">EN</button>
-                <button onclick="changeLang('de')" class="lang-btn lang-de cursor-expand">DE</button>
-                <button onclick="changeLang('fr')" class="lang-btn lang-fr cursor-expand">FR</button>
-                <button onclick="changeLang('es')" class="lang-btn lang-es cursor-expand">ES</button>
+                <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
+                <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
+                <button onclick="changeLang('de')" class="lang-btn lang-de">DE</button>
+                <button onclick="changeLang('fr')" class="lang-btn lang-fr">FR</button>
+                <button onclick="changeLang('es')" class="lang-btn lang-es">ES</button>
             </div>
             <div class="flex flex-col md:flex-row justify-between w-full mt-6 items-center gap-6 text-center md:text-left">
                 <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
@@ -321,12 +324,12 @@
     </section>
 
     <div id="side-drawer" class="drawer-panel">
-        <button class="drawer-close cursor-expand" onclick="closeDrawer()">
+        <button class="drawer-close" onclick="closeDrawer()">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div id="drawer-top-line" class="h-1 w-full transition-colors duration-500"></div>
         <div id="drawer-inner" class="drawer-inner">
-            <div id="drawer-img-container" class="w-full aspect-square bg-white mb-10 relative overflow-hidden flex items-center justify-center p-0 shadow-sm cursor-expand">
+            <div id="drawer-img-container" class="w-full aspect-square bg-white mb-10 relative overflow-hidden flex items-center justify-center p-0 shadow-sm">
                 <img id="drawer-image" src="" alt="Norien Label" class="w-full h-full object-cover opacity-100 transition-opacity duration-500 hidden">
                 <span id="drawer-placeholder" class="absolute inset-0 flex items-center justify-center text-[10px] uppercase tracking-widest text-gray-300">Loading...</span>
             </div>
@@ -342,24 +345,24 @@
                     <p id="drawer-notes" class="text-[10px] tracking-widest uppercase font-semibold"></p>
                 </div>
                 <p id="drawer-desc" class="text-sm font-light leading-relaxed text-gray-600 mb-10"></p>
-                <a id="drawer-link" href="#" class="inline-block text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition border-b border-norien-dark/20 pb-1 cursor-expand">Odkryj pełną historię -></a>
+                <a id="drawer-link" href="#" class="inline-block text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition border-b border-norien-dark/20 pb-1">Odkryj pełną historię -></a>
             </div>
             <div class="mt-auto pt-8 border-t border-gray-100 flex justify-between items-center bg-transparent">
                 <span class="text-xl font-light">€ 55.00</span>
                 <div class="flex items-center gap-6">
-                    <div class="flex items-center text-sm opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 relative z-10 cursor-expand">
+                    <div class="flex items-center text-sm opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 relative z-10">
                         <button class="outline-none qty-btn" onmousedown="startQty('drawer-qty', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('drawer-qty', -1, event)" ontouchend="stopQty()">-</button>
                         <span id="drawer-qty" class="w-8 text-center">1</span>
                         <button class="outline-none qty-btn" onmousedown="startQty('drawer-qty', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()" ontouchstart="startQty('drawer-qty', 1, event)" ontouchend="stopQty()">+</button>
                     </div>
-                    <button id="drawer-btn-acquire" class="btn-acquire bg-black text-white text-[10px] px-8 py-4 tracking-[0.2em] uppercase hover:bg-gray-800 transition shadow-lg relative z-10 cursor-expand" onclick="addFromDrawer(this)">ACQUIRE</button>
+                    <button id="drawer-btn-acquire" class="btn-acquire bg-black text-white text-[10px] px-8 py-4 tracking-[0.2em] uppercase hover:bg-gray-800 transition shadow-lg relative z-10" onclick="addFromDrawer(this)">ACQUIRE</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="cart-drawer" class="drawer-panel">
-        <button class="drawer-close cursor-expand" onclick="closeCart()">
+        <button class="drawer-close" onclick="closeCart()">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div class="h-1 w-full bg-norien-dark"></div>
@@ -375,13 +378,13 @@
                     <span id="cart-total-label" class="text-sm tracking-widest uppercase font-semibold">Total</span>
                     <span id="cart-total" class="text-2xl font-light">€ 0.00</span>
                 </div>
-                <button onclick="openCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-lg relative z-10 btn-checkout cursor-expand">CHECKOUT</button>
+                <button onclick="openCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-lg relative z-10 btn-checkout">CHECKOUT</button>
             </div>
         </div>
     </div>
 
     <div id="checkout-overlay">
-        <button class="absolute top-10 right-12 text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition flex items-center gap-3 z-50 cursor-expand" onclick="closeCheckout()">
+        <button class="absolute top-10 right-12 text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition flex items-center gap-3 z-50" onclick="closeCheckout()">
             <span id="checkout-back">Wróć do sklepu</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
@@ -403,7 +406,7 @@
                         <li id="chk-l2">• Ekologiczne opakowanie</li>
                         <li id="chk-l3">• Bezpieczne płatności (SSL)</li>
                     </ul>
-                    <button id="btn-final-pay" onclick="openStripeCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-2xl cursor-expand">
+                    <button id="btn-final-pay" onclick="openStripeCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-2xl">
                         PRZEJDŹ DO PŁATNOŚCI
                     </button>
                 </div>
@@ -468,23 +471,13 @@
                 gSub: "The Urban Guide", gT: "Odkryj miasto. <br> Zapach po zapachu.", gDesc: "Zamiast pocztówek, proponujemy zmysłową podróż. Neukölln łączy nuty dymu i przypraw tętniących życiem ulic, a Mitte to chłód galerii i ciepło starego drewna. Wybierz swój kierunek.", gAct: "Wybierz obszar na mapie, aby poznać detale.",
                 cSub: "Forma i Materiał", cT: "Świadomy wybór.", cDesc: "Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. To naturalna baza, która pozwala zapachom w pełni wybrzmieć. Surowe szkło i starannie zbalansowane esencje tworzą harmonijną całość.",
                 rSub: "Doświadczenie", rT: "Szacunek <br> do detalu.", rDesc: "Każda świeca jest zalewana i pakowana ręcznie w naszej berlińskiej pracowni. Skupiamy się na jakości wosku i autentyczności zapachu, dbając o każdy detal wykończenia.",
-                
-                // Nowe teksty do sekcji "Editorial"
                 archSub: "Dzielnice", archTitle: "Każdy zapach to inna historia Berlina. Wybierz dzielnicę i pozwól nam opowiedzieć Ci o jej charakterze.", btnExpl: "Odkryj",
-                storyMitte: "Chłód galerii sztuki, stare drewno i zapach luksusu. Gdzie wszystko się łączy.", 
-                storyPrenzl: "Poranek w Mauerpark zalanym mgłą. Nuty cytrusów i delikatnego jaśminu.",
-                storyKreuz: "Energia kanałów i nocne powietrze. Zapach buntu, mocny i nieustępliwy.",
-                storyNeukolln: "Wielokulturowa energia ulicy. Nieoszlifowana mieszanka głębokich, dymnych przypraw.",
-
+                storyMitte: "Chłód galerii sztuki, stare drewno i zapach luksusu. Gdzie wszystko się łączy.", storyPrenzl: "Poranek w Mauerpark zalanym mgłą. Nuty cytrusów i delikatnego jaśminu.", storyKreuz: "Energia kanałów i nocne powietrze. Zapach buntu, mocny i nieustępliwy.", storyNeukolln: "Wielokulturowa energia ulicy. Nieoszlifowana mieszanka głębokich, dymnych przypraw.",
                 mSub: "Nasze Podejście", mText: "Wierzymy, że zapach to najlepsze zaproszenie do odkrywania. Łącząc wegański wosk ze starannie zbalansowanymi esencjami, chcemy po prostu rozbudzać Twoją ciekawość. Projektujemy z szacunkiem do rzemiosła, oddając Ci produkt, który naturalnie przyciąga uwagę.",
                 nTitle: "Dołącz do archiwum", nDesc: "Zapisz się, aby otrzymywać informacje o nowych zapachach i przedpremierowym dostępie do limitowanych kolekcji.",
-                fShip: "Wysyłka i Zwroty", fFaq: "FAQ", fCont: "Kontakt", fImp: "Impressum", fPriv: "Polityka Prywatności",
-                dLink: "Odkryj pełną historię ->",
-                cTitle: "Koszyk", cTotal: "Total", cSum: "Order Summary", cDue: "Total due", cBack: "Wróć do sklepu",
-                chkTitle: "Prawie gotowe.", chkDesc: "W kolejnym kroku zostaniesz przekierowany do bezpiecznego systemu płatności Stripe, gdzie podasz adres dostawy i dokonasz płatności.",
-                chkL1: "• Darmowa dostawa (DE / PL)", chkL2: "• Ekologiczne opakowanie", chkL3: "• Bezpieczne płatności (SSL)", chkBtn: "PRZEJDŹ DO PŁATNOŚCI",
-                inputMail: "Twój adres e-mail", lLoad: "Loading Archives",
-                qMitte: '"Gdzie wszystko się łączy."', qPrenzl: '"Poranek w Mauerpark."', qKreuz: '"Bunt i Rytm."', qNeukolln: '"Nieoszlifowany, prawdziwy."'
+                fShip: "Wysyłka i Zwroty", fFaq: "FAQ", fCont: "Kontakt", fImp: "Impressum", fPriv: "Polityka Prywatności", dLink: "Odkryj pełną historię ->",
+                cTitle: "Koszyk", cTotal: "Total", cSum: "Order Summary", cDue: "Total due", cBack: "Wróć do sklepu", chkTitle: "Prawie gotowe.", chkDesc: "W kolejnym kroku zostaniesz przekierowany do bezpiecznego systemu płatności Stripe, gdzie podasz adres dostawy i dokonasz płatności.", chkL1: "• Darmowa dostawa (DE / PL)", chkL2: "• Ekologiczne opakowanie", chkL3: "• Bezpieczne płatności (SSL)", chkBtn: "PRZEJDŹ DO PŁATNOŚCI",
+                inputMail: "Twój adres e-mail", lLoad: "Loading Archives"
             },
             en: {
                 shop: "Shop", about: "About", contact: "Contact", cart: "CART", acq: "Acquire", add: "Added", emp: "Your cart is empty.", ship: "Shipping", free: "Free", toast: "Added to cart",
@@ -492,22 +485,13 @@
                 gSub: "The Urban Guide", gT: "Discover the city. <br> Scent by scent.", gDesc: "Instead of postcards, we offer a sensory journey. Neukölln blends notes of smoke and spices from bustling streets, while Mitte offers the coolness of a gallery and the warmth of old wood. Choose your destination.", gAct: "Select an area on the map to see details.",
                 cSub: "Form and Material", cT: "A conscious choice.", cDesc: "We have abandoned paraffin in favor of a vegan blend of rapeseed and coconut wax. It is a natural base that allows scents to fully resonate. Raw glass and carefully balanced essences create a harmonious whole.",
                 rSub: "The Experience", rT: "Respect <br> for detail.", rDesc: "Each candle is hand-poured and packed in our Berlin studio. We focus on the quality of wax and the authenticity of the scent, taking care of every finishing detail.",
-                
                 archSub: "Neighborhoods", archTitle: "Every scent is a different Berlin story. Choose a neighborhood and let us tell you about its character.", btnExpl: "Explore",
-                storyMitte: "The coolness of an art gallery, old wood, and the scent of luxury. Where everything connects.", 
-                storyPrenzl: "A morning in a mist-covered Mauerpark. Notes of citrus and delicate jasmine.",
-                storyKreuz: "The energy of the canals and the night air. The scent of rebellion, strong and relentless.",
-                storyNeukolln: "Multicultural street energy. An unpolished mix of deep, smoky spices.",
-
+                storyMitte: "The coolness of an art gallery, old wood, and the scent of luxury. Where everything connects.", storyPrenzl: "A morning in a mist-covered Mauerpark. Notes of citrus and delicate jasmine.", storyKreuz: "The energy of the canals and the night air. The scent of rebellion, strong and relentless.", storyNeukolln: "Multicultural street energy. An unpolished mix of deep, smoky spices.",
                 mSub: "Our Approach", mText: "We believe that scent is the best invitation to explore. By combining vegan wax with carefully balanced essences, we simply want to awaken your curiosity. We design with respect for craftsmanship, giving you a product that naturally attracts attention.",
                 nTitle: "Join the Archive", nDesc: "Subscribe to receive news about new scents and early access to limited collections.",
-                fShip: "Shipping & Returns", fFaq: "FAQ", fCont: "Contact", fImp: "Impressum", fPriv: "Privacy Policy",
-                dLink: "Discover the full story ->",
-                cTitle: "Cart", cTotal: "Total", cSum: "Order Summary", cDue: "Total due", cBack: "Back to store",
-                chkTitle: "Almost there.", chkDesc: "In the next step, you will be redirected to the secure Stripe payment system, where you will provide your shipping address and complete the payment.",
-                chkL1: "• Free shipping (DE / PL)", chkL2: "• Eco-friendly packaging", chkL3: "• Secure payments (SSL)", chkBtn: "PROCEED TO PAYMENT",
-                inputMail: "Your e-mail address", lLoad: "Loading Archives",
-                qMitte: '"Where everything meets."', qPrenzl: '"A morning in Mauerpark."', qKreuz: '"Resistance & Rhythm."', qNeukolln: '"Unpolished, but real."'
+                fShip: "Shipping & Returns", fFaq: "FAQ", fCont: "Contact", fImp: "Impressum", fPriv: "Privacy Policy", dLink: "Discover the full story ->",
+                cTitle: "Cart", cTotal: "Total", cSum: "Order Summary", cDue: "Total due", cBack: "Back to store", chkTitle: "Almost there.", chkDesc: "In the next step, you will be redirected to the secure Stripe payment system, where you will provide your shipping address and complete the payment.", chkL1: "• Free shipping (DE / PL)", chkL2: "• Eco-friendly packaging", chkL3: "• Secure payments (SSL)", chkBtn: "PROCEED TO PAYMENT",
+                inputMail: "Your e-mail address", lLoad: "Loading Archives"
             },
             de: {
                 shop: "Shop", about: "Über uns", contact: "Kontakt", cart: "WARENKORB", acq: "Kaufen", add: "Hinzugefügt", emp: "Dein Warenkorb ist leer.", ship: "Versand", free: "Kostenlos", toast: "Zum Warenkorb hinzugefügt",
@@ -515,22 +499,13 @@
                 gSub: "The Urban Guide", gT: "Entdecke die Stadt. <br> Duft für Duft.", gDesc: "Statt Postkarten bieten wir eine sinnliche Reise. Neukölln vereint Noten von Rauch und Gewürzen belebter Straßen, während Mitte die Kühle einer Galerie und die Wärme alten Holzes bietet. Wähle dein Ziel.", gAct: "Wähle einen Bereich auf der Karte für Details.",
                 cSub: "Form und Material", cT: "Eine bewusste Wahl.", cDesc: "Wir haben auf Paraffin verzichtet zugunsten einer veganen Mischung aus Raps- und Kokoswachs. Es ist eine natürliche Basis, die Düfte voll zur Geltung bringt. Rohes Glas und sorgfältig ausbalancierte Essenzen bilden ein harmonisches Ganzes.",
                 rSub: "Das Erlebnis", rT: "Respekt <br> fürs Detail.", rDesc: "Jede Kerze wird in unserem Berliner Studio von Hand gegossen und verpackt. Wir konzentrieren uns auf die Qualität des Wachses und die Authentizität des Duftes und achten auf jedes Finish-Detail.",
-                
                 archSub: "Kieze", archTitle: "Jeder Duft ist eine andere Berliner Geschichte. Wähle einen Kiez und lass dir von seinem Charakter erzählen.", btnExpl: "Entdecken",
-                storyMitte: "Die Kühle einer Kunstgalerie, altes Holz und der Duft von Luxus. Wo alles zusammenläuft.", 
-                storyPrenzl: "Ein Morgen im nebelverhangenen Mauerpark. Noten von Zitrusfrüchten und zartem Jasmin.",
-                storyKreuz: "Die Energie der Kanäle und die Nachtluft. Der Duft der Rebellion, stark und unerbittlich.",
-                storyNeukolln: "Multikulturelle Straßenenergie. Eine unpolierte Mischung aus tiefen, rauchigen Gewürzen.",
-
+                storyMitte: "Die Kühle einer Kunstgalerie, altes Holz und der Duft von Luxus. Wo alles zusammenläuft.", storyPrenzl: "Ein Morgen im nebelverhangenen Mauerpark. Noten von Zitrusfrüchten und zartem Jasmin.", storyKreuz: "Die Energie der Kanäle und die Nachtluft. Der Duft der Rebellion, stark und unerbittlich.", storyNeukolln: "Multikulturelle Straßenenergie. Eine unpolierte Mischung aus tiefen, rauchigen Gewürzen.",
                 mSub: "Unser Ansatz", mText: "Wir glauben, dass Duft die beste Einladung zum Entdecken ist. Durch die Kombination von veganem Wachs mit sorgfältig ausbalancierten Essenzen möchten wir einfach deine Neugier wecken. Wir entwerfen mit Respekt vor der Handwerkskunst und geben dir ein Produkt, das natürlich Aufmerksamkeit erregt.",
                 nTitle: "Join the Archive", nDesc: "Melde dich an, um Neuigkeiten über neue Düfte und Vorabzugang zu limitierten Kollektionen zu erhalten.",
-                fShip: "Versand & Retouren", fFaq: "FAQ", fCont: "Kontakt", fImp: "Impressum", fPriv: "Datenschutz",
-                dLink: "Entdecke die ganze Geschichte ->",
-                cTitle: "Warenkorb", cTotal: "Total", cSum: "Bestellübersicht", cDue: "Gesamtbetrag", cBack: "Zurück zum Shop",
-                chkTitle: "Fast geschafft.", chkDesc: "Im nächsten Schritt wirst du zum sicheren Stripe-Zahlungssystem weitergeleitet, wo du deine Lieferadresse angibst und die Zahlung abschließt.",
-                chkL1: "• Kostenloser Versand (DE / PL)", chkL2: "• Umweltfreundliche Verpackung", chkL3: "• Sichere Zahlungen (SSL)", chkBtn: "ZUR KASSE GEHEN",
-                inputMail: "Deine E-Mail Adresse", lLoad: "Archive werden geladen",
-                qMitte: '"Wo alles zusammenläuft."', qPrenzl: '"Ein Morgen im Mauerpark."', qKreuz: '"Widerstand & Rhythmus."', qNeukolln: '"Unpoliert, aber echt."'
+                fShip: "Versand & Retouren", fFaq: "FAQ", fCont: "Kontakt", fImp: "Impressum", fPriv: "Datenschutz", dLink: "Entdecke die ganze Geschichte ->",
+                cTitle: "Warenkorb", cTotal: "Total", cSum: "Bestellübersicht", cDue: "Gesamtbetrag", cBack: "Zurück zum Shop", chkTitle: "Fast geschafft.", chkDesc: "Im nächsten Schritt wirst du zum sicheren Stripe-Zahlungssystem weitergeleitet, wo du deine Lieferadresse angibst und die Zahlung abschließt.", chkL1: "• Kostenloser Versand (DE / PL)", chkL2: "• Umweltfreundliche Verpackung", chkL3: "• Sichere Zahlungen (SSL)", chkBtn: "ZUR KASSE GEHEN",
+                inputMail: "Deine E-Mail Adresse", lLoad: "Archive werden geladen"
             },
             fr: {
                 shop: "Boutique", about: "À propos", contact: "Contact", cart: "PANIER", acq: "Acheter", add: "Ajouté", emp: "Votre panier est vide.", ship: "Livraison", free: "Gratuit", toast: "Ajouté au panier",
@@ -538,22 +513,13 @@
                 gSub: "The Urban Guide", gT: "Découvrez la ville. <br> Parfum par parfum.", gDesc: "Au lieu de cartes postales, nous proposons un voyage sensoriel. Neukölln mêle des notes de fumée et d'épices des rues animées, tandis que Mitte offre la fraîcheur d'une galerie et la chaleur du vieux bois. Choisissez votre destination.", gAct: "Sélectionnez une zone sur la carte pour plus de détails.",
                 cSub: "Forme et Matériau", cT: "Un choix conscient.", cDesc: "Nous avons abandonné la paraffine au profit d'un mélange végétalien de cire de colza et de coco. C'est une base naturelle qui permet aux parfums de résonner pleinement. Le verre brut et les essences soigneusement équilibrées créent un tout harmonieux.",
                 rSub: "L'Expérience", rT: "Le respect <br> du détail.", rDesc: "Chaque bougie est coulée et emballée à la main dans notre studio berlinois. Nous nous concentrons sur la qualité de la cire et l'authenticité du parfum, en soignant chaque détail de finition.",
-                
                 archSub: "Quartiers", archTitle: "Chaque parfum est une histoire différente de Berlin. Choisissez un quartier et laissez-nous vous parler de son caractère.", btnExpl: "Explorer",
-                storyMitte: "La fraîcheur d'une galerie d'art, le bois ancien et le parfum du luxe. Où tout se rencontre.", 
-                storyPrenzl: "Un matin dans un Mauerpark couvert de brume. Notes d'agrumes et de jasmin délicat.",
-                storyKreuz: "L'énergie des canaux et l'air de la nuit. Le parfum de la rébellion, fort et implacable.",
-                storyNeukolln: "Énergie de rue multiculturelle. Un mélange non poli d'épices profondes et fumées.",
-
+                storyMitte: "La fraîcheur d'une galerie d'art, le bois ancien et le parfum du luxe. Où tout se rencontre.", storyPrenzl: "Un matin dans un Mauerpark couvert de brume. Notes d'agrumes et de jasmin délicat.", storyKreuz: "L'énergie des canaux et l'air de la nuit. Le parfum de la rébellion, fort et implacable.", storyNeukolln: "Énergie de rue multiculturelle. Un mélange non poli d'épices profondes et fumées.",
                 mSub: "Notre Approche", mText: "Nous pensons que le parfum est la meilleure invitation à l'exploration. En combinant la cire végétalienne avec des essences soigneusement équilibrées, nous voulons simplement éveiller votre curiosité. Nous concevons avec respect pour l'artisanat, en vous donnant un produit qui attire naturellement l'attention.",
                 nTitle: "Rejoindre l'Archive", nDesc: "Inscrivez-vous pour recevoir des nouvelles sur les nouveaux parfums et un accès anticipé aux collections limitées.",
-                fShip: "Livraison & Retours", fFaq: "FAQ", fCont: "Contact", fImp: "Mentions légales", fPriv: "Confidentialité",
-                dLink: "Découvrez l'histoire complète ->",
-                cTitle: "Panier", cTotal: "Total", cSum: "Résumé de la commande", cDue: "Total à payer", cBack: "Retour à la boutique",
-                chkTitle: "Presque terminé.", chkDesc: "À l'étape suivante, vous serez redirigé vers le système de paiement sécurisé Stripe, où vous indiquerez votre adresse de livraison et effectuerez le paiement.",
-                chkL1: "• Livraison gratuite (DE / PL)", chkL2: "• Emballage écologique", chkL3: "• Paiements sécurisés (SSL)", chkBtn: "PASSER AU PAIEMENT",
-                inputMail: "Votre adresse e-mail", lLoad: "Chargement des archives",
-                qMitte: '"Où tout se rencontre."', qPrenzl: '"Un matin à Mauerpark."', qKreuz: '"Résistance et rythme."', qNeukolln: '"Non poli, mais vrai."'
+                fShip: "Livraison & Retours", fFaq: "FAQ", fCont: "Contact", fImp: "Mentions légales", fPriv: "Confidentialité", dLink: "Découvrez l'histoire complète ->",
+                cTitle: "Panier", cTotal: "Total", cSum: "Résumé de la commande", cDue: "Total à payer", cBack: "Retour à la boutique", chkTitle: "Presque terminé.", chkDesc: "À l'étape suivante, vous serez redirigé vers le système de paiement sécurisé Stripe, où vous indiquerez votre adresse de livraison et effectuerez le paiement.", chkL1: "• Livraison gratuite (DE / PL)", chkL2: "• Emballage écologique", chkL3: "• Paiements sécurisés (SSL)", chkBtn: "PASSER AU PAIEMENT",
+                inputMail: "Votre adresse e-mail", lLoad: "Chargement des archives"
             },
             es: {
                 shop: "Tienda", about: "Nosotros", contact: "Contacto", cart: "CARRITO", acq: "Comprar", add: "Añadido", emp: "Tu carrito está vacío.", ship: "Envío", free: "Gratis", toast: "Añadido al carrito",
@@ -561,22 +527,13 @@
                 gSub: "The Urban Guide", gT: "Descubre la ciudad. <br> Aroma a aroma.", gDesc: "En lugar de postales, ofrecemos un viaje sensorial. Neukölln mezcla notas de humo y especias de calles animadas, mientras que Mitte ofrece la frescura de una galería y la calidez de la madera vieja. Elige tu destino.", gAct: "Selecciona una zona en el mapa para ver los detalles.",
                 cSub: "Forma y Material", cT: "Una elección consciente.", cDesc: "Hemos abandonado la parafina a favor de una mezcla vegana de cera de colza y coco. Es una base natural que permite que los aromas resuenen plenamente. El vidrio crudo y las esencias cuidadosamente equilibradas crean un conjunto armonioso.",
                 rSub: "La Experiencia", rT: "Respeto <br> por el detalle.", rDesc: "Cada vela se vierte y empaqueta a mano en nuestro estudio de Berlín. Nos centramos en la calidad de la cera y la autenticidad de la fragancia, cuidando cada detalle de acabado.",
-                
                 archSub: "Barrios", archTitle: "Cada aroma es una historia diferente de Berlín. Elige un barrio y déjanos contarte sobre su carácter.", btnExpl: "Explorar",
-                storyMitte: "La frescura de una galería de arte, la madera vieja y el aroma del lujo. Donde todo se conecta.", 
-                storyPrenzl: "Una mañana en un Mauerpark cubierto de niebla. Notas de cítricos y delicado jazmín.",
-                storyKreuz: "La energía de los canales y el aire nocturno. El aroma de la rebelión, fuerte e implacable.",
-                storyNeukolln: "Energía callejera multicultural. Una mezcla sin pulir de especias profundas y ahumadas.",
-
+                storyMitte: "La frescura de una galería de arte, la madera vieja y el aroma del lujo. Donde todo se conecta.", storyPrenzl: "Una mañana en un Mauerpark cubierto de niebla. Notas de cítricos y delicado jazmín.", storyKreuz: "La energía de los canales y el aire nocturno. El aroma de la rebelión, fuerte e implacable.", storyNeukolln: "Energía callejera multicultural. Una mezcla sin pulir de especias profundas y ahumadas.",
                 mSub: "Nuestro Enfoque", mText: "Creemos que el aroma es la mejor invitación a explorar. Al combinar cera vegana con esencias cuidadosamente equilibradas, simplemente queremos despertar tu curiosidad. Diseñamos con respeto por la artesanía, dándote un producto que atrae la atención de forma natural.",
                 nTitle: "Únete al Archivo", nDesc: "Suscríbete para recibir noticias sobre nuevas fragancias y acceso anticipado a colecciones limitadas.",
-                fShip: "Envíos y Devoluciones", fFaq: "FAQ", fCont: "Contacto", fImp: "Aviso Legal", fPriv: "Privacidad",
-                dLink: "Descubre la historia completa ->",
-                cTitle: "Carrito", cTotal: "Total", cSum: "Resumen del pedido", cDue: "Total a pagar", cBack: "Volver a la tienda",
-                chkTitle: "Casi listo.", chkDesc: "En el siguiente paso, serás redirigé al sistema de pago seguro Stripe, donde proporcionarás tu dirección de envío y completarás el pago.",
-                chkL1: "• Envío gratuito (DE / PL)", chkL2: "• Embalaje ecológico", chkL3: "• Pagos seguros (SSL)", chkBtn: "PROCEDER AL PAGO",
-                inputMail: "Tu dirección de correo electrónico", lLoad: "Cargando Archivos",
-                qMitte: '"Donde todo se encuentra."', qPrenzl: '"Una mañana en Mauerpark."', qKreuz: '"Resistencia y ritmo."', qNeukolln: '"Sin pulir, pero real."'
+                fShip: "Envíos y Devoluciones", fFaq: "FAQ", fCont: "Contacto", fImp: "Aviso Legal", fPriv: "Privacidad", dLink: "Descubre la historia completa ->",
+                cTitle: "Carrito", cTotal: "Total", cSum: "Resumen del pedido", cDue: "Total a pagar", cBack: "Volver a la tienda", chkTitle: "Casi listo.", chkDesc: "En el siguiente paso, serás redirigé al sistema de pago seguro Stripe, donde proporcionarás tu dirección de envío y completarás el pago.", chkL1: "• Envío gratuito (DE / PL)", chkL2: "• Embalaje ecológico", chkL3: "• Pagos seguros (SSL)", chkBtn: "PROCEDER AL PAGO",
+                inputMail: "Tu dirección de correo electrónico", lLoad: "Cargando Archivos"
             }
         };
 
@@ -592,7 +549,6 @@
             document.getElementById('craft-sub').innerText = t.cSub; document.getElementById('craft-title').innerText = t.cT; document.getElementById('craft-desc').innerText = t.cDesc;
             document.getElementById('ritual-sub').innerText = t.rSub; document.getElementById('ritual-title').innerHTML = t.rT; document.getElementById('ritual-desc').innerText = t.rDesc;
             
-            // Tłumaczenia sekcji Editorial
             document.getElementById('arch-story-sub').innerText = t.archSub; document.getElementById('arch-story-title').innerText = t.archTitle;
             document.getElementById('story-mitte').innerText = t.storyMitte; document.getElementById('story-prenzl').innerText = t.storyPrenzl; document.getElementById('story-kreuz').innerText = t.storyKreuz; document.getElementById('story-neukolln').innerText = t.storyNeukolln;
             document.querySelectorAll('.btn-explore').forEach(btn => btn.innerText = t.btnExpl);
@@ -655,10 +611,10 @@
                     <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
                         <div><h4 class="text-sm tracking-widest uppercase">${product.title}</h4><p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p></div>
                         <div class="flex items-center gap-4">
-                            <div class="flex items-center gap-2 text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5 cursor-expand">
-                                <button class="outline-none qty-btn" onmousedown="startCartQty('${id}', -1, event)" onmouseup="stopCartQty()" onmouseleave="stopCartQty()" ontouchstart="startCartQty('${id}', -1, event)" ontouchend="stopCartQty()">-</button>
+                            <div class="flex items-center gap-2 text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                                <button class="outline-none qty-btn" onmousedown="startCartQty('${id}', -1, event)" onmouseup="stopCartQty()" onmouseleave="stopCartQty()">-</button>
                                 <span class="w-8 text-center">${qty}</span>
-                                <button class="outline-none qty-btn" onmousedown="startCartQty('${id}', 1, event)" onmouseup="stopCartQty()" onmouseleave="stopCartQty()" ontouchstart="startCartQty('${id}', 1, event)" ontouchend="stopCartQty()">+</button>
+                                <button class="outline-none qty-btn" onmousedown="startCartQty('${id}', 1, event)" onmouseup="stopCartQty()" onmouseleave="stopCartQty()">+</button>
                             </div>
                             <span class="text-base font-light w-16 text-right">€ ${(qty * product.price).toFixed(2)}</span>
                         </div>
