@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NORIEN BERLIN | Sklep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { norien: { gold: '#b88b4a', dark: '#0f0f0f', canvas: '#fdfcf9' } }, letterSpacing: { 'ultra': '0.8em', 'micro': '0.2em' } } } }
+    </script>
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        html { -ms-overflow-style: none; scrollbar-width: none; }
+        body { overflow-x: hidden; background-color: #fdfcf9; }
+        @media (pointer: fine) { *, body, a, button, input, select { cursor: none !important; } }
+        
+        #preloader { position: fixed; inset: 0; background-color: #fdfcf9; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1); }
+        #preloader.hide { transform: translateY(-100%); }
+        .noise-overlay { position: fixed; inset: 0; z-index: 9998; pointer-events: none; opacity: 0.04; background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E'); }
+        .magnetic { transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1); display: inline-block; }
+        .custom-cursor { position: fixed; top: 0; left: 0; width: 12px; height: 12px; background-color: #0f0f0f; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease-out; }
+        
+        .text-reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .is-revealed .text-reveal { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.2s; } .delay-2 { transition-delay: 0.4s; }
+        
+        nav { position: fixed; width: 100%; top: 0; z-index: 1000; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease; opacity: 0; animation: fadeInNav 2s ease forwards 0.5s; }
+        nav.nav-top { background-color: transparent; border-bottom: 1px solid rgba(15, 15, 15, 0.05); color: #0f0f0f; }
+        nav.nav-scrolled-up { background-color: rgba(253, 252, 249, 0.98); border-bottom: 1px solid rgba(15, 15, 15, 0.05); color: #0f0f0f; transform: translateY(0); backdrop-filter: blur(12px); }
+        nav.nav-scrolled-down { transform: translateY(-100%); background-color: transparent; border-bottom: 1px solid transparent; }
+        nav.nav-top #nav-cart, nav.nav-scrolled-up #nav-cart { border-color: rgba(15,15,15,0.4); }
+        @keyframes fadeInNav { to { opacity: 1; } }
+
+        .qty-btn { display: inline-block; padding: 0 8px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease; user-select: none; }
+        .qty-btn:hover { transform: scale(1.6); font-weight: 600; }
+        
+        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; background-color: #fdfcf9; box-shadow: -15px 0 50px rgba(0,0,0,0.08); z-index: 1050; transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; color: #0f0f0f; }
+        .drawer-panel.open { transform: translateX(0); }
+        .drawer-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: currentColor; opacity: 0.4; transition: opacity 0.3s; z-index: 10; }
+        .drawer-close:hover { opacity: 1; }
+        .drawer-inner { overflow-y: auto; flex-grow: 1; padding: 5rem 3rem 3rem 3rem; display: flex; flex-direction: column; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .drawer-inner.loaded { opacity: 1; transform: translateY(0); }
+        
+        #checkout-overlay { position: fixed; inset: 0; background-color: #fdfcf9; z-index: 2000; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; color: #0f0f0f;}
+        #checkout-overlay.open { transform: translateY(0); }
+        
+        .lang-btn { transition: all 0.3s; opacity: 0.3; padding-bottom: 2px; }
+        .lang-btn.active, .lang-btn:hover { opacity: 1; font-weight: 600; border-bottom: 1px solid currentColor; }
+        #cart-toast { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: 9999 !important; }
+        #cart-toast.show { transform: translateX(0); }
+    </style>
+</head>
+<body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
+
+    <div id="preloader">
+        <div class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light text-norien-dark">Loading Catalog</div>
+        <div id="loader-perc" class="text-4xl md:text-5xl font-thin tracking-widest text-norien-dark">0%</div>
+    </div>
+
+    <div class="noise-overlay"></div>
+    <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
+
+    <div id="cart-toast" class="fixed top-24 right-0 transform translate-x-full bg-norien-dark text-white px-8 py-5 shadow-2xl flex items-center gap-4 rounded-l-md" onclick="openCart(event)">
+        <span id="toast-text" class="text-[10px] md:text-xs tracking-[0.2em] uppercase font-light">Dodano do koszyka</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+
+    <nav id="main-nav" class="nav-top px-6 md:px-10 py-5 flex justify-between items-center">
+        <a href="/" class="flex flex-col items-center justify-center pt-1 magnetic">
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.3rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: currentColor;">NORIEN</span>
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 10px; letter-spacing: 0.23em; margin-top: 0.5rem; margin-right: -0.23em; color: currentColor; opacity: 0.7;">BERLIN</span>
+        </a>
+        <div class="hidden lg:flex gap-10 text-[11px] tracking-widest uppercase font-light ml-8">
+            <div class="magnetic"><a href="/sklep" id="nav-shop" class="hover:opacity-50 transition border-b border-norien-dark pb-1 font-medium">Sklep</a></div>
+            <div class="magnetic"><a href="/o-nas" id="nav-about" class="hover:opacity-50 transition">O nas</a></div>
+            <div class="magnetic"><a href="/kontakt" id="nav-contact" class="hover:opacity-50 transition">Kontakt</a></div>
+        </div>
+        <div class="flex items-center gap-6 md:gap-10">
+            <div class="hidden md:flex gap-4 text-[10px] tracking-widest uppercase">
+                <div class="magnetic"><button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button></div>
+                <div class="magnetic"><button onclick="changeLang('en')" class="lang-btn lang-en">EN</button></div>
+                <div class="magnetic"><button onclick="changeLang('de')" class="lang-btn lang-de">DE</button></div>
+                <div class="magnetic"><button onclick="changeLang('fr')" class="lang-btn lang-fr">FR</button></div>
+                <div class="magnetic"><button onclick="changeLang('es')" class="lang-btn lang-es">ES</button></div>
+            </div>
+            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b pb-1 uppercase whitespace-nowrap hover:opacity-50 transition" onclick="openCart(event)">KOSZYK (0)</div></div>
+        </div>
+    </nav>
+
+    <header class="observe-section w-full pt-48 pb-16 px-6 text-center">
+        <div class="container mx-auto max-w-4xl">
+            <p id="shop-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase mb-6 opacity-40 font-bold text-reveal delay-1">Katalog</p>
+            <h1 id="shop-title" class="text-5xl md:text-6xl font-extralight tracking-widest uppercase mb-10 text-reveal delay-2">Wszystkie Archiwa</h1>
+            <div class="h-px w-16 bg-norien-dark/20 mx-auto text-reveal delay-2"></div>
+        </div>
+    </header>
+
+    <section class="observe-section w-full px-6 pb-32">
+        <div class="container mx-auto w-full max-w-[1400px]">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
+                
+                <div class="group relative bg-white p-8 lg:p-10 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col shadow-sm hover:shadow-xl text-reveal delay-1">
+                    <div class="flex-grow flex flex-col items-center text-center">
+                        <p class="text-[9px] tracking-ultra mb-6 opacity-40 uppercase">Archive No. 01</p>
+                        <a href="/sklep/mitte" class="w-full aspect-[4/5] flex items-center justify-center bg-norien-canvas relative overflow-hidden block">
+                            <img src="../assets/images/mitteprodukt.jpg" alt="Mitte" class="w-full h-full object-cover transform transition-transform duration-[2s] ease-out group-hover:scale-110">
+                        </a>
+                    </div>
+                    <div class="mt-8 space-y-4">
+                        <a href="/sklep/mitte" class="block text-center hover:opacity-70 transition">
+                            <h3 class="text-lg tracking-widest uppercase font-light">MITTE</h3>
+                            <p class="text-[10px] tracking-widest uppercase opacity-40 mt-2 font-semibold">Lavender / Myrrh / Suede</p>
+                        </a>
+                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
+                            <span class="text-sm font-light">€ 55.00</span>
+                            <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                                    <button class="outline-none qty-btn" onmousedown="startQty('qty-mitte', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()">-</button>
+                                    <span id="qty-mitte" class="w-6 text-center">1</span>
+                                    <button class="outline-none qty-btn" onmousedown="startQty('qty-mitte', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()">+</button>
+                                </div>
+                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('mitte', 'qty-mitte', this)">Acquire</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group relative bg-white p-8 lg:p-10 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col shadow-sm hover:shadow-xl text-reveal delay-1">
+                    <div class="flex-grow flex flex-col items-center text-center">
+                        <p class="text-[9px] tracking-ultra mb-6 opacity-40 uppercase">Archive No. 02</p>
+                        <a href="/sklep/prenzlauer-berg" class="w-full aspect-[4/5] flex items-center justify-center bg-norien-canvas relative overflow-hidden block">
+                            <img src="../assets/images/prenzlauerbergprodukt.jpg" alt="Prenzlauer Berg" class="w-full h-full object-cover transform transition-transform duration-[2s] ease-out group-hover:scale-110">
+                        </a>
+                    </div>
+                    <div class="mt-8 space-y-4">
+                        <a href="/sklep/prenzlauer-berg" class="block text-center hover:opacity-70 transition">
+                            <h3 class="text-lg tracking-widest uppercase font-light">PRENZL. BERG</h3>
+                            <p class="text-[10px] tracking-widest uppercase opacity-40 mt-2 font-semibold">Lemon / Jasmine / Sandalwood</p>
+                        </a>
+                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
+                            <span class="text-sm font-light">€ 55.00</span>
+                            <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                                    <button class="outline-none qty-btn" onmousedown="startQty('qty-prenzl', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()">-</button>
+                                    <span id="qty-prenzl" class="w-6 text-center">1</span>
+                                    <button class="outline-none qty-btn" onmousedown="startQty('qty-prenzl', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()">+</button>
+                                </div>
+                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('prenzl', 'qty-prenzl', this)">Acquire</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group relative bg-white p-8 lg:p-10 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col shadow-sm hover:shadow-xl text-reveal delay-2">
+                    <div class="flex-grow flex flex-col items-center text-center">
+                        <p class="text-[9px] tracking-ultra mb-6 opacity-40 uppercase">Archive No. 36</p>
+                        <a href="/sklep/kreuzberg" class="w-full aspect-[4/5] flex items-center justify-center bg-norien-canvas relative overflow-hidden block">
+                            <img src="../assets/images/kreuzbergprodukt.jpg" alt="Kreuzberg" class="w-full h-full object-cover transform transition-transform duration-[2s] ease-out group-hover:scale-110">
+                        </a>
+                    </div>
+                    <div class="mt-8 space-y-4">
+                        <a href="/sklep/kreuzberg" class="block text-center hover:opacity-70 transition">
+                            <h3 class="text-lg tracking-widest uppercase font-light">KREUZBERG</h3>
+                            <p class="text-[10px] tracking-widest uppercase opacity-40 mt-2 font-semibold">Bergamot / Patchouli / Vetiver</p>
+                        </a>
+                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
+                            <span class="text-sm font-light">€ 55.00</span>
+                            <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                                    <button class="outline-none qty-btn" onmousedown="startQty('qty-kreuz', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()">-</button>
+                                    <span id="qty-kreuz" class="w-6 text-center">1</span>
+                                    <button class="outline-none qty-btn" onmousedown="startQty('qty-kreuz', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()">+</button>
+                                </div>
+                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('kreuz', 'qty-kreuz', this)">Acquire</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group relative bg-white p-8 lg:p-10 border border-norien-dark/5 hover:border-norien-gold transition-all duration-700 flex flex-col shadow-sm hover:shadow-xl text-reveal delay-2">
+                    <div class="flex-grow flex flex-col items-center text-center">
+                        <p class="text-[9px] tracking-ultra mb-6 opacity-40 uppercase">Archive No. 03</p>
+                        <a href="/sklep/neukoelln" class="w-full aspect-[4/5] flex items-center justify-center bg-norien-canvas relative overflow-hidden block">
+                            <img src="../assets/images/neukollnprodukt.jpg" alt="Neukölln" class="w-full h-full object-cover transform transition-transform duration-[2s] ease-out group-hover:scale-110">
+                        </a>
+                    </div>
+                    <div class="mt-8 space-y-4">
+                        <a href="/sklep/neukoelln" class="block text-center hover:opacity-70 transition">
+                            <h3 class="text-lg tracking-widest uppercase font-light">NEUKÖLLN</h3>
+                            <p class="text-[10px] tracking-widest uppercase opacity-40 mt-2 font-semibold">Cardamom / Myrtle / Amber</p>
+                        </a>
+                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-50">
+                            <span class="text-sm font-light">€ 55.00</span>
+                            <div class="flex items-center gap-4 relative z-10 w-full xl:w-auto justify-between xl:justify-end">
+                                <div class="flex items-center text-[11px] opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                                    <button class="outline-none qty-btn" onmousedown="startQty('qty-neukolln', -1, event)" onmouseup="stopQty()" onmouseleave="stopQty()">-</button>
+                                    <span id="qty-neukolln" class="w-6 text-center">1</span>
+                                    <button class="outline-none qty-btn" onmousedown="startQty('qty-neukolln', 1, event)" onmouseup="stopQty()" onmouseleave="stopQty()">+</button>
+                                </div>
+                                <div class="magnetic"><button class="btn-acquire text-[10px] tracking-widest border border-norien-dark px-5 py-2 uppercase hover:bg-norien-dark hover:text-white transition-colors duration-300" onclick="addToCart('neukolln', 'qty-neukolln', this)">Acquire</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-16 px-6 md:px-10 border-t border-norien-dark/10 text-[9px] md:text-[10px] tracking-widest uppercase opacity-50 flex flex-col items-center gap-12 w-full">
+        <div class="grid grid-cols-2 md:flex md:flex-row gap-8 md:gap-16 text-center text-norien-dark">
+            <a href="/wysylka" class="hover:opacity-100 transition" id="ft-shipping">Wysyłka i Zwroty</a>
+            <a href="/faq" class="hover:opacity-100 transition" id="ft-faq">FAQ</a>
+            <a href="/kontakt" class="hover:opacity-100 transition" id="ft-contact">Kontakt</a>
+            <a href="/impressum" class="hover:opacity-100 transition" id="ft-impressum">Impressum</a>
+            <a href="/polityka-prywatnosci" class="hover:opacity-100 transition" id="ft-privacy">Polityka Prywatności</a>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between w-full mt-6 items-center gap-6 text-center md:text-left text-norien-dark">
+            <div id="footer-copy">&copy; 2026 Norien Berlin — Olfactory Archives</div>
+            <div>Berlin-Mitte, GER</div>
+        </div>
+    </footer>
+
+    <div id="cart-drawer" class="drawer-panel">
+        <button class="drawer-close" onclick="closeCart()">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="h-1 w-full bg-norien-dark"></div>
+        <div id="cart-inner" class="drawer-inner flex flex-col">
+            <h3 id="cart-title" class="text-2xl font-extralight tracking-widest uppercase mb-12 mt-4">Koszyk</h3>
+            <div id="cart-items" class="flex-grow space-y-8 overflow-y-auto mb-8 pr-2 relative z-10"></div>
+            <div class="mt-auto pt-8 border-t border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="cart-shipping" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-50">Wysyłka</span>
+                    <span id="cart-shipping-val" class="text-[10px] md:text-[11px] tracking-widest uppercase">Gratis</span>
+                </div>
+                <div class="flex justify-between items-center mb-10">
+                    <span id="cart-total-label" class="text-sm tracking-widest uppercase font-semibold">Total</span>
+                    <span id="cart-total" class="text-2xl font-light">€ 0.00</span>
+                </div>
+                <button onclick="openCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-lg relative z-10 btn-checkout">CHECKOUT</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkout-overlay">
+        <button class="absolute top-10 right-12 text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition flex items-center gap-3 z-50" onclick="closeCheckout()">
+            <span id="checkout-back">Wróć do sklepu</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="w-full flex flex-col md:flex-row h-full relative z-10">
+            <div class="w-full md:w-5/12 bg-[#0a0a0a] text-white p-12 md:p-24 flex flex-col justify-center border-r border-white/5">
+                <h3 id="checkout-summary-title" class="text-xs tracking-ultra uppercase opacity-40 mb-12">Order Summary</h3>
+                <div id="checkout-items" class="space-y-8 mb-12 overflow-y-auto pr-4 max-h-[40vh]"></div>
+                <div class="border-t border-white/10 pt-10 mt-auto flex justify-between items-end">
+                    <span id="checkout-due-label" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-40">Total due</span>
+                    <span id="checkout-total" class="text-5xl font-thin tracking-widest">€ 0.00</span>
+                </div>
+            </div>
+            <div class="w-full md:w-7/12 bg-white p-12 md:p-24 flex flex-col justify-center items-center text-center">
+                <div class="max-w-md w-full space-y-12">
+                    <h2 id="chk-title" class="text-4xl font-extralight tracking-widest uppercase">Prawie gotowe.</h2>
+                    <p id="chk-desc" class="text-gray-500 font-light leading-loose">W kolejnym kroku zostaniesz przekierowany do bezpiecznego systemu płatności Stripe, gdzie podasz adres dostawy i dokonasz płatności.</p>
+                    <ul class="text-[10px] tracking-widest uppercase space-y-4 opacity-60">
+                        <li id="chk-l1">• Darmowa dostawa (DE / PL)</li>
+                        <li id="chk-l2">• Ekologiczne opakowanie</li>
+                        <li id="chk-l3">• Bezpieczne płatności (SSL)</li>
+                    </ul>
+                    <button id="btn-final-pay" onclick="openStripeCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-2xl">
+                        PRZEJDŹ DO PŁATNOŚCI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('status') === 'success') {
+                localStorage.removeItem('norienCart'); cartState = {};
+                alert("Dziękujemy za zamówienie! Twoje archiwa wkrótce wyruszą w drogę do Ciebie.");
+                window.history.replaceState(null, null, window.location.pathname);
+            }
+            let perc = 0; const loaderPerc = document.getElementById('loader-perc'); const preloader = document.getElementById('preloader');
+            const interval = setInterval(() => {
+                perc += Math.floor(Math.random() * 15) + 5;
+                if (perc >= 100) { perc = 100; clearInterval(interval); loaderPerc.innerText = perc + '%'; setTimeout(() => { preloader.classList.add('hide'); document.querySelectorAll('.observe-section').forEach(s => s.classList.add('is-revealed')); }, 400); } 
+                else { loaderPerc.innerText = perc + '%'; }
+            }, 50);
+        });
+
+        document.querySelectorAll('.magnetic').forEach(el => {
+            el.addEventListener('mousemove', (e) => { const rect = el.getBoundingClientRect(); const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2; el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`; });
+            el.addEventListener('mouseleave', () => { el.style.transform = `translate(0px, 0px)`; });
+        });
+
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-revealed'); }); }, { threshold: 0.15 }); 
+        document.querySelectorAll('.observe-section').forEach(section => observer.observe(section));
+
+        const cursor = document.getElementById('custom-cursor');
+        if (window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener('mousemove', e => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+            // Odwrócenie kolorów kursora na białym tle (Sklep ma tło fdfcf9)
+            document.addEventListener('mouseover', e => {
+                if (e.target.closest('#checkout-overlay .bg-\\[\\#0a0a0a\\]') || e.target.closest('#cart-toast') || e.target.closest('.bg-norien-dark') || e.target.closest('.bg-black')) {
+                    cursor.style.backgroundColor = '#fff';
+                } else {
+                    cursor.style.backgroundColor = '#0f0f0f';
+                }
+            });
+        }
+
+        let currentLang = 'pl';
+        const tAll = {
+            pl: {
+                shop: "Sklep", about: "O nas", contact: "Kontakt", cart: "KOSZYK", acq: "Acquire", add: "Added", emp: "Twój koszyk jest pusty.", ship: "Wysyłka", free: "Gratis", toast: "Dodano do koszyka",
+                sSub: "Katalog", sTitle: "Wszystkie Archiwa",
+                fShip: "Wysyłka i Zwroty", fFaq: "FAQ", fCont: "Kontakt", fImp: "Impressum", fPriv: "Polityka Prywatności",
+                cTitle: "Koszyk", cTotal: "Total", cSum: "Order Summary", cDue: "Total due", cBack: "Wróć do sklepu",
+                chkTitle: "Prawie gotowe.", chkDesc: "W kolejnym kroku zostaniesz przekierowany do bezpiecznego systemu płatności Stripe, gdzie podasz adres dostawy i dokonasz płatności.",
+                chkL1: "• Darmowa dostawa (DE / PL)", chkL2: "• Ekologiczne opakowanie", chkL3: "• Bezpieczne płatności (SSL)", chkBtn: "PRZEJDŹ DO PŁATNOŚCI"
+            },
+            en: {
+                shop: "Shop", about: "About", contact: "Contact", cart: "CART", acq: "Acquire", add: "Added", emp: "Your cart is empty.", ship: "Shipping", free: "Free", toast: "Added to cart",
+                sSub: "Catalog", sTitle: "All Archives",
+                fShip: "Shipping & Returns", fFaq: "FAQ", fCont: "Contact", fImp: "Impressum", fPriv: "Privacy Policy",
+                cTitle: "Cart", cTotal: "Total", cSum: "Order Summary", cDue: "Total due", cBack: "Back to store",
+                chkTitle: "Almost there.", chkDesc: "In the next step, you will be redirected to the secure Stripe payment system, where you will provide your shipping address and complete the payment.",
+                chkL1: "• Free shipping (DE / PL)", chkL2: "• Eco-friendly packaging", chkL3: "• Secure payments (SSL)", chkBtn: "PROCEED TO PAYMENT"
+            },
+            de: {
+                shop: "Shop", about: "Über uns", contact: "Kontakt", cart: "WARENKORB", acq: "Kaufen", add: "Hinzugefügt", emp: "Dein Warenkorb ist leer.", ship: "Versand", free: "Kostenlos", toast: "Zum Warenkorb hinzugefügt",
+                sSub: "Katalog", sTitle: "Alle Archive",
+                fShip: "Versand & Retouren", fFaq: "FAQ", fCont: "Kontakt", fImp: "Impressum", fPriv: "Datenschutz",
+                cTitle: "Warenkorb", cTotal: "Total", cSum: "Bestellübersicht", cDue: "Gesamtbetrag", cBack: "Zurück zum Shop",
+                chkTitle: "Fast geschafft.", chkDesc: "Im nächsten Schritt wirst du zum sicheren Stripe-Zahlungssystem weitergeleitet, wo du deine Lieferadresse angibst und die Zahlung abschließt.",
+                chkL1: "• Kostenloser Versand (DE / PL)", chkL2: "• Umweltfreundliche Verpackung", chkL3: "• Sichere Zahlungen (SSL)", chkBtn: "ZUR KASSE GEHEN"
+            },
+            fr: {
+                shop: "Boutique", about: "À propos", contact: "Contact", cart: "PANIER", acq: "Acheter", add: "Ajouté", emp: "Votre panier est vide.", ship: "Livraison", free: "Gratuit", toast: "Ajouté au panier",
+                sSub: "Catalogue", sTitle: "Toutes les Archives",
+                fShip: "Livraison & Retours", fFaq: "FAQ", fCont: "Contact", fImp: "Mentions légales", fPriv: "Confidentialité",
+                cTitle: "Panier", cTotal: "Total", cSum: "Résumé de la commande", cDue: "Total à payer", cBack: "Retour à la boutique",
+                chkTitle: "Presque terminé.", chkDesc: "À l'étape suivante, vous serez redirigé vers le système de paiement sécurisé Stripe, où vous indiquerez votre adresse de livraison et effectuerez le paiement.",
+                chkL1: "• Livraison gratuite (DE / PL)", chkL2: "• Emballage écologique", chkL3: "• Paiements sécurisés (SSL)", chkBtn: "PASSER AU PAIEMENT"
+            },
+            es: {
+                shop: "Tienda", about: "Nosotros", contact: "Contacto", cart: "CARRITO", acq: "Comprar", add: "Añadido", emp: "Tu carrito está vacío.", ship: "Envío", free: "Gratis", toast: "Añadido al carrito",
+                sSub: "Catálogo", sTitle: "Todos los Archivos",
+                fShip: "Envíos y Devoluciones", fFaq: "FAQ", fCont: "Contacto", fImp: "Aviso Legal", fPriv: "Privacidad",
+                cTitle: "Carrito", cTotal: "Total", cSum: "Resumen del pedido", cDue: "Total a pagar", cBack: "Volver a la tienda",
+                chkTitle: "Casi listo.", chkDesc: "En el siguiente paso, serás redirigé al sistema de pago seguro Stripe, donde proporcionarás tu dirección de envío y completarás el pago.",
+                chkL1: "• Envío gratuito (DE / PL)", chkL2: "• Embalaje ecológico", chkL3: "• Pagos seguros (SSL)", chkBtn: "PROCEDER AL PAGO"
+            }
+        };
+
+        function changeLang(lang) {
+            currentLang = lang; const t = tAll[lang] || tAll['en'];
+            
+            document.getElementById('nav-shop').innerText = t.shop; document.getElementById('nav-about').innerText = t.about; document.getElementById('nav-contact').innerText = t.contact;
+            document.getElementById('shop-sub').innerText = t.sSub; document.getElementById('shop-title').innerText = t.sTitle;
+            
+            document.getElementById('ft-shipping').innerText = t.fShip; document.getElementById('ft-faq').innerText = t.fFaq; document.getElementById('ft-contact').innerText = t.fCont; document.getElementById('ft-impressum').innerText = t.fImp; document.getElementById('ft-privacy').innerText = t.fPriv;
+            
+            document.getElementById('cart-title').innerText = t.cTitle; document.getElementById('cart-total-label').innerText = t.cTotal;
+            document.getElementById('checkout-summary-title').innerText = t.cSum; document.getElementById('checkout-due-label').innerText = t.cDue; document.getElementById('checkout-back').innerText = t.cBack;
+            document.getElementById('chk-title').innerText = t.chkTitle; document.getElementById('chk-desc').innerText = t.chkDesc; document.getElementById('chk-l1').innerText = t.chkL1; document.getElementById('chk-l2').innerText = t.chkL2; document.getElementById('chk-l3').innerText = t.chkL3; document.getElementById('btn-final-pay').innerText = t.chkBtn;
+            
+            document.querySelectorAll('.btn-acquire').forEach(el => el.innerText = t.acq); document.getElementById('toast-text').innerText = t.toast;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active')); document.querySelectorAll('.lang-' + lang).forEach(btn => btn.classList.add('active')); renderCart(); 
+        }
+
+        const mapProducts = {
+            mitte: { id: 'mitte', title: 'MITTE', sub: 'Archive No. 01', image: '../assets/images/mitteprodukt.jpg', price: 55 },
+            prenzl: { id: 'prenzl', title: 'PRENZL. BERG', sub: 'Archive No. 02', image: '../assets/images/prenzlauerbergprodukt.jpg', price: 55 },
+            kreuz: { id: 'kreuz', title: 'KREUZBERG', sub: 'Archive No. 36', image: '../assets/images/kreuzbergprodukt.jpg', price: 55 },
+            neukolln: { id: 'neukolln', title: 'NEUKÖLLN', sub: 'Archive No. 03', image: '../assets/images/neukollnprodukt.jpg', price: 55 }
+        };
+
+        let cartState = JSON.parse(localStorage.getItem('norienCart')) || {}; 
+        function saveCart() { localStorage.setItem('norienCart', JSON.stringify(cartState)); }
+        
+        let qtyTimer; let qtyInterval;
+        function changeQty(elementId, delta) { let el = document.getElementById(elementId); if(!el) return; let newVal = parseInt(el.innerText) + delta; if(newVal < 1) newVal = 1; if(newVal > 999) newVal = 999; el.innerText = newVal; }
+        function startQty(elementId, delta, event) { if(event) event.preventDefault(); changeQty(elementId, delta); qtyTimer = setTimeout(() => { qtyInterval = setInterval(() => { changeQty(elementId, delta); }, 80); }, 400); }
+        function stopQty() { clearTimeout(qtyTimer); clearInterval(qtyInterval); }
+
+        function showToast() { const toast = document.getElementById('cart-toast'); toast.classList.add('show'); setTimeout(() => { toast.classList.remove('show'); }, 3000); }
+
+        function addToCart(productId, qtyElementId, btnElement) {
+            let qty = parseInt(document.getElementById(qtyElementId).innerText);
+            if (!cartState[productId]) cartState[productId] = 0; cartState[productId] += qty; saveCart(); document.getElementById(qtyElementId).innerText = '1';
+            btnElement.innerText = tAll[currentLang].add; btnElement.style.fontWeight = '600'; btnElement.style.opacity = '0.5';
+            setTimeout(() => { btnElement.innerText = tAll[currentLang].acq; btnElement.style.fontWeight = 'normal'; btnElement.style.opacity = '1'; }, 1000);
+            renderCart(); showToast();
+        }
+
+        let cartQtyTimer; let cartQtyInterval;
+        function updateCartItemQty(productId, delta) { if (cartState[productId]) { cartState[productId] += delta; if (cartState[productId] <= 0) delete cartState[productId]; saveCart(); renderCart(); } }
+        function startCartQty(productId, delta, event) { if(event) event.preventDefault(); updateCartItemQty(productId, delta); cartQtyTimer = setTimeout(() => { cartQtyInterval = setInterval(() => { updateCartItemQty(productId, delta); }, 80); }, 400); }
+        function stopCartQty() { clearTimeout(cartQtyTimer); clearInterval(cartQtyInterval); }
+
+        function renderCart() {
+            const itemsContainer = document.getElementById('cart-items'); const summaryContainer = document.getElementById('checkout-items');
+            const totalEl = document.getElementById('cart-total'); const checkoutTotalEl = document.getElementById('checkout-total');
+            const navCartEl = document.getElementById('nav-cart'); const t = tAll[currentLang] || tAll['en'];
+            itemsContainer.innerHTML = ''; summaryContainer.innerHTML = ''; let totalItems = 0; let totalPrice = 0;
+
+            for (let id in cartState) {
+                let qty = cartState[id]; let product = mapProducts[id]; totalItems += qty; totalPrice += qty * product.price; 
+                itemsContainer.innerHTML += `
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
+                        <div><h4 class="text-sm tracking-widest uppercase">${product.title}</h4><p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p></div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-2 text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
+                                <button class="outline-none qty-btn" onmousedown="startCartQty('${id}', -1, event)" onmouseup="stopCartQty()" onmouseleave="stopCartQty()">-</button>
+                                <span class="w-8 text-center">${qty}</span>
+                                <button class="outline-none qty-btn" onmousedown="startCartQty('${id}', 1, event)" onmouseup="stopCartQty()" onmouseleave="stopCartQty()">+</button>
+                            </div>
+                            <span class="text-base font-light w-16 text-right">€ ${(qty * product.price).toFixed(2)}</span>
+                        </div>
+                    </div>`;
+                summaryContainer.innerHTML += `
+                    <div class="flex items-center gap-6 border-b border-white/10 pb-6 pt-2 relative z-10 text-left">
+                        <div class="w-16 h-20 bg-[#1a1a1a] flex-shrink-0 overflow-hidden border border-white/5"><img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover opacity-80"></div>
+                        <div class="flex-grow"><h4 class="text-sm tracking-widest uppercase">${product.title} <span class="text-xs opacity-50 ml-2">x${qty}</span></h4><p class="text-[10px] tracking-widest uppercase opacity-40 mt-1">${product.sub}</p></div>
+                        <span class="text-base font-light whitespace-nowrap">€ ${(qty * product.price).toFixed(2)}</span>
+                    </div>`;
+            }
+            if (totalItems === 0) { itemsContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic">${t.emp}</p>`; summaryContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic">${t.emp}</p>`; }
+            navCartEl.innerText = `${t.cart} (${totalItems})`; totalEl.innerText = `€ ${totalPrice.toFixed(2)}`; checkoutTotalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
+            document.getElementById('cart-shipping').innerText = t.ship; document.getElementById('cart-shipping-val').innerText = t.free;
+        }
+
+        function openCart(e) { if (e) { e.preventDefault(); e.stopPropagation(); } document.getElementById('cart-drawer').classList.add('open'); setTimeout(() => document.getElementById('cart-inner').classList.add('loaded'), 10); }
+        function closeCart() { document.getElementById('cart-drawer').classList.remove('open'); document.getElementById('cart-inner').classList.remove('loaded'); }
+        function openCheckout() { if (Object.keys(cartState).length === 0) { alert(tAll[currentLang].emp); return; } closeCart(); document.getElementById('checkout-overlay').classList.add('open'); }
+        function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); }
+
+        async function openStripeCheckout() {
+            if (Object.keys(cartState).length === 0) return;
+            const btn = document.querySelector('.btn-final-pay'); const oldText = btn.innerText; btn.innerText = 'ŁĄCZENIE Z BANKIEM...';
+            try {
+                // WAŻNE: Z racji tego, że jesteśmy w folderze /sklep, checkout.php jest piętro wyżej!
+                const response = await fetch('../checkout.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cart: cartState }) });
+                const data = await response.json();
+                if (data.url) window.location.href = data.url; else { alert("Błąd: " + data.error); btn.innerText = oldText; }
+            } catch (e) { alert("Błąd połączenia z serwerem. Spróbuj ponownie."); btn.innerText = oldText; }
+        }
+
+        document.addEventListener('click', function(event) {
+            const cartDrawer = document.getElementById('cart-drawer'); const checkoutOverlay = document.getElementById('checkout-overlay');
+            if (cartDrawer && cartDrawer.classList.contains('open')) { if (!cartDrawer.contains(event.target) && !event.target.closest('#nav-cart') && !event.target.closest('#cart-toast') && !checkoutOverlay.classList.contains('open')) closeCart(); }
+        });
+
+        changeLang('pl'); renderCart();
+    </script>
+</body>
+</html>
