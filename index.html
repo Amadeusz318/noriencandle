@@ -46,7 +46,6 @@
         #map-explore.is-revealed::before { opacity: 1; }
         .map-layer { opacity: 0; transform: translateY(30px) scale(0.95); transform-origin: center; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
         .is-revealed .map-layer { opacity: 1; transform: translateY(0) scale(1); }
-        .delay-map-1 { transition-delay: 0.1s; } .delay-map-2 { transition-delay: 0.25s; } .delay-map-3 { transition-delay: 0.4s; } 
         #map-svg { transition: all 0.5s ease; max-height: 65vh; position: relative; z-index: 2; }
         .district-bg { fill: rgba(0, 0, 0, 0.015); stroke: #d4d4d4; stroke-width: 1.5; transition: opacity 0.5s ease; }
         .label-bg { font-size: 12px; font-weight: 500; fill: #1a1a1a; opacity: 0.45; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
@@ -78,13 +77,12 @@
         .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; background-color: #fdfcf9; box-shadow: -15px 0 50px rgba(0,0,0,0.08); z-index: 1050; transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; color: #0f0f0f; }
         .drawer-panel.open { transform: translateX(0); }
         .drawer-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: currentColor; opacity: 0.4; transition: opacity 0.3s; z-index: 10; cursor: pointer; }
-        .drawer-close:hover { opacity: 1; }
         .drawer-inner { overflow-y: auto; flex-grow: 1; padding: 5rem 3rem 3rem 3rem; display: flex; flex-direction: column; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
         .drawer-inner.loaded { opacity: 1; transform: translateY(0); }
         .drawer-inner::-webkit-scrollbar { width: 3px; }
         .drawer-inner::-webkit-scrollbar-thumb { background: #e0e0e0; }
 
-        /* CHECKOUT OVERLAY (Poczekalnia Premium) */
+        /* CHECKOUT OVERLAY */
         #checkout-overlay { position: fixed; inset: 0; background-color: #fdfcf9; z-index: 2000; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; color: #0f0f0f;}
         #checkout-overlay.open { transform: translateY(0); }
 
@@ -323,7 +321,7 @@
         <div class="flex-grow flex flex-col justify-center items-center px-6 relative z-10 py-10">
             <div class="max-w-5xl mx-auto space-y-12 text-center">
                 <h2 id="manifesto-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase opacity-40 text-reveal delay-1">Nasze Podejście</h2>
-                <p id="manifesto-text" class="text-4xl md:text-5xl lg:text-6xl font-thin leading-tight text-reveal delay-2">Wierzymy, że zapach to najlepsze zaproszenie do odkrywania. Łącząc wegański wosk ze starannie zbalansowanymi esencjami, chcemy po prostu rozbudzać Twoją ciekawość. Projektujemy z szacunkiem do rzemiosła, oddając Ci produkt, który naturalnie przyciąga uwagę.</p>
+                <p id="manifesto-text" class="text-4xl md:text-5xl lg:text-6xl font-thin leading-tight text-reveal delay-2">Wierzymy, że zapach to najlepsze zaproszenie do odkrywania. Łącząc wegański wosk ze starannie zbalansowanymi esencjami, chcemy po prostu rozbudzać Twoją ciekaowość. Projektujemy z szacunkiem do rzemiosła, oddając Ci produkt, który naturalnie przyciąga uwagę.</p>
                 <div class="pt-10 text-reveal delay-3">
                     <div id="manifesto-badge" class="inline-block border border-white/20 px-10 py-6 text-[10px] tracking-ultra uppercase opacity-60">Designed for Galleries & Concept Stores</div>
                 </div>
@@ -449,7 +447,7 @@
     </div>
 
     <script>
-        // --- OBSŁUGA POWROTU ZE STRIPE (SUKCES) ---
+        // --- OBSŁUGA POWROTU ZE STRIPE ---
         window.addEventListener('load', () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('status') === 'success') {
@@ -458,8 +456,6 @@
                 alert("Dziękujemy za zamówienie! Twoje archiwa wkrótce wyruszą w drogę do Ciebie.");
                 window.history.replaceState(null, null, window.location.pathname);
             }
-
-            // Preloader animation
             let perc = 0; const loaderPerc = document.getElementById('loader-perc'); const preloader = document.getElementById('preloader');
             const interval = setInterval(() => {
                 perc += Math.floor(Math.random() * 15) + 5;
@@ -468,7 +464,6 @@
             }, 80);
         });
 
-        // --- SMART NAVBAR & CLOSE DRAWER ---
         document.addEventListener('DOMContentLoaded', () => {
             let lastScrollY = window.scrollY; const navbar = document.getElementById('main-nav'); const drawer = document.getElementById('side-drawer');
             window.addEventListener('scroll', () => {
@@ -482,7 +477,6 @@
             if (window.scrollY <= 50) navbar.classList.add('nav-top'); else navbar.classList.add('nav-scrolled-up');
         });
 
-        // --- MAGNETIC & OBSERVER & CURSOR ---
         document.querySelectorAll('.magnetic').forEach(el => {
             el.addEventListener('mousemove', (e) => { const rect = el.getBoundingClientRect(); const x = e.clientX - rect.left - rect.width / 2; const y = e.clientY - rect.top - rect.height / 2; el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`; });
             el.addEventListener('mouseleave', () => { el.style.transform = `translate(0px, 0px)`; });
@@ -500,7 +494,6 @@
             });
         }
 
-        // --- JĘZYKI ---
         let currentLang = 'pl';
         const tAll = {
             pl: { map: "Mapa", craft: "Rzemiosło", arch: "Archiwum", man: "Podejście", cart: "KOSZYK", acq: "Acquire", add: "Added", emp: "Twój koszyk jest pusty.", ship: "Wysyłka", free: "Gratis", toast: "Dodano do koszyka" },
@@ -522,7 +515,6 @@
             neukolln: { id: 'neukolln', title: 'NEUKÖLLN', sub: 'Archive No. 03', color: '#631b2b', coords: '52°28\'52.0"N 13°26\'01.0"E', notes: 'Cardamom / Myrtle / Amber', desc: 'Wielokulturowa energia ulicy. Głębokie, dymne przyprawy.', image: 'assets/images/neukollnprodukt.jpg', price: 55 }
         };
 
-        // --- KOSZYK ---
         let currentActiveId = ''; let cartState = JSON.parse(localStorage.getItem('norienCart')) || {}; 
         function saveCart() { localStorage.setItem('norienCart', JSON.stringify(cartState)); }
         
@@ -559,7 +551,6 @@
         }
         function stopCartQty() { clearTimeout(cartQtyTimer); clearInterval(cartQtyInterval); }
 
-        // --- RENDEROWANIE KOSZYKA I PODSUMOWANIA ---
         function renderCart() {
             const itemsContainer = document.getElementById('cart-items');
             const summaryContainer = document.getElementById('checkout-items');
@@ -575,13 +566,9 @@
                 let qty = cartState[id]; let product = mapProducts[id];
                 totalItems += qty; totalPrice += qty * product.price; 
                 
-                // Elementy w koszyku
                 itemsContainer.innerHTML += `
                     <div class="flex justify-between items-center border-b border-gray-100 pb-4 relative z-10">
-                        <div>
-                            <h4 class="text-sm tracking-widest uppercase">${product.title}</h4>
-                            <p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p>
-                        </div>
+                        <div><h4 class="text-sm tracking-widest uppercase">${product.title}</h4><p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p></div>
                         <div class="flex items-center gap-4">
                             <div class="flex items-center gap-2 text-xs opacity-50 hover:opacity-100 transition border-b border-norien-dark/30 pb-0.5">
                                 <button class="outline-none qty-btn" onmousedown="startCartQty('${id}', -1, event)" onmouseup="stopCartQty()" onmouseleave="stopCartQty()" ontouchstart="startCartQty('${id}', -1, event)" ontouchend="stopCartQty()">-</button>
@@ -592,25 +579,21 @@
                         </div>
                     </div>`;
 
-                // Elementy w Podsumowaniu (Checkout Overlay)
                 summaryContainer.innerHTML += `
-                    <div class="flex justify-between items-center border-b border-white/10 pb-4 relative z-10">
-                        <div>
-                            <h4 class="text-sm tracking-widest uppercase">${product.title} <span class="text-xs opacity-50 ml-2">x${qty}</span></h4>
-                            <p class="text-[10px] tracking-widest uppercase opacity-40">${product.sub}</p>
+                    <div class="flex items-center gap-6 border-b border-white/10 pb-6 pt-2 relative z-10 text-left">
+                        <div class="w-16 h-20 bg-[#1a1a1a] flex-shrink-0 overflow-hidden border border-white/5">
+                            <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover opacity-80">
                         </div>
-                        <span class="text-base font-light">€ ${(qty * product.price).toFixed(2)}</span>
+                        <div class="flex-grow">
+                            <h4 class="text-sm tracking-widest uppercase">${product.title} <span class="text-xs opacity-50 ml-2">x${qty}</span></h4>
+                            <p class="text-[10px] tracking-widest uppercase opacity-40 mt-1">${product.sub}</p>
+                        </div>
+                        <span class="text-base font-light whitespace-nowrap">€ ${(qty * product.price).toFixed(2)}</span>
                     </div>`;
             }
-            if (totalItems === 0) { 
-                itemsContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic">${t.emp}</p>`; 
-                summaryContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic">${t.emp}</p>`;
-            }
-            navCartEl.innerText = `${t.cart} (${totalItems})`; 
-            totalEl.innerText = `€ ${totalPrice.toFixed(2)}`; 
-            checkoutTotalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
-            document.getElementById('cart-shipping').innerText = t.ship; 
-            document.getElementById('cart-shipping-val').innerText = t.free;
+            if (totalItems === 0) { itemsContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic">${t.emp}</p>`; summaryContainer.innerHTML = `<p class="text-sm font-light opacity-50 italic">${t.emp}</p>`; }
+            navCartEl.innerText = `${t.cart} (${totalItems})`; totalEl.innerText = `€ ${totalPrice.toFixed(2)}`; checkoutTotalEl.innerText = `€ ${totalPrice.toFixed(2)}`;
+            document.getElementById('cart-shipping').innerText = t.ship; document.getElementById('cart-shipping-val').innerText = t.free;
         }
 
         function openCart(e) { if (e) { e.preventDefault(); e.stopPropagation(); } closeDrawer(); document.getElementById('cart-drawer').classList.add('open'); setTimeout(() => document.getElementById('cart-inner').classList.add('loaded'), 10); }
@@ -618,39 +601,22 @@
         function openCheckout() { if (Object.keys(cartState).length === 0) { alert(tAll[currentLang].emp); return; } closeCart(); document.getElementById('checkout-overlay').classList.add('open'); }
         function closeCheckout() { document.getElementById('checkout-overlay').classList.remove('open'); }
 
-        // --- INTEGRACJA STRIPE API ---
         async function openStripeCheckout() {
             if (Object.keys(cartState).length === 0) return;
-            
-            const btn = document.querySelector('.btn-final-pay');
-            const oldText = btn.innerText;
+            const btn = document.querySelector('.btn-final-pay'); const oldText = btn.innerText;
             btn.innerText = 'ŁĄCZENIE Z BANKIEM...';
-            
             try {
-                const response = await fetch('checkout.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ cart: cartState })
-                });
+                const response = await fetch('checkout.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cart: cartState }) });
                 const data = await response.json();
-                
-                if (data.url) {
-                    window.location.href = data.url; // Przenosimy klienta do bezpiecznej kasy Stripe
-                } else {
-                    alert("Wystąpił błąd: " + data.error);
-                    btn.innerText = oldText;
-                }
-            } catch (e) {
-                alert("Błąd połączenia z serwerem. Spróbuj ponownie.");
-                btn.innerText = oldText;
-            }
+                if (data.url) window.location.href = data.url;
+                else { alert("Błąd: " + data.error); btn.innerText = oldText; }
+            } catch (e) { alert("Błąd połączenia z serwerem. Spróbuj ponownie."); btn.innerText = oldText; }
         }
 
         const mapSvg = document.getElementById('map-svg');
         function showDrawer(id) {
             const drawer = document.getElementById('side-drawer'); const inner = document.getElementById('drawer-inner'); const p = mapProducts[id];
             closeCart(); mapSvg.classList.add('is-focused'); document.querySelectorAll('.active-group').forEach(el => el.classList.remove('is-selected')); document.querySelector(`.active-group[data-id="${id}"]`).classList.add('is-selected');
-
             function updateUI() {
                 document.getElementById('drawer-title').innerText = p.title; document.getElementById('drawer-title').style.color = p.color; document.getElementById('drawer-subtitle').innerText = p.sub; document.getElementById('drawer-coords').innerText = p.coords; document.getElementById('drawer-notes').innerHTML = p.notes; document.getElementById('drawer-desc').innerText = p.desc; document.getElementById('drawer-top-line').style.backgroundColor = p.color; document.getElementById('drawer-qty').innerText = '1';
                 const imgEl = document.getElementById('drawer-image'); imgEl.src = p.image; imgEl.onload = () => { imgEl.classList.remove('hidden'); document.getElementById('drawer-placeholder').classList.add('hidden'); };
