@@ -1,506 +1,93 @@
 <!DOCTYPE html>
-<html lang="pl" class="scroll-smooth">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NORIEN BERLIN | Olfactory Archives</title>
+    <title>Ogienek | Premium Redesign</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- ZMIANA 1: Dodanie luksusowego szeryfowego fontu Cormorant Garamond -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@100;200;300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
     <script>
         tailwind.config = { 
             theme: { 
                 extend: { 
                     fontFamily: { 
                         sans: ['Inter', 'sans-serif'],
-                        serif: ['Cormorant Garamond', 'serif'] 
-                    }, 
-                    colors: { 
-                        norien: { gold: '#b88b4a', dark: '#111111', canvas: '#fdfcf9' } 
-                    }, 
-                    letterSpacing: { 'ultra': '0.8em', 'micro': '0.2em' } 
+                        serif: ['Playfair Display', 'serif']
+                    } 
                 } 
             } 
         }
     </script>
-    <style>
-        ::-webkit-scrollbar { display: none; }
-        html { -ms-overflow-style: none; scrollbar-width: none; }
-        body { overflow-x: hidden; background-color: #fdfcf9; color: #111111; }
-        body.no-scroll { overflow: hidden !important; height: 100vh; }
-        @media (pointer: fine) { *, body, a, button, input, select { cursor: none !important; } }
-        
-        #preloader { position: fixed; inset: 0; background-color: #fdfcf9; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1); }
-        #preloader.hide { transform: translateY(-100%); }
-        .noise-overlay { position: fixed; inset: 0; z-index: 9998; pointer-events: none; opacity: 0.04; background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E'); }
-        .magnetic { transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1); display: inline-block; }
-        
-        .custom-cursor { 
-            position: fixed; top: 0; left: 0; width: 12px; height: 12px; 
-            background-color: #ffffff; border-radius: 50%; pointer-events: none; 
-            z-index: 99999; transform: translate(-50%, -50%); 
-            transition: transform 0.1s ease-out, width 0.2s, height 0.2s; 
-            mix-blend-mode: difference; 
-        }
-        
-        .text-reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .is-revealed .text-reveal { opacity: 1; transform: translateY(0); }
-        .delay-1 { transition-delay: 0.2s; } .delay-2 { transition-delay: 0.4s; } .delay-3 { transition-delay: 0.6s; } .delay-4 { transition-delay: 0.8s; }
-        
-        nav { position: fixed; width: 100%; top: 0; z-index: 1000; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease; opacity: 0; animation: fadeInNav 2s ease forwards 0.5s; }
-        nav.nav-top { background-color: transparent; border-bottom: 1px solid rgba(255, 255, 255, 0.1); color: #ffffff; }
-        nav.nav-scrolled-up { background-color: rgba(253, 252, 249, 0.98); border-bottom: 1px solid rgba(15, 15, 15, 0.05); color: #111111; transform: translateY(0); backdrop-filter: blur(12px); }
-        nav.nav-scrolled-down { transform: translateY(-100%); background-color: transparent; border-bottom: 1px solid transparent; }
-        @keyframes fadeInNav { to { opacity: 1; } }
-
-        /* Map Styling */
-        .map-layer { opacity: 0; transform: translateY(30px) scale(0.95); transform-origin: center; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        .is-revealed .map-layer { opacity: 1; transform: translateY(0) scale(1); }
-        #map-svg { transition: all 0.5s ease; max-height: 65vh; position: relative; z-index: 2; background-image: radial-gradient(#d1d1d1 1px, transparent 1px); background-size: 20px 20px; border-radius: 2rem; }
-        .district-bg { fill: rgba(0, 0, 0, 0.015); stroke: #d4d4d4; stroke-width: 1.5; transition: opacity 0.5s ease; }
-        .label-bg { font-size: 12px; font-weight: 500; fill: #1a1a1a; opacity: 0.45; pointer-events: none; text-anchor: middle; letter-spacing: 0.1em; text-transform: uppercase; transition: opacity 0.5s ease; }
-        .active-group { transition: opacity 0.5s ease; cursor: pointer; }
-        .active-path { fill: transparent; stroke-width: 3.5; transition: transform 0.4s ease, filter 0.4s ease; transform-origin: center; transform-box: fill-box; }
-        .path-mitte { stroke: #b35a2d; } .path-prenzl { stroke: #8a7b8e; } .path-kreuz { stroke: #005f63; } .path-neukolln { stroke: #631b2b; }
-        .label-active { font-size: 16px; font-weight: 600; letter-spacing: 0.25em; opacity: 0.85; transition: transform 0.4s ease; text-anchor: middle; pointer-events: none; }
-        .active-group:hover .active-path { transform: translateY(-8px); filter: drop-shadow(0 15px 12px rgba(0,0,0,0.1)); }
-        .active-group:hover .label-active { transform: translateY(-8px); opacity: 1; }
-
-        .wax-liquid-bg { position: absolute; inset: -50%; z-index: 0; background: radial-gradient(circle at 50% 50%, rgba(74, 44, 42, 0.8) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(184, 139, 74, 0.4) 0%, transparent 40%), radial-gradient(circle at 20% 80%, rgba(43, 23, 14, 0.9) 0%, transparent 50%); background-color: #0f0f0f; filter: blur(80px); animation: waxLiquidMove 25s infinite alternate ease-in-out; opacity: 0.7; }
-        @keyframes waxLiquidMove { 0% { transform: translate(0%, 0%) rotate(0deg) scale(1); } 50% { transform: translate(-5%, 5%) rotate(10deg) scale(1.1); } 100% { transform: translate(5%, -5%) rotate(-5deg) scale(1); } }
-
-        /* Drawers */
-        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 440px; height: 100vh; background-color: #fdfcf9; box-shadow: -15px 0 50px rgba(0,0,0,0.08); z-index: 1050; transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; color: #111111; }
-        .drawer-panel.open { transform: translateX(0); }
-        .drawer-inner { overflow-y: auto; flex-grow: 1; padding: 5rem 3rem 3rem 3rem; display: flex; flex-direction: column; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
-        .drawer-inner.loaded { opacity: 1; transform: translateY(0); }
-        .drawer-close { position: absolute; top: 1.5rem; right: 1.5rem; opacity: 0.4; transition: opacity 0.3s; z-index: 10; }
-        .drawer-close:hover { opacity: 1; }
-        .qty-btn { display: inline-block; padding: 0 12px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease; user-select: none; }
-        .qty-btn:hover { transform: scale(1.4); font-weight: 600; }
-        
-        #checkout-overlay { position: fixed; inset: 0; background-color: #fdfcf9; z-index: 2000; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; color: #111111; overflow-y: auto; -webkit-overflow-scrolling: touch;}
-        #checkout-overlay.open { transform: translateY(0); }
-        
-        .mobile-scroll { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.5rem; padding-bottom: 2rem; -webkit-overflow-scrolling: touch; }
-        @media (min-width: 768px) { .mobile-scroll { display: grid; overflow: visible; } }
-        
-        @media (max-width: 768px) {
-            .drawer-panel { max-width: 100%; width: 100%; height: 100dvh; }
-            .drawer-inner { padding: 4rem 1.5rem 1.5rem 1.5rem; height: 100%; justify-content: space-between; }
-            #drw-img { height: 35vh; }
-            .drawer-close { top: 1rem; right: 1rem; padding: 10px; }
-            /* ZMIANA 2: Przyklejone CTA na mobile w produkcie */
-            #drw-add-container { position: sticky; bottom: 0; background: #fdfcf9; padding-top: 15px; border-top: 1px solid #eee; }
-        }
-
-        .lang-btn { transition: all 0.3s; opacity: 0.3; padding-bottom: 2px; }
-        .lang-btn.active, .lang-btn:hover { opacity: 1; font-weight: 600; border-bottom: 1px solid currentColor; }
-        #cart-toast { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: 9999 !important; }
-        #cart-toast.show { transform: translateX(0); }
-        
-        /* ZMIANA 3: Image Hover Swap CSS */
-        .img-hover-wrap { position: relative; }
-        .img-hover-wrap .img-secondary { position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.8s ease; }
-        .group:hover .img-hover-wrap .img-secondary { opacity: 1; }
-    </style>
 </head>
-<body class="bg-norien-canvas text-norien-dark font-sans antialiased overflow-x-hidden">
+<body class="bg-[#111111] text-white antialiased min-h-screen">
 
-    <div id="preloader">
-        <div id="loader-text" class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light text-norien-dark">Loading Archives</div>
-        <div id="loader-perc" class="text-4xl md:text-5xl font-serif tracking-widest text-norien-dark">0%</div>
-    </div>
-
-    <div class="noise-overlay"></div>
-    <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
-
-    <div id="cart-toast" class="fixed top-24 right-0 transform translate-x-full bg-norien-dark text-white px-8 py-5 shadow-2xl flex items-center gap-4 rounded-l-md" onclick="openCart(event)">
-        <span id="toast-text" class="text-[10px] md:text-xs tracking-[0.2em] uppercase font-light">Dodano do koszyka</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
-    </div>
-
-    <nav id="main-nav" class="nav-top px-6 md:px-10 py-5 flex justify-between items-center">
-        <a href="index.html" class="flex flex-col items-center justify-center pt-1 magnetic">
-            <span style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.6rem; letter-spacing: 0.3em; line-height: 1; margin-right: -0.3em; color: currentColor;">NORIEN</span>
-            <span style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 9px; letter-spacing: 0.3em; margin-top: 0.3rem; margin-right: -0.3em; color: currentColor; opacity: 0.7;">BERLIN</span>
-        </a>
-        <div class="hidden lg:flex gap-10 text-[10px] tracking-widest uppercase font-light ml-8">
-            <div class="magnetic"><a href="sklep.html" id="nav-shop" class="hover:opacity-50 transition">Sklep</a></div>
-            <div class="magnetic"><a href="o-nas.html" id="nav-about" class="hover:opacity-50 transition">O nas</a></div>
-            <div class="magnetic"><a href="kontakt.html" id="nav-contact" class="hover:opacity-50 transition">Kontakt</a></div>
+    <header class="w-full py-10 px-8 flex justify-between items-center border-b border-white/10">
+        <div class="text-3xl font-serif tracking-wide">ogienek.</div>
+        <div class="space-y-1.5 cursor-pointer hover:opacity-70 transition">
+            <div class="w-6 h-px bg-white"></div>
+            <div class="w-6 h-px bg-white"></div>
         </div>
-        <div class="flex items-center gap-6 md:gap-10">
-            <div class="hidden md:flex gap-4 text-[9px] tracking-widest uppercase">
-                <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
-                <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
-                <button onclick="changeLang('de')" class="lang-btn lang-de">DE</button>
-            </div>
-            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[10px] tracking-widest border-b pb-1 uppercase whitespace-nowrap hover:opacity-50 transition cursor-pointer" onclick="openCart(event)">KOSZYK (0)</div></div>
-        </div>
-    </nav>
+    </header>
 
-    <!-- ZMIANA 4: Poprawione Hero (Emocjonalny tekst + CTA) -->
-    <section id="hero" class="observe-section min-h-[100dvh] w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden bg-black text-white">
-        <div class="absolute inset-0 w-full h-full z-0 overflow-hidden">
-            <video autoplay loop muted playsinline class="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover -translate-x-1/2 -translate-y-1/2 opacity-60">
-                <source src="assets/images/7191254-hd_1920_1080_30fps.mp4" type="video/mp4">
-            </video>
-        </div>
-        <div class="relative z-10 flex flex-col items-center">
-            <p id="hero-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase mb-8 opacity-70 text-reveal delay-1">Olfactory Archives</p>
-            <h1 class="text-6xl md:text-8xl lg:text-9xl font-serif font-light tracking-tight mb-8 leading-[1.1]">
-                <span id="hero-t1" class="block text-reveal delay-1">Rytuał ukryty</span>
-                <span id="hero-t2" class="block text-reveal delay-2 italic">w szkle.</span>
-            </h1>
-            <p id="hero-desc" class="max-w-xl mx-auto text-sm md:text-base font-light leading-relaxed opacity-80 text-reveal delay-3">Tworzymy zapachy, które oddają charakter berlińskich dzielnic. Surowe rzemiosło z naszej pracowni na Mitte.</p>
-            
-            <a href="#map-explore" class="mt-12 border border-white/40 px-10 py-4 text-[10px] tracking-widest uppercase hover:bg-white hover:text-black transition duration-500 text-reveal delay-4 magnetic">
-                Odkryj kolekcję
-            </a>
-        </div>
-    </section>
-
-    <!-- Reszta sekcji pozostała nietknięta strukturą, zmieniono jedynie font nagłówków -->
-    <section id="map-explore" class="observe-section min-h-[100dvh] w-full flex flex-col justify-center bg-white py-32 relative overflow-hidden">
-        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-16 lg:gap-20 items-center relative z-10 text-center lg:text-left">
-            <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
-                <svg id="map-svg" viewBox="0 0 1000 850" class="w-full max-h-[65vh] overflow-visible transform scale-[1.15] sm:scale-105 md:scale-100 origin-center">
-                    <g class="map-layer delay-map-1">
-                        <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z"/> <text x="360" y="210" class="label-bg">Reinickendorf</text>
-                        <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 L 500,200 Z"/> <text x="560" y="220" class="label-bg">Pankow</text>
-                        <path class="district-bg" d="M 50,350 L 180,280 L 260,520 L 120,600 L 40,480 Z"/> <text x="130" y="450" class="label-bg">Spandau</text>
-                        <path class="district-bg" d="M 260,520 L 340,460 L 280,390 L 320,320 L 250,220 L 180,280 Z"/> <text x="240" y="350" class="label-bg"><tspan x="240" dy="0">CHARL.-</tspan><tspan x="240" dy="14">WILM.</tspan></text>
-                        <path class="district-bg" d="M 120,600 L 260,520 L 320,750 L 280,850 L 100,800 Z"/> <text x="190" y="710" class="label-bg"><tspan x="190" dy="0">STEGLITZ-</tspan><tspan x="190" dy="14">ZEHL.</tspan></text>
-                        <path class="district-bg" d="M 340,460 L 430,480 L 460,550 L 430,650 L 450,800 L 320,750 L 260,520 Z"/> <text x="380" y="610" class="label-bg"><tspan x="380" dy="0">TEMP.-</tspan><tspan x="380" dy="14">SCHÖN.</tspan></text>
-                        <path class="district-bg" d="M 640,350 L 750,320 L 820,450 L 650,550 L 600,450 Z"/> <text x="710" y="410" class="label-bg">Lichtenberg</text>
-                        <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z"/> <text x="750" y="630" class="label-bg"><tspan x="750" dy="0">TREPTOW-</tspan><tspan x="750" dy="14">KÖP.</tspan></text>
-                    </g>
-                    <g class="map-layer delay-map-2">
-                        <g class="active-group" onclick="openProductDrawer('mitte')">
-                            <path class="active-path path-mitte" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
-                            <text x="390" y="405" class="label-active" fill="#b35a2d">MITTE</text>
-                        </g>
-                        <g class="active-group" onclick="openProductDrawer('prenzl')">
-                            <path class="active-path path-prenzl" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
-                            <text x="545" y="385" class="label-active" fill="#8a7b8e"><tspan x="545" dy="0">PRENZL.</tspan><tspan x="545" dy="20">BERG</tspan></text>
-                        </g>
-                        <g class="active-group" onclick="openProductDrawer('kreuz')">
-                            <path class="active-path path-kreuz" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
-                            <text x="530" y="505" class="label-active" fill="#005f63">KREUZBERG</text>
-                        </g>
-                        <g class="active-group" onclick="openProductDrawer('neukolln')">
-                            <path class="active-path path-neukolln" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
-                            <text x="520" y="690" class="label-active" fill="#631b2b">NEUKÖLLN</text>
-                        </g>
-                    </g>
-                </svg>
-            </div>
-            <div class="space-y-8 md:col-span-5 lg:col-span-4 lg:pl-6 map-layer delay-map-3">
-                <h2 id="guide-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
-                <!-- Typografia szeryfowa -->
-                <h3 id="guide-title" class="text-5xl lg:text-6xl font-serif font-light leading-tight">Dzielnica.<br>Zapach.<br><span class="italic">Archiwum.</span></h3>
-                <p id="guide-desc" class="text-gray-500 font-light leading-relaxed">Każda dzielnica Berlina to inna energia. Wybierz obszar na mapie, by poznać jej zapachowy profil.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="the-craft" class="observe-section min-h-[100dvh] w-full relative flex flex-col justify-center items-center text-center px-6 overflow-hidden bg-black text-white py-32 lg:py-40">
-        <div class="wax-liquid-bg"></div>
-        <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center pointer-events-none">
-            <p id="craft-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase mb-12 opacity-60 text-reveal delay-1">Forma i Materiał</p>
-            <h2 id="craft-title" class="text-5xl md:text-7xl font-serif font-light mb-12 tracking-wide text-reveal delay-2">Świadomy wybór.</h2>
-            <div class="h-px w-16 bg-white/20 mx-auto mb-12 text-reveal delay-3"></div>
-            <p id="craft-desc" class="text-base md:text-xl font-light leading-loose opacity-80 text-reveal delay-4 max-w-2xl">Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki wosku rzepakowego i kokosowego. To naturalna baza, która pozwala zapachom w pełni wybrzmieć. Surowe szkło i starannie zbalansowane esencje tworzą harmonijną całość.</p>
-        </div>
-    </section>
-
-    <section id="ritual" class="observe-section w-full py-32 lg:py-48 px-6 relative overflow-hidden bg-norien-canvas text-norien-dark">
-        <div class="container mx-auto max-w-6xl flex flex-col md:flex-row items-center gap-16 lg:gap-32">
-            <div class="w-full md:w-1/2 aspect-[4/5] bg-[#F0EFEA] relative overflow-hidden flex items-center justify-center text-reveal delay-1 rounded-2xl">
-                <span id="ritual-img-text" class="text-[10px] tracking-widest uppercase opacity-30 font-semibold">MIEJSCE NA ZDJĘCIE LIFESTYLE</span>
-            </div>
-            <div class="w-full md:w-1/2 space-y-10 text-reveal delay-2">
-                <h2 id="ritual-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase opacity-40 font-bold">Doświadczenie</h2>
-                <h3 id="ritual-title" class="text-5xl lg:text-6xl font-serif font-light leading-tight">Szacunek <br> <span class="italic">do detalu.</span></h3>
-                <p id="ritual-desc" class="leading-loose font-light text-base text-gray-500 max-w-md">Każda świeca jest zalewana i pakowana ręcznie w naszej berlińskiej pracowni. Skupiamy się na jakości wosku i autentyczności zapachu, dbając o każdy detal wykończenia.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ZMIANA 5: Image Hover na kolekcji -->
-    <section class="observe-section w-full px-6 py-32 bg-norien-canvas text-norien-dark border-t border-gray-100">
-        <div class="container mx-auto max-w-[1400px]">
-            <div class="text-center max-w-3xl mx-auto mb-20 text-reveal delay-1">
-                <h2 id="col-sub" class="text-[10px] tracking-ultra uppercase opacity-40 font-bold mb-6">Kolekcja</h2>
-            </div>
-            <div class="mobile-scroll md:grid md:grid-cols-4 gap-12">
-                
-                <a href="mitte.html" class="group block text-reveal delay-1">
-                    <div class="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 img-hover-wrap">
-                        <img src="assets/images/mitteprodukt.jpg" alt="Mitte Packshot" class="w-full h-full object-cover">
-                        <!-- Drugie zdjęcie wyświetlane po najechaniu -->
-                        <img src="assets/images/mitte-lifestyle.jpg" alt="Mitte Lifestyle" class="w-full h-full object-cover img-secondary bg-gray-200">
-                    </div>
-                    <div class="text-center">
-                        <h3 class="text-xl font-serif tracking-widest uppercase font-light">Mitte</h3>
-                        <p class="text-[9px] opacity-40 uppercase mt-2 tracking-widest">Archive No. 01</p>
-                    </div>
-                </a>
-
-                <a href="prenzlauer-berg.html" class="group block text-reveal delay-2">
-                    <div class="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 img-hover-wrap">
-                        <img src="assets/images/prenzlauerbergprodukt.jpg" alt="Prenzlauer Berg" class="w-full h-full object-cover">
-                        <img src="assets/images/prenzl-lifestyle.jpg" alt="Prenzl Lifestyle" class="w-full h-full object-cover img-secondary bg-gray-200">
-                    </div>
-                    <div class="text-center">
-                        <h3 class="text-xl font-serif tracking-widest uppercase font-light">Prenzl. Berg</h3>
-                        <p class="text-[9px] opacity-40 uppercase mt-2 tracking-widest">Archive No. 02</p>
-                    </div>
-                </a>
-
-                <a href="kreuzberg.html" class="group block text-reveal delay-3">
-                    <div class="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 img-hover-wrap">
-                        <img src="assets/images/kreuzbergprodukt.jpg" alt="Kreuzberg" class="w-full h-full object-cover">
-                        <img src="assets/images/kreuzberg-lifestyle.jpg" alt="Kreuzberg Lifestyle" class="w-full h-full object-cover img-secondary bg-gray-200">
-                    </div>
-                    <div class="text-center">
-                        <h3 class="text-xl font-serif tracking-widest uppercase font-light">Kreuzberg</h3>
-                        <p class="text-[9px] opacity-40 uppercase mt-2 tracking-widest">Archive No. 36</p>
-                    </div>
-                </a>
-
-                <a href="neukoelln.html" class="group block text-reveal delay-4">
-                    <div class="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 img-hover-wrap">
-                        <img src="assets/images/neukollnprodukt.jpg" alt="Neukölln" class="w-full h-full object-cover">
-                        <img src="assets/images/neukolln-lifestyle.jpg" alt="Neukölln Lifestyle" class="w-full h-full object-cover img-secondary bg-gray-200">
-                    </div>
-                    <div class="text-center">
-                        <h3 class="text-xl font-serif tracking-widest uppercase font-light">Neukölln</h3>
-                        <p class="text-[9px] opacity-40 uppercase mt-2 tracking-widest">Archive No. 03</p>
-                    </div>
-                </a>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- ZMIANA 6: Szuflada Produktu z piramidą zapachową i elementami zaufania -->
-    <div id="product-drawer" class="drawer-panel z-[1050]">
-        <button class="drawer-close" onclick="closeDrawer()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-        <div id="drawer-inner" class="drawer-inner relative">
-            <div class="aspect-square bg-[#f4f3ef] mb-8 overflow-hidden rounded-xl"><img id="drw-img" src="" class="w-full h-full object-cover"></div>
-            
-            <p id="drw-sub" class="text-[9px] tracking-ultra uppercase opacity-40 mb-2 font-bold"></p>
-            <h3 id="drw-title" class="text-4xl font-serif font-light tracking-wide uppercase mb-4"></h3>
-            
-            <!-- Trust Badges -->
-            <div class="flex gap-4 text-[9px] uppercase tracking-widest opacity-60 mb-6 border-b pb-6">
-                <span>✧ 100% Wegański Wosk</span>
-                <span>✧ 45h Czas Palenia</span>
-            </div>
-
-            <p id="drw-desc" class="text-sm font-light leading-relaxed text-gray-600 mb-8"></p>
-
-            <!-- Piramida zapachowa -->
-            <div class="mb-10 text-xs font-light space-y-3 bg-gray-50/50 p-4 rounded-lg">
-                <div class="flex justify-between border-b border-gray-100 pb-2"><span class="uppercase tracking-widest opacity-40 font-medium">Głowa</span><span id="drw-top" class="text-right"></span></div>
-                <div class="flex justify-between border-b border-gray-100 pb-2"><span class="uppercase tracking-widest opacity-40 font-medium">Serce</span><span id="drw-heart" class="text-right"></span></div>
-                <div class="flex justify-between"><span class="uppercase tracking-widest opacity-40 font-medium">Baza</span><span id="drw-base" class="text-right"></span></div>
-            </div>
-
-            <div id="drw-add-container" class="mt-auto flex justify-between items-center bg-norien-canvas">
-                <span class="text-2xl font-light">€ 32.00</span>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center text-sm border-b border-black pb-0.5"><button class="qty-btn" onclick="changeQty('drw-qty', -1)">-</button><span id="drw-qty" class="w-6 text-center">1</span><button class="qty-btn" onclick="changeQty('drw-qty', 1)">+</button></div>
-                    <button id="drw-add" class="bg-black text-white text-[10px] px-8 py-4 uppercase tracking-widest hover:bg-gray-800 transition" onclick="handleAddToCart()">Do koszyka</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ZMIANA 7: Koszyk z progresem i upsellem (prezent) -->
-    <div id="cart-drawer" class="drawer-panel z-[1050]">
-        <button class="drawer-close" onclick="closeCart()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-        <div id="cart-inner" class="drawer-inner">
-            <h3 id="cart-title" class="text-3xl font-serif font-light tracking-wide uppercase mb-8">Koszyk</h3>
-            
-            <!-- Pasek darmowej dostawy -->
-            <div class="mb-8 bg-gray-50 p-4 rounded-lg text-center">
-                <p id="free-shipping-text" class="text-[9px] uppercase tracking-widest mb-3 opacity-60">Brakuje €X do darmowej dostawy</p>
-                <div class="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
-                    <div id="free-shipping-bar" class="h-full bg-black transition-all duration-700 w-0"></div>
-                </div>
-            </div>
-
-            <div id="cart-items" class="flex-grow space-y-6 overflow-y-auto mb-8 pr-2"></div>
-            
-            <div class="pt-8 border-t">
-                <!-- Opcja pakowania na prezent -->
-                <label class="flex items-center gap-3 text-[11px] uppercase tracking-widest mb-6 cursor-pointer group">
-                    <input type="checkbox" id="gift-wrap" class="accent-black w-4 h-4 cursor-pointer" onchange="renderCart()">
-                    <span class="group-hover:opacity-70 transition">Zapakuj jako prezent (+€5.00)</span>
-                </label>
-
-                <div class="flex justify-between items-center mb-10"><span id="cart-total-lbl" class="text-sm tracking-widest uppercase opacity-50">Total</span><span id="cart-total" class="text-3xl font-light">€ 0.00</span></div>
-                <button id="cart-btn" onclick="openCheckout()" class="w-full bg-black text-white text-[10px] py-5 tracking-ultra uppercase hover:bg-gray-800 transition">Do kasy</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Poniższa logika JS zaaktualizowana o nowe funkcje -->
-    <script>
-        // --- 1. PRELOADER & URL CHECK ---
-        window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('status') === 'success') { localStorage.removeItem('norienCart'); cart = {}; window.history.replaceState(null, null, window.location.pathname); }
-            
-            if (sessionStorage.getItem('visited')) {
-                document.getElementById('preloader').style.display = 'none';
-                document.querySelectorAll('.observe-section').forEach(s => s.classList.add('is-revealed'));
-                return;
-            }
-
-            let perc = 0; const lp = document.getElementById('loader-perc'); const pr = document.getElementById('preloader');
-            const int = setInterval(() => { 
-                perc += 5; lp.innerText = perc + '%'; 
-                if(perc>=100){ 
-                    clearInterval(int); 
-                    setTimeout(()=> { 
-                        pr.classList.add('hide'); 
-                        document.querySelectorAll('.observe-section').forEach(s=>s.classList.add('is-revealed')); 
-                        sessionStorage.setItem('visited', 'true');
-                    }, 400); 
-                } 
-            }, 40);
-        });
-
-        // (Skrócony dla czytelności obiekt tłumaczeń, by skupić się na funkcjach E-commerce)
-        // ... ZOSTAW SWOJE TŁUMACZENIA Z ORYGINAŁU ...
-        const translations = {
-            pl: { cartBtn: "KOSZYK", drwAdd: "Do koszyka", toastText: "Dodano do koszyka", emptyCart: "Twój koszyk jest pusty.", cartTot: "Suma", cartBtnCheckout: "Do kasy" },
-            en: { cartBtn: "CART", drwAdd: "Add to bag", toastText: "Added to cart", emptyCart: "Your cart is empty.", cartTot: "Total", cartBtnCheckout: "Checkout" },
-            de: { cartBtn: "WARENKORB", drwAdd: "In den Warenkorb", toastText: "Hinzugefügt", emptyCart: "Warenkorb ist leer.", cartTot: "Gesamt", cartBtnCheckout: "Zur Kasse" }
-        };
-        let currentLang = 'pl';
-        function changeLang(lang) { currentLang = lang; renderCart(); }
-
-        // --- 3. PRODUCTS & CART (Zaktualizowane o piramidę zapachową) ---
-        const products = {
-            mitte: { 
-                id: 'mitte', title: 'Mitte', sub: 'Archive No. 01', price: 32, image: 'assets/images/mitteprodukt.jpg', 
-                desc: 'Chłód galerii sztuki i stare drewno. Surowe, berlińskie Mitte.',
-                top: 'Bergamotka, Czarny Pieprz', heart: 'Stare Drewno, Wetiwer', base: 'Paczula, Skóra'
-            },
-            prenzl: { 
-                id: 'prenzl', title: 'Prenzl. Berg', sub: 'Archive No. 02', price: 32, image: 'assets/images/prenzlauerbergprodukt.jpg', 
-                desc: 'Poranna mgła w Mauerpark. Kojące i miękkie zderzenie cytrusów z jaśminem.',
-                top: 'Petitgrain, Figa', heart: 'Jaśmin, Czarna Herbata', base: 'Białe Piżmo, Cedr'
-            },
-            kreuz: { 
-                id: 'kreuz', title: 'Kreuzberg', sub: 'Archive No. 36', price: 32, image: 'assets/images/kreuzbergprodukt.jpg', 
-                desc: 'Energia kanałów. Zapach buntu, głębokiej paczuli i wetiwerii.',
-                top: 'Różowy Pieprz, Kadzidło', heart: 'Tabaka, Irys', base: 'Paczula, Wanilia'
-            },
-            neukolln: { 
-                id: 'neukolln', title: 'Neukölln', sub: 'Archive No. 03', price: 32, image: 'assets/images/neukollnprodukt.jpg', 
-                desc: 'Wielokulturowy puls. Ciepła, obezwładniająca mieszanka przypraw i bursztynu.',
-                top: 'Kardamon, Szafran', heart: 'Róża z Taif, Goździk', base: 'Bursztyn, Drzewo Sandałowe'
-            }
-        };
-
-        let cart = JSON.parse(localStorage.getItem('norienCart')) || {};
-        let activeId = null;
-
-        function openProductDrawer(id) { 
-            activeId = id; 
-            const p = products[id]; 
-            document.getElementById('drw-img').src = p.image; 
-            document.getElementById('drw-title').innerText = p.title; 
-            document.getElementById('drw-sub').innerText = p.sub; 
-            document.getElementById('drw-desc').innerText = p.desc; 
-            
-            // Renderowanie piramidy
-            document.getElementById('drw-top').innerText = p.top;
-            document.getElementById('drw-heart').innerText = p.heart;
-            document.getElementById('drw-base').innerText = p.base;
-
-            document.getElementById('drw-qty').innerText = '1'; 
-            document.getElementById('product-drawer').classList.add('open'); 
-            setTimeout(() => document.getElementById('drawer-inner').classList.add('loaded'), 10); 
-        }
-
-        function closeDrawer() { document.getElementById('product-drawer').classList.remove('open'); document.getElementById('drawer-inner').classList.remove('loaded'); }
-        function openCart() { renderCart(); document.getElementById('cart-drawer').classList.add('open'); setTimeout(() => document.getElementById('cart-inner').classList.add('loaded'), 10); }
-        function closeCart() { document.getElementById('cart-drawer').classList.remove('open'); document.getElementById('cart-inner').classList.remove('loaded'); }
+    <main class="max-w-[1400px] mx-auto px-6 py-20">
         
-        function changeQty(id, delta) { const el = document.getElementById(id); let val = parseInt(el.innerText) + delta; if(val < 1) val = 1; el.innerText = val; }
-
-        function handleAddToCart() {
-            const qty = parseInt(document.getElementById('drw-qty').innerText);
-            cart[activeId] = (cart[activeId] || 0) + qty;
-            localStorage.setItem('norienCart', JSON.stringify(cart));
-            closeDrawer(); renderCart(); showToast();
-        }
-
-        function renderCart() {
-            const items = document.getElementById('cart-items'); 
-            items.innerHTML = ''; 
-            let total = 0; let count = 0;
-            const t = translations[currentLang] || translations['en'];
-
-            for(let id in cart) {
-                const p = products[id]; const q = cart[id]; total += p.price * q; count += q;
-                items.innerHTML += `
-                <div class="flex gap-4 items-center border-b border-gray-100 pb-4 relative z-10">
-                    <img src="${p.image}" class="w-16 h-20 object-cover rounded-md">
-                    <div class="flex-grow">
-                        <p class="uppercase text-xs font-serif tracking-widest">${p.title}</p>
-                        <p class="text-[9px] opacity-40 uppercase tracking-widest mb-1">${p.sub}</p>
-                        <span class="text-xs opacity-50">${q} x €${p.price.toFixed(2)}</span>
-                    </div>
-                    <div class="flex flex-col items-end">
-                        <span class="text-sm">€${(p.price * q).toFixed(2)}</span>
-                        <button onclick="removeItem('${id}')" class="text-[10px] uppercase tracking-widest opacity-30 hover:opacity-100 mt-2">Usuń</button>
-                    </div>
-                </div>`;
-            }
-
-            // Logika pakowania na prezent
-            const isGift = document.getElementById('gift-wrap') ? document.getElementById('gift-wrap').checked : false;
-            if(isGift && count > 0) {
-                total += 5.00;
-            }
-
-            if(count === 0) { 
-                items.innerHTML = `<p class="text-xs opacity-50 italic text-center py-10">${t.emptyCart}</p>`; 
-            }
-
-            // Logika darmowej dostawy (próg 100 EUR)
-            const freeShippingThreshold = 100;
-            const progress = Math.min((total / freeShippingThreshold) * 100, 100);
-            const bar = document.getElementById('free-shipping-bar');
-            const text = document.getElementById('free-shipping-text');
+        <div class="flex flex-col items-center mb-20 space-y-12">
+            <h1 class="text-sm tracking-[0.3em] uppercase text-gray-400 font-light">Kolekcja</h1>
             
-            if (bar && text) {
-                bar.style.width = `${progress}%`;
-                if (progress >= 100) {
-                    text.innerText = "Darmowa dostawa odblokowana!";
-                    text.classList.add('text-green-600', 'font-bold');
-                } else {
-                    text.innerText = `Brakuje €${(freeShippingThreshold - total).toFixed(2)} do darmowej dostawy`;
-                    text.classList.remove('text-green-600', 'font-bold');
-                }
-            }
+            <div class="flex gap-10 text-xs tracking-widest uppercase font-light">
+                <a href="#" class="text-white border-b border-white pb-1">Wszystkie</a>
+                <a href="#" class="text-gray-500 hover:text-white transition">Świece rzepakowe</a>
+                <a href="#" class="text-gray-500 hover:text-white transition">Akcesoria</a>
+            </div>
+        </div>
 
-            document.getElementById('nav-cart').innerText = `${t.cartBtn} (${count})`; 
-            document.getElementById('cart-total').innerText = `€ ${total.toFixed(2)}`;
-        }
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-16">
+            
+            <a href="#" class="group block">
+                <div class="aspect-[4/5] bg-[#1a1a1a] rounded-xl overflow-hidden mb-6 relative">
+                    <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?q=80&w=800&auto=format&fit=crop" alt="Sauna" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-90 group-hover:opacity-100">
+                </div>
+                <div class="text-center">
+                    <h3 class="font-serif text-2xl mb-2">Sauna</h3>
+                    <p class="text-[9px] uppercase tracking-widest text-gray-500 mb-4">Drzewo cedrowe / Eukaliptus / Dym</p>
+                    <p class="text-sm font-light">120 PLN</p>
+                </div>
+            </a>
 
-        function removeItem(id) { delete cart[id]; localStorage.setItem('norienCart', JSON.stringify(cart)); renderCart(); }
-        function showToast() { const t = document.getElementById('cart-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
+            <a href="#" class="group block">
+                <div class="aspect-[4/5] bg-[#1a1a1a] rounded-xl overflow-hidden mb-6 relative">
+                    <img src="https://images.unsplash.com/photo-1596433809252-260c27459eb5?q=80&w=800&auto=format&fit=crop" alt="Leśna Kąpiel" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-90 group-hover:opacity-100">
+                </div>
+                <div class="text-center">
+                    <h3 class="font-serif text-2xl mb-2">Leśna Kąpiel</h3>
+                    <p class="text-[9px] uppercase tracking-widest text-gray-500 mb-4">Świerk / Mech / Wilgotna ziemia</p>
+                    <p class="text-sm font-light">120 PLN</p>
+                </div>
+            </a>
 
-        document.addEventListener('DOMContentLoaded', () => { renderCart(); });
-    </script>
+            <a href="#" class="group block">
+                <div class="aspect-[4/5] bg-[#1a1a1a] rounded-xl overflow-hidden mb-6 relative">
+                    <img src="https://images.unsplash.com/photo-1608181114410-db21b214bdf4?q=80&w=800&auto=format&fit=crop" alt="Coffee Addict" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-90 group-hover:opacity-100">
+                </div>
+                <div class="text-center">
+                    <h3 class="font-serif text-2xl mb-2">Coffee Addict</h3>
+                    <p class="text-[9px] uppercase tracking-widest text-gray-500 mb-4">Palona kawa / Wanilia / Karmel</p>
+                    <p class="text-sm font-light">120 PLN</p>
+                </div>
+            </a>
+
+            <a href="#" class="group block">
+                <div class="aspect-[4/5] bg-[#1a1a1a] rounded-xl overflow-hidden mb-6 relative">
+                    <img src="https://images.unsplash.com/photo-1602921092645-b74a161f365d?q=80&w=800&auto=format&fit=crop" alt="Leśna Chatka" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-90 group-hover:opacity-100">
+                </div>
+                <div class="text-center">
+                    <h3 class="font-serif text-2xl mb-2">Leśna Chatka</h3>
+                    <p class="text-[9px] uppercase tracking-widest text-gray-500 mb-4">Ognisko / Żywica / Paczula</p>
+                    <p class="text-sm font-light">120 PLN</p>
+                </div>
+            </a>
+
+        </div>
+    </main>
 </body>
 </html>
