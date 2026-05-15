@@ -3,199 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ogienek. | Sklep Premium</title>
+    <title>NORIEN BERLIN | Olfactory Archives</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
     <script>
         tailwind.config = { 
             theme: { 
                 extend: { 
-                    fontFamily: { 
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif']
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { 
+                        norien: { 
+                            dark: '#0a0a0a', 
+                            canvas: '#EBE9E4',
+                            white: '#fdfcf9'
+                        } 
                     },
-                    colors: {
-                        brand: {
-                            dark: '#0f0f0f',
-                            card: '#1a1a1a',
-                            text: '#f3f3f3',
-                            muted: '#8a8a8a'
-                        }
-                    }
+                    letterSpacing: { 'ultra': '0.8em' }
                 } 
             } 
         }
     </script>
-    <style>
-        body { background-color: #0f0f0f; color: #f3f3f3; }
-        .filter-btn.active { color: #f3f3f3; border-bottom-color: #f3f3f3; }
-        .product-card { transition: opacity 0.4s ease, transform 0.4s ease; }
-        .product-card.hidden-item { opacity: 0; transform: translateY(10px); pointer-events: none; position: absolute; visibility: hidden; }
-    </style>
 </head>
-<body class="antialiased min-h-screen font-sans">
+<body class="bg-norien-canvas text-norien-dark antialiased">
 
-    <!-- NAGŁÓWEK -->
-    <header class="w-full py-8 px-6 md:px-12 flex justify-between items-center border-b border-white/5 sticky top-0 bg-[#0f0f0f]/90 backdrop-blur-md z-50">
-        <a href="#" class="text-3xl md:text-4xl font-serif font-bold tracking-tight">ogienek.</a>
-        <div class="flex items-center gap-8">
-            <a href="#" class="hidden md:block text-[10px] tracking-widest uppercase font-light hover:opacity-50 transition">Konto</a>
-            <a href="#" class="hidden md:block text-[10px] tracking-widest uppercase font-light hover:opacity-50 transition">Koszyk (0)</a>
-            <button class="space-y-1.5 cursor-pointer hover:opacity-70 transition p-2">
-                <div class="w-6 h-px bg-brand-text"></div>
-                <div class="w-6 h-px bg-brand-text"></div>
-            </button>
-        </div>
-    </header>
+    <div id="preloader">
+        <div id="loader-perc" class="text-4xl md:text-5xl font-thin tracking-widest text-norien-dark">0%</div>
+    </div>
 
-    <main class="max-w-[1600px] mx-auto px-6 md:px-12 py-16 md:py-24">
+    <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
+
+    <nav id="main-nav" class="nav-top px-6 md:px-10 py-5 flex justify-between items-center">
+        <a href="index.html" id="nav-logo" class="flex flex-col items-center justify-center pt-1 transition-colors duration-500 text-white">
+            <span class="logo-main">NORIEN</span>
+            <span class="logo-sub">BERLIN</span>
+        </a>
         
-        <!-- NAGŁÓWEK SKLEPU I FILTRY -->
-        <div class="flex flex-col items-center mb-20">
-            <h1 class="text-[10px] md:text-xs tracking-[0.4em] uppercase text-brand-muted font-bold mb-12">Kolekcja</h1>
-            
-            <div class="flex flex-wrap justify-center gap-8 text-[10px] md:text-xs tracking-widest uppercase font-light" id="filters">
-                <button data-filter="all" class="filter-btn active text-brand-muted hover:text-brand-text transition border-b border-transparent pb-1">Wszystkie</button>
-                <button data-filter="candle" class="filter-btn text-brand-muted hover:text-brand-text transition border-b border-transparent pb-1">Świece rzepakowe</button>
-                <button data-filter="accessory" class="filter-btn text-brand-muted hover:text-brand-text transition border-b border-transparent pb-1">Akcesoria</button>
-            </div>
+        <div class="hidden lg:flex gap-10 text-[11px] tracking-widest uppercase font-light">
+            <a href="sklep.html" class="hover:opacity-50 transition-opacity">Sklep</a>
+            <a href="o-nas.html" class="hover:opacity-50 transition-opacity">O nas</a>
+            <a href="kontakt.html" class="hover:opacity-50 transition-opacity">Kontakt</a>
         </div>
 
-        <!-- GRID PRODUKTÓW -->
-        <!-- Zastosowano proporcje zdjęć dopasowane do luksusowych marek (np. 4:5). Używam idealnie dopasowanych bursztynowych zdjęć z Unsplash jako placeholderów Premium. -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16 relative" id="product-grid">
+        <div class="flex items-center gap-6 md:gap-10">
+            <div class="hidden md:flex gap-4 text-[10px] tracking-widest uppercase">
+                <button onclick="changeLang('pl')" class="lang-btn active">PL</button>
+                <button onclick="changeLang('en')" class="lang-btn">EN</button>
+            </div>
+            <div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b border-current pb-1 uppercase cursor-pointer" onclick="openCart()">
+                KOSZYK (0)
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero" class="observe-section h-screen w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden bg-black text-white">
+        <div class="absolute inset-0 w-full h-full z-0">
+            <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-60">
+                <source src="assets/images/7191254-hd_1920_1080_30fps.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="absolute inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-black/60"></div>
+
+        <div class="relative z-10">
+            <p class="text-[10px] tracking-ultra uppercase mb-8 opacity-70 text-reveal delay-1">Olfactory Archives</p>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-thin tracking-tighter mb-10 leading-tight">
+                <span class="block text-reveal delay-1">Prawdziwy Berlin.</span>
+                <span class="block text-reveal delay-2 italic">Zamknięty w szkle.</span>
+            </h1>
+            <p class="max-w-xl mx-auto text-base md:text-lg font-light opacity-80 text-reveal delay-3">Surowe rzemiosło z naszej pracowni na Mitte.</p>
+        </div>
+        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce text-reveal delay-4">
+            <span class="text-[10px] tracking-widest uppercase opacity-40 italic">Przewiń</span>
+        </div>
+    </section>
+
+    <section id="map-explore" class="observe-section min-h-screen py-32 bg-black text-white">
+        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-20 items-center">
+            <div class="lg:col-span-8 flex justify-center py-10">
+                <svg id="map-svg" viewBox="0 0 1000 850" class="w-full max-h-[75vh] overflow-visible scale-110">
+                    </svg>
+            </div>
+            <div class="lg:col-span-4 space-y-10 text-center lg:text-left text-reveal">
+                <h2 class="text-[10px] tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
+                <h3 class="text-4xl lg:text-6xl font-extralight uppercase leading-tight">Dzielnica. <br> Zapach. <br> Archiwum.</h3>
+                <p class="text-gray-400 font-light text-lg">Kliknij na mapie, aby odkryć zapachowy profil każdej części miasta.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-40 bg-norien-dark text-white text-center">
+        <div class="max-w-3xl mx-auto px-6 text-reveal">
+            <h2 class="text-5xl md:text-7xl font-thin mb-12">Świadomy wybór.</h2>
+            <p class="text-lg md:text-xl font-light leading-relaxed opacity-70">Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki rzepaku i kokosu. Czyste spalanie, surowa forma.</p>
+        </div>
+    </section>
+
+    <section id="ritual" class="relative py-40 overflow-hidden bg-norien-canvas">
+        <div class="absolute inset-0 frosted-layer z-0"></div> <div class="container mx-auto px-6 flex flex-col md:flex-row gap-20 items-center relative z-10">
+            <div class="w-full md:w-1/2 aspect-[4/5] bg-white/20 backdrop-blur-xl border border-white/40 rounded-3xl overflow-hidden shadow-2xl text-reveal">
+                <div class="w-full h-full flex items-center justify-center opacity-30 uppercase text-[10px] tracking-widest">Photo Placeholder</div>
+            </div>
+            <div class="w-full md:w-1/2 space-y-8 text-reveal delay-1">
+                <h2 class="text-[10px] tracking-ultra uppercase font-bold text-black">Doświadczenie</h2>
+                <h3 class="text-4xl lg:text-5xl font-extralight text-black leading-tight">Szacunek do detalu.</h3>
+                <p class="text-black/70 text-lg leading-loose">Każda świeca jest zalewana ręcznie. Od knotów drewnianych po ręcznie klejone etykiety – nie idziemy na skróty.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-40 bg-norien-canvas">
+        <div class="container mx-auto px-6 max-w-6xl space-y-40">
             
-            <!-- Produkt 1 -->
-            <div class="product-card group cursor-pointer" data-category="candle">
-                <div class="aspect-[4/5] bg-brand-card rounded-2xl overflow-hidden mb-6 relative">
-                    <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?q=80&w=800&auto=format&fit=crop" alt="Sauna" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-500"></div>
+            <div class="flex flex-col md:flex-row items-center gap-20 text-reveal">
+                <div class="w-full md:w-1/2 aspect-[4/5] bg-black rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer" onclick="openProductDrawer('mitte')">
+                    <img src="assets/images/mitteprodukt.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000">
                 </div>
-                <div class="text-center px-4">
-                    <h3 class="font-serif text-2xl lg:text-3xl mb-2 group-hover:text-amber-500 transition-colors">Sauna</h3>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-brand-muted mb-4 h-6">Eukaliptus / Cedr / Dym</p>
-                    <p class="text-sm font-light">59,00 zł – 139,00 zł</p>
+                <div class="w-full md:w-1/2 space-y-8">
+                    <h3 class="text-5xl font-light text-black uppercase">Mitte</h3>
+                    <p class="text-lg text-black/60 leading-relaxed">Chłód galerii sztuki i stare drewno. Surowe serce Berlina.</p>
+                    <button class="bg-black text-white px-12 py-5 text-[11px] uppercase tracking-widest hover:bg-gray-800 transition-all shadow-xl">Odkryj</button>
                 </div>
             </div>
 
-            <!-- Produkt 2 -->
-            <div class="product-card group cursor-pointer" data-category="candle">
-                <div class="aspect-[4/5] bg-brand-card rounded-2xl overflow-hidden mb-6 relative">
-                    <img src="https://images.unsplash.com/photo-1596433809252-260c27459eb5?q=80&w=800&auto=format&fit=crop" alt="Leśna Kąpiel" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-500"></div>
+            <div class="flex flex-col md:flex-row-reverse items-center gap-20 text-reveal">
+                <div class="w-full md:w-1/2 aspect-[4/5] bg-black rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer" onclick="openProductDrawer('prenzl')">
+                    <img src="assets/images/prenzlauerbergprodukt.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000">
                 </div>
-                <div class="text-center px-4">
-                    <h3 class="font-serif text-2xl lg:text-3xl mb-2 group-hover:text-amber-500 transition-colors">Leśna Kąpiel</h3>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-brand-muted mb-4 h-6">Świerk / Mech / Wilgotna ziemia</p>
-                    <p class="text-sm font-light">59,00 zł – 139,00 zł</p>
-                </div>
-            </div>
-
-            <!-- Produkt 3 -->
-            <div class="product-card group cursor-pointer" data-category="candle">
-                <div class="aspect-[4/5] bg-brand-card rounded-2xl overflow-hidden mb-6 relative">
-                    <img src="https://images.unsplash.com/photo-1608181114410-db21b214bdf4?q=80&w=800&auto=format&fit=crop" alt="Coffee Addict" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-500"></div>
-                </div>
-                <div class="text-center px-4">
-                    <h3 class="font-serif text-2xl lg:text-3xl mb-2 group-hover:text-amber-500 transition-colors">Coffee Addict</h3>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-brand-muted mb-4 h-6">Palona kawa / Wanilia / Karmel</p>
-                    <p class="text-sm font-light">59,00 zł – 139,00 zł</p>
-                </div>
-            </div>
-
-            <!-- Produkt 4 -->
-            <div class="product-card group cursor-pointer" data-category="candle">
-                <div class="aspect-[4/5] bg-brand-card rounded-2xl overflow-hidden mb-6 relative">
-                    <img src="https://images.unsplash.com/photo-1602921092645-b74a161f365d?q=80&w=800&auto=format&fit=crop" alt="Leśna Chatka" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-500"></div>
-                </div>
-                <div class="text-center px-4">
-                    <h3 class="font-serif text-2xl lg:text-3xl mb-2 group-hover:text-amber-500 transition-colors">Leśna Chatka</h3>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-brand-muted mb-4 h-6">Ognisko / Żywica / Paczula</p>
-                    <p class="text-sm font-light">59,00 zł – 139,00 zł</p>
-                </div>
-            </div>
-
-            <!-- Produkt 5 -->
-            <div class="product-card group cursor-pointer" data-category="candle">
-                <div class="aspect-[4/5] bg-brand-card rounded-2xl overflow-hidden mb-6 relative">
-                    <img src="https://images.unsplash.com/photo-1605282711667-270bbd11340a?q=80&w=800&auto=format&fit=crop" alt="Just Blue" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-500"></div>
-                </div>
-                <div class="text-center px-4">
-                    <h3 class="font-serif text-2xl lg:text-3xl mb-2 group-hover:text-amber-500 transition-colors">Just Blue</h3>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-brand-muted mb-4 h-6">Morska bryza / Szałwia / Sól</p>
-                    <p class="text-sm font-light">59,00 zł – 139,00 zł</p>
-                </div>
-            </div>
-
-            <!-- Produkt 6 -->
-            <div class="product-card group cursor-pointer" data-category="candle">
-                <div class="aspect-[4/5] bg-brand-card rounded-2xl overflow-hidden mb-6 relative">
-                    <img src="https://images.unsplash.com/photo-1610425026940-b6ddba1ec1e2?q=80&w=800&auto=format&fit=crop" alt="Dziki Bez" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-500"></div>
-                </div>
-                <div class="text-center px-4">
-                    <h3 class="font-serif text-2xl lg:text-3xl mb-2 group-hover:text-amber-500 transition-colors">Dziki Bez</h3>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-brand-muted mb-4 h-6">Kwiat bzu / Heliotrop / Zielone liście</p>
-                    <p class="text-sm font-light">59,00 zł – 139,00 zł</p>
-                </div>
-            </div>
-
-            <!-- Produkt 7 - Akcesoria -->
-            <div class="product-card group cursor-pointer" data-category="accessory">
-                <div class="aspect-[4/5] bg-brand-card rounded-2xl overflow-hidden mb-6 relative flex items-center justify-center p-8">
-                    <!-- Zdjęcie akcesoriów - taca z nożyczkami -->
-                    <img src="https://images.unsplash.com/photo-1620021665671-55ec3e9b1da0?q=80&w=800&auto=format&fit=crop" alt="Zestaw akcesoriów" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000 opacity-80 group-hover:opacity-100 rounded-lg">
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-500"></div>
-                </div>
-                <div class="text-center px-4">
-                    <h3 class="font-serif text-2xl lg:text-3xl mb-2 group-hover:text-amber-500 transition-colors">Zestaw 3 akcesoriów</h3>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-brand-muted mb-4 h-6">Trymer / Gasidło / Taca</p>
-                    <p class="text-sm font-light"><span class="line-through text-brand-muted mr-2">249,00 zł</span>199,00 zł</p>
+                <div class="w-full md:w-1/2 space-y-8 text-right">
+                    <h3 class="text-5xl font-light text-black uppercase">Prenzl. Berg</h3>
+                    <p class="text-lg text-black/60 leading-relaxed">Poranna mgła i nuty jaśminu. Spokój przed burzą.</p>
+                    <button class="bg-black text-white px-12 py-5 text-[11px] uppercase tracking-widest hover:bg-gray-800 transition-all shadow-xl">Odkryj</button>
                 </div>
             </div>
 
         </div>
-    </main>
+    </section>
 
-    <!-- Skrypt do filtrowania (działa perfekcyjnie i płynnie) -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const buttons = document.querySelectorAll('.filter-btn');
-            const cards = document.querySelectorAll('.product-card');
+    <footer class="py-20 border-t border-black/5 text-center">
+        <div class="space-y-10">
+            <h2 class="text-[10px] tracking-ultra uppercase opacity-50 font-bold text-black">Norien Berlin</h2>
+            <div class="flex justify-center gap-10 text-[10px] uppercase tracking-widest">
+                <a href="#" class="hover:opacity-50">Kontakt</a>
+                <a href="#" class="hover:opacity-50">Regulamin</a>
+                <a href="#" class="hover:opacity-50">Prywatność</a>
+            </div>
+            <p class="text-[10px] opacity-30 uppercase tracking-widest">© 2026 Olfactory Archives</p>
+        </div>
+    </footer>
 
-            buttons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Aktywny stan przycisku
-                    buttons.forEach(b => b.classList.remove('active', 'text-brand-text', 'border-brand-text'));
-                    buttons.forEach(b => b.classList.add('text-brand-muted', 'border-transparent'));
-                    
-                    btn.classList.add('active', 'text-brand-text', 'border-brand-text');
-                    btn.classList.remove('text-brand-muted', 'border-transparent');
+    <div id="cart-drawer" class="drawer-panel">
+        </div>
 
-                    const filter = btn.getAttribute('data-filter');
+    <div id="product-drawer" class="drawer-panel">
+        </div>
 
-                    // Filtrowanie z animacją
-                    cards.forEach(card => {
-                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                            card.classList.remove('hidden-item');
-                            card.style.position = 'relative';
-                            card.style.visibility = 'visible';
-                        } else {
-                            card.classList.add('hidden-item');
-                            // setTimeout by zniknęły fizycznie po animacji opacity
-                            setTimeout(() => {
-                                if(card.classList.contains('hidden-item')) {
-                                    card.style.position = 'absolute';
-                                }
-                            }, 400);
-                        }
-                    });
-                });
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
