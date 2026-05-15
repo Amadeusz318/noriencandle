@@ -4,162 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NORIEN BERLIN | Olfactory Archives</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="style.css">
-    
     <script>
         tailwind.config = { 
             theme: { 
                 extend: { 
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { 
-                        norien: { 
-                            dark: '#0a0a0a', 
-                            canvas: '#EBE9E4',
-                            white: '#fdfcf9'
-                        } 
-                    },
-                    letterSpacing: { 'ultra': '0.8em' }
+                    colors: { norien: { gold: '#b88b4a', dark: '#0f0f0f', canvas: '#EBE9E4' } },
+                    letterSpacing: { 'ultra': '0.8em', 'micro': '0.2em' }
                 } 
             } 
         }
     </script>
 </head>
-<body class="bg-norien-canvas text-norien-dark antialiased">
+<body class="antialiased">
 
     <div id="preloader">
-        <div id="loader-perc" class="text-4xl md:text-5xl font-thin tracking-widest text-norien-dark">0%</div>
+        <div id="loader-perc" class="text-4xl font-thin tracking-widest text-black">0%</div>
     </div>
 
     <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
 
     <nav id="main-nav" class="nav-top px-6 md:px-10 py-5 flex justify-between items-center">
-        <a href="index.html" id="nav-logo" class="flex flex-col items-center justify-center pt-1 transition-colors duration-500 text-white">
-            <span class="logo-main">NORIEN</span>
-            <span class="logo-sub">BERLIN</span>
+        <a href="index.html" class="flex flex-col items-center justify-center pt-1 magnetic text-white">
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.3rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: currentColor;">NORIEN</span>
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 10px; letter-spacing: 0.23em; margin-top: 0.5rem; margin-right: -0.23em; color: currentColor; opacity: 0.7;">BERLIN</span>
         </a>
-        
-        <div class="hidden lg:flex gap-10 text-[11px] tracking-widest uppercase font-light">
-            <a href="sklep.html" class="hover:opacity-50 transition-opacity">Sklep</a>
-            <a href="o-nas.html" class="hover:opacity-50 transition-opacity">O nas</a>
-            <a href="kontakt.html" class="hover:opacity-50 transition-opacity">Kontakt</a>
+        <div class="hidden lg:flex gap-10 text-[11px] tracking-widest uppercase font-light ml-8">
+            <div class="magnetic"><a href="sklep.html" class="hover:text-norien-gold transition-colors duration-300">Sklep</a></div>
+            <div class="magnetic"><a href="o-nas.html" class="hover:text-norien-gold transition-colors duration-300">O nas</a></div>
+            <div class="magnetic"><a href="kontakt.html" class="hover:text-norien-gold transition-colors duration-300">Kontakt</a></div>
         </div>
-
         <div class="flex items-center gap-6 md:gap-10">
             <div class="hidden md:flex gap-4 text-[10px] tracking-widest uppercase">
-                <button onclick="changeLang('pl')" class="lang-btn active">PL</button>
-                <button onclick="changeLang('en')" class="lang-btn">EN</button>
+                <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
+                <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
             </div>
-            <div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b border-current pb-1 uppercase cursor-pointer" onclick="openCart()">
-                KOSZYK (0)
-            </div>
+            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b pb-1 uppercase hover:text-norien-gold transition-colors duration-300 cursor-pointer" onclick="openCart()">KOSZYK (0)</div></div>
         </div>
     </nav>
 
-    <section id="hero" class="observe-section h-screen w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden bg-black text-white">
+    <section id="hero" class="observe-section h-screen min-h-[100dvh] w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden bg-black text-white">
         <div class="absolute inset-0 w-full h-full z-0">
-            <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-60">
-                <source src="assets/images/7191254-hd_1920_1080_30fps.mp4" type="video/mp4">
-            </video>
+            <img src="assets/images/hero-leipzig.png" alt="Norien Berlin" class="w-full h-full object-cover opacity-80 scale-100">
         </div>
-        <div class="absolute inset-0 z-0 bg-gradient-to-b from-black/20 via-transparent to-black/60"></div>
+        
+        <div class="absolute inset-0 z-0 bg-gradient-to-b from-black/30 via-transparent to-black/80"></div>
 
-        <div class="relative z-10">
-            <p class="text-[10px] tracking-ultra uppercase mb-8 opacity-70 text-reveal delay-1">Olfactory Archives</p>
+        <div class="relative z-10 pt-20">
+            <p class="text-[10px] md:text-[11px] tracking-ultra uppercase mb-8 opacity-70 text-reveal delay-1">Olfactory Archives</p>
             <h1 class="text-5xl md:text-7xl lg:text-8xl font-thin tracking-tighter mb-10 leading-tight">
                 <span class="block text-reveal delay-1">Prawdziwy Berlin.</span>
-                <span class="block text-reveal delay-2 italic">Zamknięty w szkle.</span>
+                <span class="block text-reveal delay-2 italic text-[#b88b4a]">Zamknięty w szkle.</span>
             </h1>
-            <p class="max-w-xl mx-auto text-base md:text-lg font-light opacity-80 text-reveal delay-3">Surowe rzemiosło z naszej pracowni na Mitte.</p>
+            <p class="max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed opacity-80 text-reveal delay-3">Tworzymy zapachy, które oddają charakter berlińskich dzielnic.</p>
         </div>
-        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce text-reveal delay-4">
-            <span class="text-[10px] tracking-widest uppercase opacity-40 italic">Przewiń</span>
+        
+        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4 z-10 text-white">
+            <a href="#map-explore" class="text-[10px] tracking-widest uppercase animate-bounce italic opacity-60 hover:text-norien-gold transition-colors">Przewiń by odkryć</a>
         </div>
     </section>
 
-    <section id="map-explore" class="observe-section min-h-screen py-32 bg-black text-white">
-        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-20 items-center">
-            <div class="lg:col-span-8 flex justify-center py-10">
-                <svg id="map-svg" viewBox="0 0 1000 850" class="w-full max-h-[75vh] overflow-visible scale-110">
+    <section id="map-explore" class="observe-section min-h-screen w-full flex flex-col justify-center bg-transparent py-32 relative overflow-hidden">
+        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-16 items-center">
+            <div class="lg:col-span-8 flex justify-center">
+                <svg id="map-svg" viewBox="0 0 1000 850" class="w-full max-h-[70vh] overflow-visible transform scale-110 md:scale-100">
                     </svg>
             </div>
-            <div class="lg:col-span-4 space-y-10 text-center lg:text-left text-reveal">
-                <h2 class="text-[10px] tracking-ultra uppercase opacity-40 font-bold">The Urban Guide</h2>
-                <h3 class="text-4xl lg:text-6xl font-extralight uppercase leading-tight">Dzielnica. <br> Zapach. <br> Archiwum.</h3>
-                <p class="text-gray-400 font-light text-lg">Kliknij na mapie, aby odkryć zapachowy profil każdej części miasta.</p>
+            <div class="lg:col-span-4 space-y-8 text-reveal">
+                <h2 class="text-[10px] tracking-ultra uppercase opacity-40 font-bold text-black">The Urban Guide</h2>
+                <h3 class="text-4xl lg:text-5xl font-extralight leading-tight uppercase text-black">Dzielnica. <br> Zapach. <br> Archiwum.</h3>
             </div>
         </div>
     </section>
-
-    <section class="py-40 bg-norien-dark text-white text-center">
-        <div class="max-w-3xl mx-auto px-6 text-reveal">
-            <h2 class="text-5xl md:text-7xl font-thin mb-12">Świadomy wybór.</h2>
-            <p class="text-lg md:text-xl font-light leading-relaxed opacity-70">Zrezygnowaliśmy z parafiny na rzecz wegańskiej mieszanki rzepaku i kokosu. Czyste spalanie, surowa forma.</p>
-        </div>
-    </section>
-
-    <section id="ritual" class="relative py-40 overflow-hidden bg-norien-canvas">
-        <div class="absolute inset-0 frosted-layer z-0"></div> <div class="container mx-auto px-6 flex flex-col md:flex-row gap-20 items-center relative z-10">
-            <div class="w-full md:w-1/2 aspect-[4/5] bg-white/20 backdrop-blur-xl border border-white/40 rounded-3xl overflow-hidden shadow-2xl text-reveal">
-                <div class="w-full h-full flex items-center justify-center opacity-30 uppercase text-[10px] tracking-widest">Photo Placeholder</div>
-            </div>
-            <div class="w-full md:w-1/2 space-y-8 text-reveal delay-1">
-                <h2 class="text-[10px] tracking-ultra uppercase font-bold text-black">Doświadczenie</h2>
-                <h3 class="text-4xl lg:text-5xl font-extralight text-black leading-tight">Szacunek do detalu.</h3>
-                <p class="text-black/70 text-lg leading-loose">Każda świeca jest zalewana ręcznie. Od knotów drewnianych po ręcznie klejone etykiety – nie idziemy na skróty.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-40 bg-norien-canvas">
-        <div class="container mx-auto px-6 max-w-6xl space-y-40">
-            
-            <div class="flex flex-col md:flex-row items-center gap-20 text-reveal">
-                <div class="w-full md:w-1/2 aspect-[4/5] bg-black rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer" onclick="openProductDrawer('mitte')">
-                    <img src="assets/images/mitteprodukt.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000">
-                </div>
-                <div class="w-full md:w-1/2 space-y-8">
-                    <h3 class="text-5xl font-light text-black uppercase">Mitte</h3>
-                    <p class="text-lg text-black/60 leading-relaxed">Chłód galerii sztuki i stare drewno. Surowe serce Berlina.</p>
-                    <button class="bg-black text-white px-12 py-5 text-[11px] uppercase tracking-widest hover:bg-gray-800 transition-all shadow-xl">Odkryj</button>
-                </div>
-            </div>
-
-            <div class="flex flex-col md:flex-row-reverse items-center gap-20 text-reveal">
-                <div class="w-full md:w-1/2 aspect-[4/5] bg-black rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer" onclick="openProductDrawer('prenzl')">
-                    <img src="assets/images/prenzlauerbergprodukt.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000">
-                </div>
-                <div class="w-full md:w-1/2 space-y-8 text-right">
-                    <h3 class="text-5xl font-light text-black uppercase">Prenzl. Berg</h3>
-                    <p class="text-lg text-black/60 leading-relaxed">Poranna mgła i nuty jaśminu. Spokój przed burzą.</p>
-                    <button class="bg-black text-white px-12 py-5 text-[11px] uppercase tracking-widest hover:bg-gray-800 transition-all shadow-xl">Odkryj</button>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <footer class="py-20 border-t border-black/5 text-center">
-        <div class="space-y-10">
-            <h2 class="text-[10px] tracking-ultra uppercase opacity-50 font-bold text-black">Norien Berlin</h2>
-            <div class="flex justify-center gap-10 text-[10px] uppercase tracking-widest">
-                <a href="#" class="hover:opacity-50">Kontakt</a>
-                <a href="#" class="hover:opacity-50">Regulamin</a>
-                <a href="#" class="hover:opacity-50">Prywatność</a>
-            </div>
-            <p class="text-[10px] opacity-30 uppercase tracking-widest">© 2026 Olfactory Archives</p>
-        </div>
-    </footer>
-
-    <div id="cart-drawer" class="drawer-panel">
-        </div>
-
-    <div id="product-drawer" class="drawer-panel">
-        </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
