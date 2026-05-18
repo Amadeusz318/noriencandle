@@ -4,78 +4,332 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NORIEN BERLIN | Olfactory Archives</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    
+   <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&family=Montserrat:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
     <script>
-        tailwind.config = { 
-            theme: { 
-                extend: { 
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { norien: { gold: '#b88b4a', dark: '#0f0f0f', canvas: '#EBE9E4' } },
-                    letterSpacing: { 'ultra': '0.8em', 'micro': '0.2em' }
-                } 
-            } 
-        }
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], montserrat: ['Montserrat', 'sans-serif'] }, colors: { norien: { gold: '#b88b4a', dark: '#0f0f0f', canvas: '#F6F6F5' } }, letterSpacing: { 'ultra': '0.8em', 'micro': '0.2em' } } } }
     </script>
+
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        html { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .text-reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .is-revealed .text-reveal { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
+        
+        nav { position: fixed; width: 100%; top: 0; left: 0; z-index: 9000; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease; opacity: 0; animation: fadeInNav 2s ease forwards 0.5s; }
+        nav.nav-top { background-color: transparent; border-bottom: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; }
+        nav.nav-scrolled-up { background-color: rgba(246, 246, 245, 0.98); border-bottom: 1px solid rgba(15, 15, 15, 0.05); color: #0f0f0f; transform: translateY(0); backdrop-filter: blur(12px); }
+        nav.nav-scrolled-down { transform: translateY(-100%); background-color: transparent; border-bottom: 1px solid transparent; }
+        @keyframes fadeInNav { to { opacity: 1; } }
+
+        .drawer-panel { position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; background-color: #F6F6F5; box-shadow: -15px 0 50px rgba(0,0,0,0.08); z-index: 10000; transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; color: #0f0f0f; }
+        .drawer-panel.open { transform: translateX(0); }
+        .drawer-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: currentColor; opacity: 0.4; transition: opacity 0.3s; z-index: 10; }
+        .drawer-close:hover { opacity: 1; }
+        .drawer-inner { overflow-y: auto; flex-grow: 1; padding: 5rem 3rem 3rem 3rem; display: flex; flex-direction: column; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .drawer-inner.loaded { opacity: 1; transform: translateY(0); }
+        
+        #checkout-overlay { position: fixed; inset: 0; background-color: #F6F6F5; z-index: 10500; transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); display: flex; color: #0f0f0f; }
+        #checkout-overlay.open { transform: translateY(0); }
+        
+        .lang-btn { transition: all 0.3s; opacity: 0.3; padding-bottom: 2px; }
+        .lang-btn.active, .lang-btn:hover { opacity: 1; font-weight: 600; border-bottom: 1px solid currentColor; }
+        #cart-toast { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: 10500 !important; }
+        #cart-toast.show { transform: translateX(0); }
+        .qty-btn { display: inline-block; padding: 0 8px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.2s ease; user-select: none; }
+        .qty-btn:hover { transform: scale(1.6); font-weight: 600; }
+    </style>
 </head>
 <body class="antialiased">
 
     <div id="preloader">
-        <div id="loader-perc" class="text-4xl font-thin tracking-widest text-black">0%</div>
+        <div id="loader-text" class="text-[10px] tracking-[0.4em] uppercase opacity-40 mb-4 font-light">Loading Archives</div>
+        <div id="loader-perc" class="text-4xl md:text-5xl font-thin tracking-widest">0%</div>
+    </div>
+    
+    <div class="custom-cursor" id="custom-cursor"></div>
+    
+    <div id="cart-toast" class="fixed top-24 right-0 transform translate-x-full bg-[#0f0f0f] text-white px-8 py-5 shadow-2xl flex items-center gap-4 rounded-l-md">
+        <span id="toast-text" class="text-[10px] md:text-xs tracking-[0.2em] uppercase font-light">Dodano do koszyka</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
     </div>
 
-    <div class="custom-cursor hidden md:block" id="custom-cursor"></div>
-
     <nav id="main-nav" class="nav-top px-6 md:px-10 py-5 flex justify-between items-center">
-        <a href="index.html" class="flex flex-col items-center justify-center pt-1 magnetic text-white">
+        <a href="index.html" class="flex flex-col items-center justify-center pt-1 magnetic" id="nav-logo">
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 1.3rem; letter-spacing: 0.435em; line-height: 1; margin-right: -0.435em; color: currentColor;">NORIEN</span>
             <span style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 10px; letter-spacing: 0.23em; margin-top: 0.5rem; margin-right: -0.23em; color: currentColor; opacity: 0.7;">BERLIN</span>
         </a>
+        
         <div class="hidden lg:flex gap-10 text-[11px] tracking-widest uppercase font-light ml-8">
-            <div class="magnetic"><a href="sklep.html" class="hover:text-norien-gold transition-colors duration-300">Sklep</a></div>
-            <div class="magnetic"><a href="o-nas.html" class="hover:text-norien-gold transition-colors duration-300">O nas</a></div>
-            <div class="magnetic"><a href="kontakt.html" class="hover:text-norien-gold transition-colors duration-300">Kontakt</a></div>
+            <div class="magnetic"><a href="sklep.html" id="nav-shop" class="hover:opacity-50 transition-opacity duration-300">Sklep</a></div>
+            <div class="magnetic"><a href="o-nas.html" id="nav-about" class="hover:opacity-50 transition-opacity duration-300">O nas</a></div>
+            <div class="magnetic"><a href="kontakt.html" id="nav-contact" class="hover:opacity-50 transition-opacity duration-300">Kontakt</a></div>
         </div>
+        
         <div class="flex items-center gap-6 md:gap-10">
             <div class="hidden md:flex gap-4 text-[10px] tracking-widest uppercase">
-                <button onclick="changeLang('pl')" class="lang-btn active lang-pl">PL</button>
-                <button onclick="changeLang('en')" class="lang-btn lang-en">EN</button>
+                <div class="magnetic"><button onclick="changeLang('pl')" class="lang-btn lang-pl">PL</button></div>
+                <div class="magnetic"><button onclick="changeLang('en')" class="lang-btn lang-en">EN</button></div>
+                <div class="magnetic"><button onclick="changeLang('de')" class="lang-btn active lang-de">DE</button></div>
+                <div class="magnetic"><button onclick="changeLang('fr')" class="lang-btn lang-fr">FR</button></div>
+                <div class="magnetic"><button onclick="changeLang('es')" class="lang-btn lang-es">ES</button></div>
             </div>
-            <div class="magnetic"><div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b pb-1 uppercase hover:text-norien-gold transition-colors duration-300 cursor-pointer" onclick="openCart()">KOSZYK (0)</div></div>
+            <div class="magnetic">
+                <div id="nav-cart" class="text-[10px] md:text-[11px] tracking-widest border-b pb-1 uppercase whitespace-nowrap hover:opacity-50 transition cursor-pointer" onclick="openCart(event)">KOSZYK (0)</div>
+            </div>
         </div>
     </nav>
 
-    <section id="hero" class="observe-section h-screen min-h-[100dvh] w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden bg-black text-white">
-        <div class="absolute inset-0 w-full h-full z-0">
-            <img src="assets/images/hero-leipzig.png" alt="Norien Berlin" class="w-full h-full object-cover opacity-80 scale-100">
+    <section id="hero" class="observe-section min-h-[100dvh] w-full flex flex-col justify-center items-center text-center px-6 relative overflow-hidden bg-black text-white">
+        <div class="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none bg-[#0a0a0a]">
+            <img src="assets/images/headerphoto.jpg" alt="Norien Berlin" class="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover -translate-x-1/2 -translate-y-1/2 opacity-80 pointer-events-none">
         </div>
         
-        <div class="absolute inset-0 z-0 bg-gradient-to-b from-black/30 via-transparent to-black/80"></div>
-
-        <div class="relative z-10 pt-20">
-            <p class="text-[10px] md:text-[11px] tracking-ultra uppercase mb-8 opacity-70 text-reveal delay-1">Olfactory Archives</p>
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-thin tracking-tighter mb-10 leading-tight">
-                <span class="block text-reveal delay-1">Prawdziwy Berlin.</span>
-                <span class="block text-reveal delay-2 italic text-[#b88b4a]">Zamknięty w szkle.</span>
+        <div class="relative z-10 flex flex-col items-center pointer-events-none">
+            <p id="hero-sub" class="text-xs md:text-sm tracking-[0.4em] uppercase mb-6 opacity-100 text-reveal delay-1 font-medium text-white">Olfactory Archives</p>
+           <h1 class="text-6xl md:text-7xl lg:text-[7.5rem] font-montserrat font-thin tracking-normal mb-8 leading-[1.1] text-white">
+                <span id="hero-t1" class="block text-reveal delay-1">Prawdziwy Berlin.</span>
+                <span id="hero-t2" class="block text-reveal delay-2 mt-2 opacity-90">Zamknięty w szkle.</span>
             </h1>
-            <p class="max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed opacity-80 text-reveal delay-3">Tworzymy zapachy, które oddają charakter berlińskich dzielnic.</p>
-        </div>
-        
-        <div class="magnetic absolute bottom-12 left-1/2 -translate-x-1/2 text-reveal delay-4 z-10 text-white">
-            <a href="#map-explore" class="text-[10px] tracking-widest uppercase animate-bounce italic opacity-60 hover:text-norien-gold transition-colors">Przewiń by odkryć</a>
+            <p id="hero-desc" class="max-w-2xl mx-auto text-lg md:text-xl font-light leading-loose opacity-90 text-reveal delay-3 text-white">
+                Tworzymy zapachy, które oddają charakter berlińskich dzielnic.
+            </p>
         </div>
     </section>
 
-    <section id="map-explore" class="observe-section min-h-screen w-full flex flex-col justify-center bg-transparent py-32 relative overflow-hidden">
-        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-16 items-center">
-            <div class="lg:col-span-8 flex justify-center">
-                <svg id="map-svg" viewBox="0 0 1000 850" class="w-full max-h-[70vh] overflow-visible transform scale-110 md:scale-100">
-                    </svg>
+    <section id="map-explore" class="observe-section min-h-[100dvh] w-full flex flex-col justify-center bg-transparent py-32 relative overflow-hidden">
+        <div class="container mx-auto px-6 grid lg:grid-cols-12 gap-16 lg:gap-20 items-center relative z-10 text-center lg:text-left">
+            <div class="map-container relative md:col-span-7 lg:col-span-8 flex justify-center">
+                <svg id="map-svg" viewBox="0 60 1000 820" class="w-full max-h-[65vh] transform scale-[1.15] sm:scale-105 md:scale-100 origin-center">
+                    <g class="map-layer delay-map-1">
+                        <path class="district-bg" d="M 250,120 L 450,100 L 500,200 L 450,320 L 320,320 L 250,220 Z"/> <text x="360" y="210" class="label-bg">Reinickendorf</text>
+                        <path class="district-bg" d="M 450,100 L 620,130 L 680,250 L 640,350 L 450,320 L 500,200 Z"/> <text x="560" y="220" class="label-bg">Pankow</text>
+                        <path class="district-bg" d="M 50,350 L 180,280 L 260,520 L 120,600 L 40,480 Z"/> <text x="130" y="450" class="label-bg">Spandau</text>
+                        <path class="district-bg" d="M 260,520 L 340,460 L 280,390 L 320,320 L 250,220 L 180,280 Z"/> <text x="240" y="350" class="label-bg"><tspan x="240" dy="0">CHARL.-</tspan><tspan x="240" dy="14">WILM.</tspan></text>
+                        <path class="district-bg" d="M 120,600 L 260,520 L 320,750 L 280,850 L 100,800 Z"/> <text x="190" y="710" class="label-bg"><tspan x="190" dy="0">STEGLITZ-</tspan><tspan x="190" dy="14">ZEHL.</tspan></text>
+                        <path class="district-bg" d="M 340,460 L 430,480 L 460,550 L 430,650 L 450,800 L 320,750 L 260,520 Z"/> <text x="380" y="610" class="label-bg"><tspan x="380" dy="0">TEMP.-</tspan><tspan x="380" dy="14">SCHÖN.</tspan></text>
+                        <path class="district-bg" d="M 640,350 L 750,320 L 820,450 L 650,550 L 600,450 Z"/> <text x="710" y="410" class="label-bg">Lichtenberg</text>
+                        <path class="district-bg" d="M 650,550 L 820,450 L 950,550 L 900,800 L 620,650 L 550,580 Z"/> <text x="750" y="630" class="label-bg"><tspan x="750" dy="0">TREPTOW-</tspan><tspan x="750" dy="14">KÖP.</tspan></text>
+                    </g>
+                    <g class="map-layer delay-map-2">
+                        <g class="active-group" onclick="openProductDrawer('mitte')">
+                            <path class="active-path path-mitte" d="M 320,320 L 450,320 L 480,420 L 430,480 L 340,460 L 280,390 Z" />
+                            <text x="390" y="405" class="label-active" fill="#b35a2d">MITTE</text>
+                        </g>
+                        <g class="active-group" onclick="openProductDrawer('prenzl')">
+                            <path class="active-path path-prenzl" d="M 450,320 L 640,350 L 600,450 L 480,420 Z" />
+                            <text x="545" y="385" class="label-active" fill="#8a7b8e"><tspan x="545" dy="0">PRENZL.</tspan><tspan x="545" dy="20">BERG</tspan></text>
+                        </g>
+                        <g class="active-group" onclick="openProductDrawer('kreuz')">
+                            <path class="active-path path-kreuz" d="M 430,480 L 480,420 L 600,450 L 650,550 L 550,580 L 460,550 Z" />
+                            <text x="530" y="505" class="label-active" fill="#005f63">KREUZBERG</text>
+                        </g>
+                        <g class="active-group" onclick="openProductDrawer('neukolln')">
+                            <path class="active-path path-neukolln" d="M 460,550 L 550,580 L 620,650 L 580,850 L 450,800 L 430,650 Z" />
+                            <text x="520" y="690" class="label-active" fill="#631b2b">NEUKÖLLN</text>
+                        </g>
+                    </g>
+                </svg>
             </div>
-            <div class="lg:col-span-4 space-y-8 text-reveal">
-                <h2 class="text-[10px] tracking-ultra uppercase opacity-40 font-bold text-black">The Urban Guide</h2>
-                <h3 class="text-4xl lg:text-5xl font-extralight leading-tight uppercase text-black">Dzielnica. <br> Zapach. <br> Archiwum.</h3>
+            <div class="space-y-10 md:col-span-5 lg:col-span-4 lg:pl-10 map-layer delay-map-3 text-reveal flex flex-col justify-center">
+                <h2 id="guide-t1" class="text-[10px] md:text-[11px] tracking-ultra uppercase text-gray-500 font-medium">The Urban Guide</h2>
+                <h3 id="guide-t2" class="text-5xl lg:text-7xl font-montserrat font-thin uppercase tracking-tight leading-none text-[#1a1a1a]">Dzielnica.<br>Zapach.<br>Archiwum.</h3>
+                <p id="guide-desc" class="text-lg text-gray-500 font-light leading-loose max-w-md mt-4">Każda dzielnica Berlina to inna energia. Wybierz obszar na mapie.</p>
             </div>
         </div>
     </section>
+
+    <section id="kolekcja" class="w-full bg-[#F6F6F5] py-24 px-6 observe-section relative z-20">
+        <div class="text-center max-w-2xl mx-auto mb-20 text-reveal delay-1">
+            <p id="col-sub" class="text-[10px] tracking-[0.4em] uppercase mb-4 font-medium opacity-50">Kolekcja</p>
+            <h2 id="col-title" class="text-4xl md:text-5xl font-montserrat font-thin uppercase tracking-normal">Odkryj Archiwa</h2>
+        </div>
+        <div class="max-w-5xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-10 lg:gap-16 mb-28 text-reveal delay-1 px-4">
+                <a href="mitte.html" class="block w-full md:w-5/12 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer">
+                    <img src="assets/images/mitteprodukt.jpg" alt="Mitte" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000">
+                </a>
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <p class="text-[10px] opacity-40 font-medium uppercase tracking-[0.2em] mb-4">Archive No. 01</p>
+                    <h3 class="text-4xl lg:text-6xl font-montserrat font-thin uppercase tracking-normal mb-6">Mitte</h3>
+                    <p id="m-desc" class="opacity-60 font-light leading-relaxed mb-8 max-w-sm mx-auto md:mx-0 text-[14px]">Chłód galerii sztuki i stare drewno. Surowe, berlińskie Mitte zamknięte w szkle. Otwórz zapachową mapę centrum miasta.</p>
+                    <a href="mitte.html" class="btn-det inline-block bg-[#0a0a0a] text-white text-[10px] tracking-[0.15em] uppercase px-10 py-4 hover:bg-[#b88b4a] transition-colors duration-300 shadow-xl luxury-btn">Zobacz detale</a>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row-reverse items-center justify-between gap-10 lg:gap-16 mb-28 text-reveal delay-1 px-4">
+                <a href="prenzlauer-berg.html" class="block w-full md:w-5/12 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer">
+                    <img src="assets/images/prenzlauerbergprodukt.jpg" alt="Prenzlauer Berg" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000">
+                </a>
+                <div class="w-full md:w-1/2 text-center md:text-right">
+                    <p class="text-[10px] opacity-40 font-medium uppercase tracking-[0.2em] mb-4">Archive No. 02</p>
+                    <h3 class="text-4xl lg:text-6xl font-montserrat font-thin uppercase tracking-normal mb-6">Prenzl. Berg</h3>
+                    <p id="p-desc" class="opacity-60 font-light leading-relaxed mb-8 max-w-sm mx-auto md:mx-0 md:ml-auto text-[14px]">Poranna mgła w Mauerpark. Delikatne nuty cytrusów i jaśminu przeplatają się z aromatem kawy z lokalnej palarni.</p>
+                    <a href="prenzlauer-berg.html" class="btn-det inline-block bg-[#0a0a0a] text-white text-[10px] tracking-[0.15em] uppercase px-10 py-4 hover:bg-[#b88b4a] transition-colors duration-300 shadow-xl luxury-btn">Zobacz detale</a>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between gap-10 lg:gap-16 mb-28 text-reveal delay-1 px-4">
+                <a href="kreuzberg.html" class="block w-full md:w-5/12 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer">
+                    <img src="assets/images/kreuzbergprodukt.jpg" alt="Kreuzberg" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000">
+                </a>
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <p class="text-[10px] opacity-40 font-medium uppercase tracking-[0.2em] mb-4">Archive No. 36</p>
+                    <h3 class="text-4xl lg:text-6xl font-montserrat font-thin uppercase tracking-normal mb-6">Kreuzberg</h3>
+                    <p id="k-desc" class="opacity-60 font-light leading-relaxed mb-8 max-w-sm mx-auto md:mx-0 text-[14px]">Energia nocnych kanałów. Zapach buntu, intensywnej paczuli, ciemnych jagód i wetiwerii.</p>
+                    <a href="kreuzberg.html" class="btn-det inline-block bg-[#0a0a0a] text-white text-[10px] tracking-[0.15em] uppercase px-10 py-4 hover:bg-[#b88b4a] transition-colors duration-300 shadow-xl luxury-btn">Zobacz detale</a>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row-reverse items-center justify-between gap-10 lg:gap-16 text-reveal delay-1 px-4">
+                <a href="neukoelln.html" class="block w-full md:w-5/12 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer">
+                    <img src="assets/images/neukollnprodukt.jpg" alt="Neukölln" class="w-full h-full object-cover group-hover:scale-105 transition duration-1000">
+                </a>
+                <div class="w-full md:w-1/2 text-center md:text-right">
+                    <p class="text-[10px] opacity-40 font-medium uppercase tracking-[0.2em] mb-4">Archive No. 03</p>
+                    <h3 class="text-4xl lg:text-6xl font-montserrat font-thin uppercase tracking-normal mb-6">Neukölln</h3>
+                    <p id="n-desc" class="opacity-60 font-light leading-relaxed mb-8 max-w-sm mx-auto md:mx-0 md:ml-auto text-[14px]">Wielokulturowy puls i głośne kawiarnie. Ciepła mieszanka głębokich przypraw, kardamonu i płynnego bursztynu.</p>
+                    <a href="neukoelln.html" class="btn-det inline-block bg-[#0a0a0a] text-white text-[10px] tracking-[0.15em] uppercase px-10 py-4 hover:bg-[#b88b4a] transition-colors duration-300 shadow-xl luxury-btn">Zobacz detale</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="instagram-feed" class="observe-section w-full px-6 py-20 lg:py-32 bg-[#F6F6F5]">
+        <div class="container mx-auto max-w-6xl">
+            <div class="text-center max-w-3xl mx-auto mb-16 text-reveal delay-1">
+                <h2 id="ig-sub" class="text-[10px] tracking-ultra uppercase opacity-50 font-bold mb-6">Społeczność</h2>
+                <a href="https://instagram.com/twoj_profil" target="_blank" class="text-4xl lg:text-5xl font-montserrat font-thin uppercase tracking-normal hover:text-[#b88b4a] transition-colors duration-300">@norienberlin</a>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-reveal delay-2">
+                <a href="https://instagram.com/twoj_profil" target="_blank" class="block aspect-square overflow-hidden group cursor-pointer bg-black">
+                    <img src="assets/images/mitteprodukt.jpg" alt="Instagram post 1" class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700">
+                </a>
+                <a href="https://instagram.com/twoj_profil" target="_blank" class="block aspect-square overflow-hidden group cursor-pointer bg-black">
+                    <img src="assets/images/prenzlauerbergprodukt.jpg" alt="Instagram post 2" class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700">
+                </a>
+                <a href="https://instagram.com/twoj_profil" target="_blank" class="block aspect-square overflow-hidden group cursor-pointer bg-black">
+                    <img src="assets/images/kreuzbergprodukt.jpg" alt="Instagram post 3" class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700">
+                </a>
+                <a href="https://instagram.com/twoj_profil" target="_blank" class="block aspect-square overflow-hidden group cursor-pointer bg-black">
+                    <img src="assets/images/neukollnprodukt.jpg" alt="Instagram post 4" class="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700">
+                </a>
+            </div>
+            <div class="text-center mt-16 text-reveal delay-3">
+                <a id="ig-btn" href="https://instagram.com/twoj_profil" target="_blank" class="inline-block bg-transparent border border-[#0a0a0a] text-[#0a0a0a] text-[10px] tracking-[0.15em] uppercase px-10 py-4 hover:bg-[#0a0a0a] hover:text-white transition-colors duration-300">Śledź Archiwa</a>
+            </div>
+        </div>
+    </section>
+    
+    <section id="manifesto-footer" class="observe-section w-full bg-[#111111] text-white pt-20 pb-16 relative">
+        <div class="max-w-5xl mx-auto space-y-12 text-center px-6 mb-32 text-reveal delay-1">
+            <h2 id="man-sub" class="text-[10px] md:text-[11px] tracking-ultra uppercase opacity-40 font-bold">Nasze Podejście</h2>
+            <p id="man-desc" class="text-3xl md:text-4xl lg:text-5xl font-montserrat font-thin leading-relaxed">Wierzymy, że zapach to najlepsze zaproszenie do odkrywania. Projektujemy z szacunkiem do rzemiosła, oddając Ci produkt, który naturalnie przyciąga uwagę.</p>
+        </div>
+        <div class="max-w-xl mx-auto text-center px-6 mb-20 text-reveal delay-2">
+            <h3 id="nl-t" class="text-2xl font-montserrat font-thin uppercase tracking-normal mb-4">Dołącz do naszych Archiwów</h3>
+            <p id="nl-desc" class="text-sm font-light opacity-60 mb-8">Zapisz się, aby otrzymywać informacje o nowych zapachach i sekretach Berlina.</p>
+            <form action="#" method="POST" class="flex flex-col md:flex-row gap-4">
+                <input id="nl-input" type="email" name="email" class="w-full bg-transparent border-b border-white/30 pb-3 outline-none text-sm placeholder-white/30" placeholder="Twój adres e-mail" required>
+                <button id="nl-btn" type="submit" class="bg-white text-black text-[10px] uppercase tracking-widest px-8 py-3 hover:bg-[#b88b4a] transition">Zapisz się</button>
+            </form>
+        </div>
+        <footer class="py-16 px-6 md:px-12 border-t border-white/10 text-[10px] tracking-widest uppercase opacity-60 flex flex-col items-center gap-12 w-full mt-10">
+            <div class="grid grid-cols-2 md:flex md:flex-row flex-wrap justify-center gap-8 md:gap-12 lg:gap-16 text-center w-full max-w-6xl">
+                <a href="sklep.html" id="ft-shop" class="hover:opacity-100 transition">Sklep</a>
+                <a href="o-nas.html" id="ft-about" class="hover:opacity-100 transition">O nas</a>
+                <a href="kontakt.html" id="ft-contact" class="hover:opacity-100 transition">Kontakt</a>
+                <a href="faq.html" id="ft-faq" class="hover:opacity-100 transition">FAQ</a>
+                <a href="wysylka.html" id="ft-ship" class="hover:opacity-100 transition">Wysyłka i Zwroty</a>
+                <a href="regulamin.html" id="ft-reg" class="hover:opacity-100 transition">Regulamin</a>
+                <a href="polityka-prywatnosci.html" id="ft-priv" class="hover:opacity-100 transition">Polityka Prywatności</a>
+                <a href="impressum.html" id="ft-imp" class="hover:opacity-100 transition">Impressum</a>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between w-full max-w-6xl mt-8 items-center gap-6 text-center md:text-left opacity-50">
+                <div>&copy; 2026 Norien Berlin — Olfactory Archives</div>
+                <div>Berlin, GER</div>
+            </div>
+        </footer>
+    </section>
+
+    <div id="product-drawer" class="drawer-panel bg-[#F6F6F5]">
+        <button class="drawer-close" onclick="closeDrawer()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div id="drawer-inner" class="drawer-inner">
+            <a id="drw-img-link" href="#" class="block aspect-square bg-black/5 mb-10 overflow-hidden rounded-2xl cursor-pointer hover:opacity-80 transition-opacity">
+                <img id="drw-img" src="" class="w-full h-full object-cover">
+            </a>
+            <p id="drw-sub" class="text-[10px] tracking-[0.15em] uppercase font-medium opacity-50 mb-3"></p>
+            <h3 id="drw-title" class="text-4xl font-montserrat font-thin tracking-normal mb-6 uppercase"></h3>
+            <p id="drw-desc" class="text-[15px] font-light leading-loose opacity-70 mb-10"></p>
+            <div class="mt-auto pt-8 border-t border-black/10 flex justify-between items-center">
+                <span class="text-2xl font-light">€ 55.00</span>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center text-sm border-b border-black/20 pb-0.5">
+                        <button class="qty-btn outline-none" onclick="changeQty('drw-qty', -1)">-</button>
+                        <span id="drw-qty" class="w-8 text-center">1</span>
+                        <button class="qty-btn outline-none" onclick="changeQty('drw-qty', 1)">+</button>
+                    </div>
+                    <button id="drw-add" class="bg-[#0f0f0f] text-white text-[10px] px-8 py-4 uppercase tracking-[0.15em] hover:bg-[#b88b4a] transition-colors duration-300" onclick="handleAddToCart()">Dodaj</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-drawer" class="drawer-panel bg-[#F6F6F5]">
+        <button class="drawer-close" onclick="closeCart()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="p-10 flex-grow flex flex-col mt-8">
+            <h3 id="cart-title" class="text-2xl font-montserrat font-thin tracking-normal mb-12 uppercase">Koszyk</h3>
+            <div id="cart-items" class="flex-grow space-y-8 overflow-y-auto mb-8 pr-2"></div>
+            <div class="mt-auto pt-8 border-t border-black/10">
+                <div class="flex justify-between items-center mb-10"><span id="cart-total-label" class="text-sm tracking-widest uppercase font-semibold">Total</span><span id="cart-total" class="text-2xl font-light">€ 0.00</span></div>
+                <button id="btn-checkout" onclick="openCheckout()" class="w-full bg-[#0f0f0f] text-white text-[11px] py-6 tracking-ultra uppercase hover:bg-[#b88b4a] transition-colors duration-300">Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkout-overlay" class="bg-[#F6F6F5]">
+        <button class="absolute top-10 right-12 text-[10px] tracking-widest uppercase opacity-50 hover:opacity-100 transition flex items-center gap-3 z-50" onclick="closeCheckout()">
+            <span id="checkout-back">Wróć</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="w-full flex flex-col md:flex-row h-full relative z-10">
+            <div class="w-full md:w-5/12 bg-[#0a0a0a] text-white p-12 md:p-24 flex flex-col justify-center border-r border-white/5">
+                <h3 id="checkout-summary-title" class="text-xs font-montserrat font-medium tracking-widest uppercase opacity-40 mb-12">Order Summary</h3>
+                <div id="checkout-items" class="space-y-8 mb-12 overflow-y-auto pr-4 max-h-[40vh]"></div>
+                <div class="border-t border-white/10 pt-10 mt-auto flex justify-between items-end">
+                    <span id="checkout-due-label" class="text-[10px] md:text-[11px] tracking-widest uppercase opacity-40">Total due</span>
+                    <span id="checkout-total" class="text-5xl font-thin tracking-widest">€ 0.00</span>
+                </div>
+            </div>
+            <div class="w-full md:w-7/12 p-12 md:p-24 flex flex-col justify-center items-center text-center bg-white">
+                <div class="max-w-md w-full space-y-12">
+                    <h2 id="chk-title" class="text-4xl font-montserrat font-thin tracking-normal uppercase">Prawie gotowe.</h2>
+                    <p id="chk-desc" class="text-gray-500 font-light leading-loose">Zostaniesz przekierowany do bezpiecznego systemu Stripe.</p>
+                    <button id="btn-final-pay" onclick="openStripeCheckout()" class="w-full bg-black text-white text-[11px] py-6 tracking-[0.25em] uppercase hover:bg-gray-800 transition shadow-2xl">
+                        PRZEJDŹ DO PŁATNOŚCI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-[#F6F6F5] text-black border-t border-black/10 p-6 z-50 transform translate-y-full transition-transform duration-500">
+        <div class="container mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm font-light opacity-80">NORIEN Berlin uses cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.</p>
+            <div class="flex items-center gap-4 flex-shrink-0">
+                <a href="polityka-prywatnosci.html" class="text-xs uppercase tracking-widest opacity-60 hover:opacity-100">Learn More</a>
+                <button onclick="acceptCookies()" class="bg-[#0f0f0f] text-white text-[10px] px-8 py-3 uppercase tracking-[0.15em] hover:bg-[#b88b4a] transition">Accept</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
