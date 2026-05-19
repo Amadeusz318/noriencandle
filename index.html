@@ -26,7 +26,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Chroni przed rozjeżdżaniem na mobile */
             -webkit-font-smoothing: antialiased;
         }
 
@@ -46,43 +46,54 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem 0;
+            padding: 1.5rem 0;
             border-bottom: 1px solid var(--border);
         }
 
-        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; }
+        .logo { font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 900; letter-spacing: -1px; }
         .logo span { color: var(--muted); font-weight: 400; }
 
         .btn-outline {
-            padding: 0.8rem 1.5rem;
+            padding: 0.6rem 1.2rem;
             border: 2px solid var(--text-color);
             border-radius: 4px;
             color: var(--text-color);
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s;
+            font-size: 0.9rem;
         }
 
         .btn-outline:hover { background-color: var(--text-color); color: var(--white); }
 
         /* --- HERO --- */
-        .hero { padding: 15vh 0 10vh; }
+        .hero { padding: 10vh 0; }
         .hero h1 {
-            font-size: clamp(3rem, 7vw, 6.5rem);
+            font-size: clamp(2.5rem, 8vw, 6.5rem);
             font-weight: 900;
             line-height: 0.95;
             letter-spacing: -2px;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             max-width: 1000px;
             color: var(--black);
         }
         .hero p {
-            font-size: 1.25rem; color: var(--muted); max-width: 600px; margin-bottom: 3rem;
+            font-size: clamp(1rem, 3vw, 1.25rem); color: var(--muted); max-width: 600px; margin-bottom: 2rem;
+        }
+
+        /* --- WSPÓLNY STYL POTĘŻNYCH NAGŁÓWKÓW --- */
+        .huge-text {
+            font-size: clamp(3rem, 10vw, 7rem); 
+            font-weight: 900; 
+            line-height: 0.9;
+            letter-spacing: -2px; 
+            color: var(--black); 
+            margin-bottom: 1rem;
         }
 
         /* --- SEKCJA INSTRUKCJI (KARTEK) --- */
         .manual-section {
-            padding: 8rem 0; background-color: var(--white); border-top: 1px solid var(--border); overflow: hidden;
+            padding: 5rem 0 8rem; background-color: var(--white); border-top: 1px solid var(--border); overflow: hidden;
         }
         .papers-wrapper { position: relative; max-width: 1200px; margin: 0 auto; perspective: 1000px; }
         .paper-bg {
@@ -91,123 +102,131 @@
         }
         .manual-container {
             position: relative; z-index: 5; border: 3px solid var(--black); background: var(--white);
-            padding: 4rem; box-shadow: 15px 15px 0px rgba(0,0,0,0.05); opacity: 0; transform: translateY(100px);
+            padding: 3rem; box-shadow: 15px 15px 0px rgba(0,0,0,0.05); opacity: 0; transform: translateY(100px);
         }
+        
         .manual-header {
             display: flex; justify-content: space-between; align-items: flex-end;
-            border-bottom: 3px solid var(--black); padding-bottom: 2rem; margin-bottom: 4rem;
+            border-bottom: 3px solid var(--black); padding-bottom: 1.5rem; margin-bottom: 3rem;
         }
-        .manual-header h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; line-height: 1; }
-        .manual-header .tech-code { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; }
-        .manual-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; }
+        .manual-header .tech-code { font-family: 'Space Mono', monospace; font-size: clamp(0.9rem, 2vw, 1.2rem); font-weight: 700; }
+        .manual-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; }
         .manual-image-wrapper img { width: 100%; height: auto; display: block; border: 2px solid var(--black); }
-        .tech-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; }
-        .tech-table th, .tech-table td { border: 2px solid var(--black); padding: 1.5rem; text-align: left; }
+        .tech-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 0.9rem; }
+        .tech-table th, .tech-table td { border: 2px solid var(--black); padding: 1rem; text-align: left; }
         .tech-table th { background: #f0f0f0; font-weight: 700; text-transform: uppercase; }
         .part-id {
-            display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+            display: inline-flex; align-items: center; justify-content: center; width: 35px; height: 35px;
             background: var(--black); color: var(--white); border-radius: 50%; font-weight: 900;
-            font-size: 1.2rem; font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', sans-serif;
         }
 
         /* --- SEKCJA BLOCK REVEAL (Malowanie) --- */
-        .reveal-section { padding: 10rem 0; background-color: var(--bg-color); position: relative; }
-        .reveal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-        .text-reveal-container { position: relative; display: inline-block; overflow: hidden; }
-        .huge-text {
-            font-size: clamp(4rem, 8vw, 7rem); font-weight: 900; line-height: 0.9;
-            letter-spacing: -2px; color: var(--black); white-space: nowrap;
-        }
+        .reveal-section { padding: 8rem 0; background-color: var(--bg-color); position: relative; }
+        .reveal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+        .text-reveal-container { position: relative; display: inline-block; overflow: hidden; padding-right: 10px; }
         .color-block {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--accent-reveal); transform-origin: right; z-index: 2;
         }
         .reveal-description {
-            font-size: 1.25rem; color: var(--muted); max-width: 500px; margin-top: 2rem;
+            font-size: clamp(1rem, 2vw, 1.1rem); color: var(--muted); max-width: 500px; margin-top: 1.5rem;
             opacity: 0; transform: translateY(30px);
         }
         .paint-image {
             width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 4px; opacity: 0; transform: scale(0.9);
         }
 
-        /* --- NOWA SEKCJA 3: Wiercenie i Półka (Ciemny motyw) --- */
-        .drilling-section {
-            padding: 10rem 0; background-color: var(--text-color); color: var(--white); overflow: hidden;
-        }
-        .drilling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        /* --- SEKCJA WIERCENIE I PÓŁKA --- */
+        .drilling-section { padding: 8rem 0; background-color: var(--text-color); color: var(--white); overflow: hidden; }
+        .drilling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
         .drilling-section .huge-text { color: var(--white); }
         .drilling-section .reveal-description { color: #adb5bd; }
         
-        .wall-visual {
-            position: relative; width: 100%; height: 300px; display: flex; align-items: center;
-        }
-        /* Półka rysowana od lewej */
+        .wall-visual { position: relative; width: 100%; height: 300px; display: flex; align-items: center; }
         .shelf-line {
             position: absolute; left: 0; top: 50%; width: 100%; height: 6px;
-            background-color: var(--white); transform-origin: left; transform: scaleX(0); z-index: 1;
+            background-color: var(--white); transform-origin: left; transform: scaleX(0); z-index: 1; border-radius: 3px;
         }
-        /* Wiertarka / Ołówek animowana */
-        .drill-icon {
-            position: absolute; left: 0; top: 40%; font-size: 2.5rem; z-index: 3;
-        }
-        /* Przedmioty na półce */
-        .shelf-items {
-            position: absolute; left: 20%; bottom: 50%; display: flex; gap: 10px; z-index: 2;
-        }
-        .book {
-            width: 20px; height: 60px; background-color: var(--accent-reveal); opacity: 0; transform: translateY(20px);
-        }
-        .book:nth-child(2) { height: 80px; background-color: #fff; }
-        .book:nth-child(3) { height: 50px; background-color: #adb5bd; transform: rotate(15deg); transform-origin: bottom right;}
-
-        /* --- NOWA SEKCJA 4: Lodówka (Poziomowanie) --- */
-        .leveling-section { padding: 10rem 0; background-color: var(--white); border-bottom: 1px solid var(--border); }
-        .leveling-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
+        .drill-icon { position: absolute; left: 0; top: 38%; font-size: 2.5rem; z-index: 3; }
         
-        .fridge-visual {
-            position: relative; display: flex; justify-content: center; height: 400px;
+        /* Kontener na przedmioty – flex-end dociska je idealnie do dołu */
+        .shelf-items {
+            position: absolute; left: 10%; bottom: 50%; width: 80%; height: 150px; 
+            display: flex; align-items: flex-end; gap: 4px; z-index: 2; padding-bottom: 3px;
         }
-        .fridge-container { position: relative; }
-        /* CSSowa, minimalistyczna lodówka */
+        .book { width: 22px; background-color: var(--white); opacity: 0; transform: translateY(-50px); border-radius: 2px 2px 0 0; }
+        .book-1 { height: 70px; background-color: var(--accent-reveal); }
+        .book-2 { height: 85px; }
+        .book-3 { height: 60px; background-color: #adb5bd; }
+        .book-4 { height: 65px; }
+        .book-5 { height: 50px; background-color: var(--accent-reveal); transform-origin: bottom left; margin-left: 2px; }
+        
+        /* Wazonik z kwiatuszkiem */
+        .vase-container { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; margin-left: 30px; opacity: 0; transform: translateY(-50px); }
+        .flower { width: 12px; height: 12px; background-color: var(--accent-reveal); border-radius: 50%; margin-bottom: 2px; }
+        .stem { width: 2px; height: 10px; background-color: #adb5bd; }
+        .vase { width: 24px; height: 30px; background-color: var(--white); border-radius: 0 0 10px 10px; }
+
+        /* --- SEKCJA LODÓWKA (Poziomowanie) --- */
+        .leveling-section { padding: 8rem 0; background-color: var(--white); border-bottom: 1px solid var(--border); }
+        .leveling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+        
+        .fridge-visual { position: relative; display: flex; justify-content: center; align-items: center; height: 350px; }
+        
         .fridge-body {
-            width: 160px; height: 300px; background-color: #f1f3f5; border: 4px solid var(--black);
-            border-radius: 8px; position: relative; display: flex; flex-direction: column;
-            transform-origin: bottom right; /* Będzie się przechylać względem dolnego prawego rogu */
+            width: 140px; height: 260px; background-color: #f8f9fa; border: 4px solid var(--black);
+            border-radius: 6px; position: relative; display: flex; flex-direction: column;
+            transform-origin: bottom left; /* Oś obrotu na lewej nodze */
         }
-        /* Drzwi zamrażarki i chłodziarki */
         .fridge-top { height: 30%; border-bottom: 4px solid var(--black); position: relative; }
         .fridge-bottom { height: 70%; position: relative; }
-        /* Uchwyty */
-        .fridge-handle { position: absolute; left: 15px; width: 6px; background-color: var(--black); border-radius: 3px; }
-        .fridge-top .fridge-handle { bottom: 15px; height: 30px; }
-        .fridge-bottom .fridge-handle { top: 15px; height: 60px; }
-        /* Nóżka i klucz */
-        .fridge-foot {
-            position: absolute; bottom: -10px; left: 10px; width: 15px; height: 10px;
-            background-color: var(--black); border-radius: 2px;
+        .fridge-handle { position: absolute; left: 12px; width: 5px; background-color: var(--black); border-radius: 3px; }
+        .fridge-top .fridge-handle { bottom: 15px; height: 25px; }
+        .fridge-bottom .fridge-handle { top: 15px; height: 50px; }
+        
+        /* Dwie nóżki */
+        .fridge-foot-left, .fridge-foot-right {
+            position: absolute; bottom: -10px; width: 14px; height: 10px; background-color: var(--black); border-radius: 2px;
         }
-        .wrench-icon {
-            position: absolute; bottom: -20px; left: -20px; font-size: 2rem; opacity: 0;
-            transform-origin: center;
+        .fridge-foot-left { left: 15px; }
+        .fridge-foot-right { right: 15px; }
+        
+        /* Nakrętka (Triks z nakrętkami) */
+        .nut {
+            position: absolute; bottom: -14px; right: 12px; width: 20px; height: 6px;
+            background-color: var(--accent-reveal); border-radius: 2px; opacity: 0; z-index: -1;
         }
 
         /* --- STOPKA --- */
-        footer { background-color: var(--text-color); color: var(--white); padding: 6rem 0 3rem; }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
-        .footer-grid h3 { font-size: 2.5rem; margin-bottom: 1rem; }
+        footer { background-color: var(--text-color); color: var(--white); padding: 5rem 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-grid h3 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 1rem; }
         .footer-grid p { color: #adb5bd; margin-bottom: 2rem; max-width: 400px;}
-        .footer-links h4 { font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--muted); }
+        .footer-links h4 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--muted); }
         .footer-links ul { list-style: none; }
-        .footer-links li { margin-bottom: 0.8rem; }
+        .footer-links li { margin-bottom: 0.6rem; font-size: 0.9rem; }
         .footer-links a { color: var(--white); text-decoration: none; transition: color 0.3s; }
         .footer-links a:hover { color: var(--accent-reveal); }
-        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; justify-content: space-between; color: #adb5bd; font-size: 0.9rem; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; color: #adb5bd; font-size: 0.85rem; }
 
+        /* --- RESPONSYWNOŚĆ (MOBILE & TABLET) --- */
         @media (max-width: 992px) {
-            .manual-grid, .reveal-grid, .drilling-grid, .leveling-grid, .footer-grid { grid-template-columns: 1fr; }
-            .manual-container { padding: 2rem; }
-            .huge-text { white-space: normal; }
-            .leveling-grid { display: flex; flex-direction: column-reverse; } /* Obrazek nad tekstem na mobile */
+            .manual-grid, .reveal-grid, .drilling-grid, .leveling-grid, .footer-grid { 
+                grid-template-columns: 1fr; 
+                gap: 2rem;
+            }
+            .manual-container { padding: 1.5rem; }
+            .huge-text { white-space: normal; } /* Tekst może zawijać się do nowej linii */
+            
+            /* Poprawa układu – na mobile wizualizacje są nad tekstem lub odwrotnie, ale spójnie */
+            .leveling-grid { display: flex; flex-direction: column-reverse; }
+            .drilling-grid { display: flex; flex-direction: column-reverse; }
+            .reveal-grid { display: flex; flex-direction: column-reverse; }
+            
+            /* Uproszczenie efektu cienia pod instrukcją dla mniejszych ekranów */
+            .papers-wrapper { perspective: none; }
+            .paper-1, .paper-2 { display: none; }
         }
     </style>
 </head>
@@ -220,19 +239,20 @@
         </nav>
 
         <section class="hero">
-            <h1>Solidne rzemiosło. Spokojna głowa.</h1>
+            <h1>Solidne rzemiosło.<br>Spokojna głowa.</h1>
             <p>Jesteśmy ekipą, dla której liczy się precyzja i porządek. Przejmujemy Twoje obowiązki remontowe i montażowe, żebyś Ty nie musiał się denerwować.</p>
         </section>
     </div>
 
     <section class="manual-section">
         <div class="container">
+            <h2 class="huge-text" style="margin-bottom: 2rem;">MONTAŻ <br>MEBLI</h2>
             <div class="papers-wrapper">
                 <div class="paper-bg paper-1"></div>
                 <div class="paper-bg paper-2"></div>
                 <div class="manual-container">
                     <div class="manual-header">
-                        <h2>Zostaw schematy nam</h2>
+                        <h3 style="font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 900;">Zostaw schematy nam</h3>
                         <div class="tech-code">PO-Y00E05</div>
                     </div>
                     <div class="manual-grid">
@@ -243,11 +263,11 @@
                             <table class="tech-table">
                                 <thead><tr><th>Część</th><th>Ilość i specyfikacja</th></tr></thead>
                                 <tbody>
-                                    <tr><td style="text-align: center;"><span class="part-id">A</span></td><td><div class="tech-desc">Darmowa wycena i konsultacja.</div><div class="tech-desc">Odbiór paczek (opcja).</div></td></tr>
-                                    <tr><td style="text-align: center;"><span class="part-id">E</span></td><td><div class="tech-desc">Dojazd w umówionym terminie.</div><div class="tech-desc">Zostawiamy porządek. </div></td></tr>
+                                    <tr><td style="text-align: center;"><span class="part-id">A</span></td><td><div>Darmowa wycena i konsultacja.</div><div>Odbiór paczek (opcja).</div></td></tr>
+                                    <tr><td style="text-align: center;"><span class="part-id">E</span></td><td><div>Dojazd w terminie.</div><div>Zostawiamy porządek. </div></td></tr>
                                 </tbody>
                             </table>
-                            <p style="margin-top: 2rem; color: var(--muted); font-size: 1.1rem;">
+                            <p class="reveal-description" style="margin-top: 1.5rem; opacity: 1; transform: none;">
                                 Paczki z meblami to dla wielu stres. Posiadamy odpowiednie narzędzia, dbamy o regulację zawiasów i zawsze zabieramy puste kartony. Zero brakujących śrubek.
                             </p>
                         </div>
@@ -280,15 +300,22 @@
                 <div class="shelf-line"></div>
                 <div class="drill-icon">✏️</div>
                 <div class="shelf-items">
-                    <div class="book"></div>
-                    <div class="book"></div>
-                    <div class="book"></div>
+                    <div class="book book-1"></div>
+                    <div class="book book-2"></div>
+                    <div class="book book-3"></div>
+                    <div class="book book-4"></div>
+                    <div class="book book-5 fall-book"></div>
+                    <div class="vase-container">
+                        <div class="flower"></div>
+                        <div class="stem"></div>
+                        <div class="vase"></div>
+                    </div>
                 </div>
             </div>
             <div class="drilling-content">
                 <h2 class="huge-text">MONTAŻ <br>ŚCIENNY</h2>
                 <p class="reveal-description">
-                    Koniec z dziurawieniem ścian "na oko" i krzywymi karniszami. Używamy profesjonalnych detektorów kabli oraz poziomic laserowych. Telewizory, ciężkie lustra i szafki wiszące będą trzymać się idealnie poziomo, na mur-beton.
+                    Koniec z dziurawieniem ścian "na oko". Używamy profesjonalnych detektorów kabli. Telewizory, ciężkie lustra i gęsto zastawione szafki wiszące będą trzymać się idealnie na mur-beton.
                 </p>
             </div>
         </div>
@@ -299,17 +326,16 @@
             <div class="leveling-content">
                 <h2 class="huge-text">PERFEKCYJNY <br>POZIOM</h2>
                 <p class="reveal-description" style="color: var(--muted);">
-                    Kiwająca się pralka czy lodówka to nie tylko irytujący dźwięk, ale ryzyko awarii sprzętu. Regulujemy nóżki, sprawdzamy poziom i gwarantujemy, że każdy sprzęt AGD czy szafka będzie stać twardo na ziemi. Drobiazgi robią wielką różnicę.
+                    Kiwająca się pralka czy lodówka to irytujący dźwięk i ryzyko awarii. Używamy prostych trików kalibracyjnych. Regulujemy nakrętki kontrujące, gwarantując, że każdy sprzęt AGD będzie stać twardo na ziemi.
                 </p>
             </div>
             <div class="fridge-visual">
-                <div class="fridge-container">
-                    <div class="fridge-body">
-                        <div class="fridge-top"><div class="fridge-handle"></div></div>
-                        <div class="fridge-bottom"><div class="fridge-handle"></div></div>
-                        <div class="fridge-foot"></div>
-                    </div>
-                    <div class="wrench-icon">🔧</div>
+                <div class="fridge-body">
+                    <div class="fridge-top"><div class="fridge-handle"></div></div>
+                    <div class="fridge-bottom"><div class="fridge-handle"></div></div>
+                    <div class="fridge-foot-left"></div>
+                    <div class="fridge-foot-right"></div>
+                    <div class="nut"></div>
                 </div>
             </div>
         </div>
@@ -319,16 +345,16 @@
         <div class="container">
             <div class="footer-grid">
                 <div>
-                    <h3>Masz plan? My mamy narzędzia.</h3>
+                    <h3 style="font-family: 'Outfit'; font-weight: 900; text-transform: uppercase;">Zróbmy to.</h3>
                     <p>Skontaktuj się z nami, opowiedz co masz do zrobienia, a my przygotujemy bezpłatną wycenę. Bez ukrytych kosztów.</p>
                     <a href="mailto:kontakt@montadeus.eu" class="btn-outline" style="border-color: #fff; color: #fff;">Napisz do nas</a>
                 </div>
                 <div class="footer-links">
-                    <h4>Nasze Usługi</h4>
+                    <h4>Usługi</h4>
                     <ul>
                         <li><a href="#">Montaż Mebli</a></li>
                         <li><a href="#">Malowanie Wnętrz</a></li>
-                        <li><a href="#">Montaże Ścienne (TV, półki)</a></li>
+                        <li><a href="#">Montaże Ścienne</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
@@ -336,7 +362,7 @@
                     <ul>
                         <li>+48 000 000 000</li>
                         <li>kontakt@montadeus.eu</li>
-                        <li>Warszawa i okolic</li>
+                        <li>Warszawa i okolice</li>
                     </ul>
                 </div>
             </div>
@@ -350,49 +376,56 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // --- ANIMACJA 1: KARTEK (Instrukcja) ---
-        const paperTl = gsap.timeline({
-            scrollTrigger: { trigger: ".manual-section", start: "top 70%", end: "center 50%", toggleActions: "play none none reverse" }
-        });
-        paperTl.to([".paper-1", ".paper-2", ".manual-container"], { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", stagger: 0.1 })
-               .to(".paper-1", { rotation: -4, x: -20, y: 15, duration: 0.8, ease: "back.out(1.5)" }, "-=0.4")
-               .to(".paper-2", { rotation: 3, x: 25, y: -10, duration: 0.8, ease: "back.out(1.5)" }, "-=0.8");
+        // Zapobiega odpalaniu animacji kartek na mobile (gdzie są ukryte)
+        const isDesktop = window.innerWidth > 992;
 
-        // --- ANIMACJA 2: BLOCK REVEAL (Malowanie) ---
+        if(isDesktop) {
+            const paperTl = gsap.timeline({
+                scrollTrigger: { trigger: ".manual-section", start: "top 70%", toggleActions: "play none none reverse" }
+            });
+            paperTl.to([".paper-1", ".paper-2", ".manual-container"], { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", stagger: 0.1 })
+                   .to(".paper-1", { rotation: -4, x: -20, y: 15, duration: 0.8, ease: "back.out(1.5)" }, "-=0.4")
+                   .to(".paper-2", { rotation: 3, x: 25, y: -10, duration: 0.8, ease: "back.out(1.5)" }, "-=0.8");
+        } else {
+            // Proste wejście na mobile
+            gsap.to(".manual-container", {
+                y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
+                scrollTrigger: { trigger: ".manual-section", start: "top 80%" }
+            });
+        }
+
+        // --- BLOCK REVEAL ---
         const revealTl = gsap.timeline({
-            scrollTrigger: { trigger: ".reveal-section", start: "top 60%", end: "center 40%", toggleActions: "play none none reverse" }
+            scrollTrigger: { trigger: ".reveal-section", start: "top 60%", toggleActions: "play none none reverse" }
         });
         revealTl.to(".color-block", { scaleX: 0, duration: 1.2, ease: "power3.inOut" })
                 .to(".paint-image", { opacity: 1, scale: 1, duration: 1, ease: "power2.out" }, "-=0.8")
                 .to(".reveal-description", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.6");
 
-        // --- ANIMACJA 3: WIERCENIE / PÓŁKA ---
+        // --- WIERCENIE I PÓŁKA (Fizyka przedmiotów) ---
         const drillTl = gsap.timeline({
             scrollTrigger: { trigger: ".drilling-section", start: "top 60%", toggleActions: "play none none reverse" }
         });
-        // Wiertarka/Ołówek jedzie w prawo i jednocześnie rozwija się półka (scaleX)
-        drillTl.to(".drill-icon", { x: "100%", duration: 1.5, ease: "power2.inOut" })
-               .to(".shelf-line", { scaleX: 1, duration: 1.5, ease: "power2.inOut" }, "<")
-               // Zniknięcie ołówka po narysowaniu
+        drillTl.to(".drill-icon", { x: "100%", duration: 1.2, ease: "power2.inOut" })
+               .to(".shelf-line", { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, "<")
                .to(".drill-icon", { opacity: 0, duration: 0.2 })
-               // Pojawienie się książek/dekoracji
-               .to(".book", { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: "back.out(1.7)" });
+               // Książki i wazonik uderzają o dół (bounce.out daje fajny ciężar)
+               .to([".book", ".vase-container"], { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "bounce.out" })
+               // Ostatnia książka lekko się odchyla (opiera się o resztę)
+               .to(".fall-book", { rotation: 18, duration: 0.4, ease: "power2.out" }, "-=0.2");
 
-        // --- ANIMACJA 4: POZIOMOWANIE LODÓWKI ---
-        // Ustawienie początkowe - lodówka krzywo (12 stopni w prawo)
-        gsap.set(".fridge-body", { rotation: 12 });
+        // --- LODÓWKA (Triks z nakrętką) ---
+        // Punkt początkowy: Lodówka przechylona o 7 stopni w prawo
+        gsap.set(".fridge-body", { rotation: 7 });
 
         const fridgeTl = gsap.timeline({
             scrollTrigger: { trigger: ".leveling-section", start: "top 60%", toggleActions: "play none none reverse" }
         });
-        // 1. Pojawia się klucz
-        fridgeTl.to(".wrench-icon", { opacity: 1, x: 10, y: -10, duration: 0.5, ease: "power2.out" })
-        // 2. Klucz kręci się (dokręca śrubkę)
-                .to(".wrench-icon", { rotation: -60, duration: 0.5, yoyo: true, repeat: 1 })
-        // 3. W tym samym czasie lodówka sprężyście wraca do pionu (0 stopni)
-                .to(".fridge-body", { rotation: 0, duration: 1.5, ease: "elastic.out(1, 0.4)" }, "-=0.5")
-        // 4. Klucz znika, bo robota zrobiona
-                .to(".wrench-icon", { opacity: 0, duration: 0.3, y: 20 }, "-=1");
+        // Nakrętka pojawia się z boku i zjeżdża w dół jako "dystans"
+        fridgeTl.to(".nut", { opacity: 1, duration: 0.3 })
+                .to(".nut", { y: 12, duration: 0.5, ease: "power1.inOut" })
+                // Lodówka sprężyście odzyskuje pion
+                .to(".fridge-body", { rotation: 0, duration: 1.2, ease: "elastic.out(1, 0.5)" }, "-=0.2");
 
     </script>
 </body>
