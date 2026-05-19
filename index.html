@@ -3,494 +3,340 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Montadeus | Rzemiosło w każdym detalu</title>
+    <title>Montadeus | Profesjonalne Wykończenia</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Główny, jaskrawy akcent DJ/Neon */
-            --accent: #FF4500; /* Neonowy pomarańcz */
-            --accent-blue: #00BFFF; /* Jaskrawy błękit */
-            --dark-bg: #0d0d0d;
-            --text-on-dark: #f5f5f5;
-            --light-bg: #fff;
-            --text-on-light: #111;
-            /* Font zbliżony do IKEA / instrukcji z obrazu */
-            --ikea-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            /* Font techniczny, cyfrowy */
-            --tech-font: 'Chakra Petch', sans-serif;
-            /* Font do tekstu głównego */
-            --main-font: 'Inter', sans-serif;
+            --bg-color: #f8f9fa;
+            --text-color: #1a1b1e;
+            --muted: #868e96;
+            --accent: #2c3e50; /* Klasyczny, głęboki granat zamiast neonów */
+            --border: #dee2e6;
+            --white: #ffffff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: var(--main-font);
-            background-color: var(--dark-bg);
-            color: var(--text-on-dark);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            scroll-behavior: smooth;
         }
 
-        /* --- GLOBALNE ELEMENTY TECHNICZNE --- */
-        .tech-code {
-            font-family: var(--tech-font);
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            color: rgba(255,255,255,0.4);
-            position: fixed;
-            top: 20px;
-            right: 5vw;
-            z-index: 100;
+        h1, h2, h3, .logo { font-family: 'Outfit', sans-serif; }
+        
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         /* --- NAWIGACJA --- */
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 2rem 5vw;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 100;
-            mix-blend-mode: color-burn; /* Płynne przejście między tłami */
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
         }
 
-        .logo {
-            font-family: var(--tech-font);
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: -2px;
-            text-transform: uppercase;
-            color: #fff;
-        }
+        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; }
+        .logo span { color: var(--muted); font-weight: 400; }
 
-        .logo span { color: var(--accent); }
-
-        .btn {
-            padding: 1rem 2rem;
-            background: transparent;
-            color: #fff;
-            border: 2px solid var(--accent);
-            border-radius: 5px;
+        .btn-outline {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--text-color);
+            border-radius: 4px;
+            color: var(--text-color);
             text-decoration: none;
-            text-transform: uppercase;
-            font-size: 0.9rem;
             font-weight: 600;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
-        .btn:hover {
-            background: var(--accent);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);
+        .btn-outline:hover {
+            background-color: var(--text-color);
+            color: var(--white);
         }
 
-        /* --- HEADER (STYL DJ / NEON) --- */
-        header {
-            height: 100vh;
-            display: flex;
-            align-items: flex-end;
-            padding: 0 5vw 10vh;
-            background: radial-gradient(circle at 70% 30%, rgba(0, 191, 255, 0.15) 0%, rgba(13, 13, 13, 1) 100%);
-            position: relative;
-        }
-
-        header::before { /* Efekt siatki laserowej */
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(255, 69, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 69, 0, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: 1;
-        }
-
-        .header-content { max-width: 900px; z-index: 2; position: relative; }
-
-        .header-content h1 {
-            font-family: var(--tech-font);
-            font-size: clamp(4rem, 10vw, 8rem);
-            line-height: 0.95;
-            text-transform: uppercase;
+        /* --- HERO --- */
+        .hero { padding: 15vh 0 10vh; }
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            line-height: 1.05;
             margin-bottom: 2rem;
-            letter-spacing: -3px;
+            max-width: 900px;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--muted);
+            max-width: 600px;
+            margin-bottom: 3rem;
         }
 
-        .header-content h1 span { color: var(--accent); }
-
-        .header-content p {
-            font-size: 1.5rem;
-            color: rgba(255,255,255,0.7);
-            max-width: 500px;
-            line-height: 1.6;
+        /* --- O NAS (Struktura i Tożsamość) --- */
+        .about {
+            padding: 5rem 0;
+            background-color: var(--white);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
         }
 
-        .scroll-indicator {
-            position: absolute;
-            bottom: 3vh;
-            left: 5vw;
-            font-family: var(--tech-font);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255,255,255,0.4);
-            animation: bounce 2s infinite;
-        }
+        .about h2 { font-size: 2.5rem; }
+        .about-text { font-size: 1.1rem; color: var(--text-color); column-count: 2; column-gap: 3rem; }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-
-        /* --- SEKCJA INSTRUKCJI (STYL MINIMALISTYCZNY - CZYSTA BIEL / CZERŃ) --- */
-        .manual-section {
-            padding: 15vh 0;
-            background-color: var(--light-bg);
-            color: var(--text-on-light);
-            min-height: 100vh;
-            position: relative;
-        }
-
-        .section-header {
-            width: 90vw;
-            max-width: 1400px;
-            margin: 0 auto 10vh;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 4px solid var(--text-on-light);
-            padding-bottom: 2rem;
-        }
-
-        .section-header .logo { color: var(--text-on-light); font-size: 2.5rem;}
-        .section-header .tech-spec { font-family: var(--ikea-font); font-size: 1.2rem; font-weight: bold;}
-
-        .manual-grid {
-            width: 90vw;
-            max-width: 1400px;
-            margin: 0 auto;
+        /* --- SEKCJA MONTAŻU (Instrukcja) --- */
+        .assembly { padding: 8rem 0; }
+        .assembly-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10vh;
-            align-items: start;
+            gap: 4rem;
+            align-items: center;
         }
 
-        /* Lewa strona - Schemat */
-        .schematic {
-            border: 4px solid var(--text-on-light);
-            padding: 40px;
-            background: #fff;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+        /* Ramka na Twój schemat */
+        .manual-image-wrapper {
+            background: var(--white);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            border-radius: 8px;
         }
 
-        /* SVG reprezentacja schematu szafy z obrazu */
-        .schematic-svg {
+        .manual-image-wrapper img {
             width: 100%;
             height: auto;
             display: block;
+            border: 1px solid #eee; /* Delikatna ramka na sam obrazek */
         }
 
-        .schematic-svg line {
-            stroke: var(--text-on-light);
-            stroke-width: 2.5;
-        }
+        .assembly-content h2 { font-size: 3rem; margin-bottom: 1.5rem; }
+        .assembly-content p { font-size: 1.1rem; color: var(--muted); margin-bottom: 2rem; }
 
-        .schematic-svg text {
-            font-family: var(--ikea-font);
-            font-weight: 900;
-            font-size: 20px;
-            fill: var(--text-on-light);
-            text-anchor: middle;
-        }
-
-        .schematic-svg circle {
-            fill: var(--text-on-light);
-        }
-
-        /* Prawa strona - Tabela śrub i usługi */
-        .manual-content h2 {
-            font-family: var(--tech-font);
-            font-size: 3rem;
-            line-height: 1.1;
-            margin-bottom: 2rem;
-            color: var(--text-on-light);
-        }
-
-        .services-list {
-            list-style: none;
-            margin-bottom: 5vh;
-        }
-
-        .services-list li {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            padding-left: 2rem;
-            position: relative;
-        }
-
-        .services-list li::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 10px;
-            width: 1rem; height: 1rem;
-            border-radius: 50%;
-            background-color: var(--text-on-light);
-        }
-
-        .table-of-screws {
-            border: 2px solid var(--text-on-light);
-            font-family: var(--ikea-font);
-            width: 100%;
-            margin-top: 5vh;
-        }
-
-        .table-of-screws th, .table-of-screws td {
-            border: 1px solid var(--text-on-light);
-            padding: 1.5rem;
-            text-align: left;
-            position: relative;
-        }
-
-        .table-of-screws th { background-color: rgba(0,0,0,0.05); }
-
-        .table-of-screws .screw-id {
-            position: absolute;
-            top: 10px; left: 10px;
-            font-size: 1.5rem; font-weight: 900;
-            width: 40px; height: 40px; border-radius: 50%;
-            background-color: var(--text-on-light);
-            color: var(--light-bg);
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .table-of-screws .spec { margin-top: 2rem; font-weight: bold; font-size: 1.1rem; }
-
-        /* --- SEKCJA WAŁKA MALARSKIEGO (GSAP) --- */
-        .paint-section {
-            height: 300vh; /* Duża wysokość dla dłuższego scrollowania */
-            background-color: var(--light-bg);
-            color: var(--text-on-light);
-            position: relative;
-        }
-
-        .paint-container {
-            position: sticky;
-            top: 0;
-            height: 100vh;
+        .service-features { list-style: none; }
+        .service-features li {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background-color: var(--light-bg);
+            font-weight: 600;
+        }
+        .service-features li::before {
+            content: '✓';
+            margin-right: 1rem;
+            color: var(--accent);
+            font-weight: bold;
         }
 
-        /* Ukryty tekst w tle */
-        .text-bg {
-            font-family: var(--tech-font);
-            font-size: clamp(3rem, 8vw, 8rem);
-            font-weight: 700;
-            color: rgba(0,0,0,0.03); /* Wyblakły */
-            white-space: nowrap;
-            text-transform: uppercase;
+        /* --- SEKCJA MALOWANIA (Color Reveal) --- */
+        .painting {
+            padding: 8rem 0;
+            background-color: var(--white);
+        }
+
+        .painting-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .painting-text h2 { font-size: 3rem; margin-bottom: 1.5rem; }
+        .painting-text p { font-size: 1.1rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+        /* Magia nakładania zdjęć */
+        .paint-visual-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .paint-visual-container img {
             position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .img-bw {
+            filter: grayscale(100%);
             z-index: 1;
         }
 
-        /* Warstwa "farby", która będzie się rozszerzać */
-        .paint-reveal {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0%; /* Zaczynamy od 0 szerokości */
-            background-color: var(--accent); /* Kolor farby (neonowy pomarańcz) */
+        .img-color {
             z-index: 2;
-            overflow: hidden;
+            /* Na start ukrywamy kolorowe zdjęcie (przesłaniamy od prawej) */
+            clip-path: inset(0 100% 0 0); 
+        }
+
+        /* --- STOPKA --- */
+        footer {
+            background-color: var(--text-color);
+            color: var(--white);
+            padding: 6rem 0 3rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-grid h3 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .footer-grid p { color: #adb5bd; margin-bottom: 2rem; max-width: 400px;}
+        
+        .footer-links h4 { font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--muted); }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 0.8rem; }
+        .footer-links a { color: var(--white); text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--muted); }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
             display: flex;
-            align-items: center;
-            box-shadow: 10px 0 50px rgba(255, 69, 0, 0.4);
+            justify-content: space-between;
+            color: #adb5bd;
+            font-size: 0.9rem;
         }
 
-        /* Ten sam tekst, w białym kolorze */
-        .text-fg {
-            font-family: var(--tech-font);
-            font-size: clamp(3rem, 8vw, 8rem);
-            font-weight: 700;
-            color: #fff;
-            white-space: nowrap;
-            text-transform: uppercase;
-            position: absolute;
-            left: 50vw; /* Środek ekranu */
-            transform: translateX(-50%);
-        }
-
-        /* Ikona wałka na krawędzi "farby" */
-        .roller {
-            position: absolute;
-            top: 50%;
-            left: 0; /* Będzie poruszany przez GSAP */
-            transform: translate(-50%, -50%);
-            font-size: 5rem;
-            z-index: 3;
-            /* Można tu wstawić SVG wałka */
-        }
-
-        /* Sekcja końcowa */
-        .footer-spacer {
-            height: 100vh;
-            background: radial-gradient(circle at 30% 70%, rgba(255, 69, 0, 0.15) 0%, var(--dark-bg) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-family: var(--tech-font);
-            font-size: 4rem;
-            text-transform: uppercase;
-        }
-
-        /* Responsive */
+        /* Responsywność */
         @media (max-width: 992px) {
-            .manual-grid { grid-template-columns: 1fr; }
-            .section-header { flex-direction: column; align-items: center; }
-            .section-header .logo { margin-bottom: 1rem; }
+            .about-grid, .assembly-grid, .painting-grid, .footer-grid { grid-template-columns: 1fr; }
+            .about-text { column-count: 1; }
+            .painting-grid { display: flex; flex-direction: column-reverse; }
         }
     </style>
 </head>
 <body>
 
-    <div class="tech-code">A-00-11-22</div>
+    <div class="container">
+        <nav>
+            <div class="logo">Monta<span>deus</span></div>
+            <a href="#kontakt" class="btn-outline">Wycena</a>
+        </nav>
 
-    <nav>
-        <div class="logo">Monta<span>deus</span></div>
-        <a href="#kontakt" class="btn">Zleć Prace</a>
-    </nav>
+        <section class="hero">
+            <h1>Solidne rzemiosło. Spokojna głowa.</h1>
+            <p>Jesteśmy ekipą, dla której liczy się precyzja i porządek. Od składania skomplikowanych mebli po idealnie gładkie ściany – przejmujemy Twoje obowiązki remontowe, żebyś Ty nie musiał.</p>
+        </section>
+    </div>
 
-    <header>
-        <div class="header-content">
-            <h1>Rzemiosło,<br><span>w każdym detalu.</span></h1>
-            <p>Łączymy precyzję rzemieślniczą z pasją do tworzenia idealnych wnętrz. Nie odstawiamy fuszerki.</p>
-        }
-        </div>
-        <div class="scroll-indicator">Scrolluj po precyzję</div>
-    </header>
-
-    <section class="manual-section" id="instrukcja">
-        <div class="section-header">
-            <div class="logo">MONTADEUS</div>
-            <div class="tech-spec">AA-2026-1 | Solid Oak Sliding Door Wardrobe</div>
-        </div>
-        
-        <div class="manual-grid">
-            <article class="schematic">
-                <svg class="schematic-svg" viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="50" y="50" width="500" height="700" fill="none" line-width="2.5" stroke="#111"/>
-                    <line x1="50" y1="350" x2="350" y2="350" stroke="#111"/>
-                    <line x1="350" y1="50" x2="350" y2="750" stroke="#111"/>
-                    <line x1="150" y1="50" x2="150" y2="350" stroke="#111"/>
-                    <line x1="150" y1="350" x2="150" y2="750" stroke="#111"/>
-                    <line x1="150" y1="200" x2="350" y2="200" stroke="#111"/>
-                    <line x1="150" y1="500" x2="350" y2="500" stroke="#111"/>
-                    <rect x="370" y="100" width="200" height="600" fill="none" stroke="#111"/>
-                    
-                    <text x="100" y="380">8</text>
-                    <text x="100" y="450">3</text>
-                    <text x="250" y="270">5</text>
-                    <text x="200" y="230">9</text>
-                    <text x="250" y="120">6</text>
-                    <text x="250" y="700">7</text>
-                    <text x="450" y="120">4</text>
-                    <text x="470" y="650">2</text>
-                    <text x="420" y="650">1</text>
-                    <circle cx="280" cy="180" r="10"/>
-                    <line x1="280" y1="180" x2="260" y2="210" stroke="#111"/>
-                </svg>
-                <div class="tech-spec" style="text-align: center; margin-top: 2rem;">Montaż zgodnie ze specyfikacją producenta</div>
-            </article>
-
-            <article class="manual-content">
-                <h2>Jak to robimy? <br>Precyzja to klucz.</h2>
-                <ul class="services-list">
-                    <li>Darmowa wycena i konsultacja.</li>
-                    <li>Odbiór paczek (opcja).</li>
-                    <li>Dojazd w umówionym terminie.</li>
-                    <li>Cichy i czysty montaż.</li>
-                    <li>Zostawiamy porządek. Zero brakujących śrubek.</li>
-                </ul>
-
-                <table class="table-of-screws">
-                    <thead>
-                        <tr><th>Część</th><th>Ilość i specyfikacja</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><div class="screw-id">A</div></td><td><div class="spec">4# = 2</div><div class="spec">B. M6*30= 50</div><div class="spec">C. Ø6*14=50</div><div class="spec">D. Ø6*12=50</div></td></tr>
-                        <tr><td><div class="screw-id">E</div></td><td><div class="spec">M3.5×30=19</div><div class="spec">F. Adjustable Levelling Foot=4</div><div class="spec">G. M6×25=4</div><div class="spec">H. Felt Pads =6</div></td></tr>
-                    </tbody>
-                </table>
-            </article>
+    <section class="about">
+        <div class="container about-grid">
+            <h2>Krótko o nas.</h2>
+            <div class="about-text">
+                <p>Nie jesteśmy z przypadku. Używamy profesjonalnych narzędzi, sprawdzamy ściany detektorami przed wierceniem i zawsze zabezpieczamy podłogi przed malowaniem. Wiemy, że wpuszczasz nas do swojego domu, dlatego naszą wizytówką jest nie tylko dobrze wykonana praca, ale też czystość, którą po sobie zostawiamy.</p>
+                <br>
+                <p>Niezależnie od tego, czy przyjeżdżamy zamontować szafę z sieciówki, czy odświeżyć salon przed świętami – do każdego zlecenia podchodzimy z takim samym, rzemieślniczym szacunkiem.</p>
+            </div>
         </div>
     </section>
 
-    <section class="paint-section">
-        <div class="paint-container">
+    <section class="assembly">
+        <div class="container assembly-grid">
+            <div class="manual-image-wrapper">
+                <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Instrukcja montażu szafy">
+            </div>
             
-            <div class="text-bg">Malowanie Wnętrz</div>
-            
-            <div class="paint-reveal">
-                <div class="text-fg">Malowanie Wnętrz</div>
+            <div class="assembly-content">
+                <h2>Zostaw te schematy nam.</h2>
+                <p>Paczki z meblami to dla wielu stres i stracony weekend. Dla nas to codzienność. Składamy szafy, łóżka i komody szybciej i pewniej. Zero przekręconych gwintów, zero brakujących elementów.</p>
+                
+                <ul class="service-features">
+                    <li>Czytamy każdą instrukcję (nawet tę napisaną drobnym drukiem)</li>
+                    <li>Posiadamy odpowiednie elektronarzędzia</li>
+                    <li>Dbamy o regulację zawiasów i poziomowanie</li>
+                    <li>Zabieramy ze sobą puste kartony i folie</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="painting">
+        <div class="container painting-grid">
+            <div class="painting-text">
+                <h2>Nowy kolor. <br>Bez śladów.</h2>
+                <p>Odpowiednie przygotowanie to 80% sukcesu przy malowaniu. Zanim otworzymy puszkę z farbą, dokładnie maskujemy listwy, gniazdka i podłogi.</p>
+                <p>Używamy wałków dobranych do struktury ściany, co gwarantuje równe krycie bez smug i prześwitów. Ty wybierasz kolor, my zajmujemy się resztą – szybko, sprawnie i bez niespodzianek.</p>
             </div>
 
-            <div class="roller">🖌️</div>
+            <div class="paint-visual-container">
+                <img src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Pokój przed" class="img-bw">
+                <img src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Pokój pomalowany" class="img-color">
+            </div>
         </div>
     </section>
 
-    <section class="footer-spacer">
-        Jesteśmy gotowi.
-    </section>
+    <footer id="kontakt">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3>Masz plan? My mamy narzędzia.</h3>
+                    <p>Skontaktuj się z nami, opowiedz co masz do zrobienia, a my przygotujemy bezpłatną wycenę. Bez ukrytych kosztów.</p>
+                    <a href="mailto:kontakt@montadeus.eu" class="btn-outline" style="border-color: #fff; color: #fff;">Napisz do nas</a>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Nasze Usługi</h4>
+                    <ul>
+                        <li><a href="#">Montaż Mebli</a></li>
+                        <li><a href="#">Malowanie Wnętrz</a></li>
+                        <li><a href="#">Odświeżanie pod Wynajem</a></li>
+                        <li><a href="#">Montaże Ścienne (TV, półki)</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Kontakt</h4>
+                    <ul>
+                        <li>+48 000 000 000</li>
+                        <li>kontakt@montadeus.eu</li>
+                        <li>Działamy na terenie Warszawy i okolic</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div>&copy; 2026 Montadeus. Wszystkie prawa zastrzeżone.</div>
+                <div>Stworzone dla profesjonalistów.</div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // Animacja wałka i rozlewania farby
-        let paintTl = gsap.timeline({
+        // Znajdujemy kolorowe zdjęcie
+        const colorImg = document.querySelector('.img-color');
+
+        // Animacja odkrywania koloru
+        gsap.to(colorImg, {
+            // clipPath płynnie zmienia wartość z "inset(0 100% 0 0)" na "inset(0 0% 0 0)"
+            // co działa jak odsłanianie kurtyny od lewej do prawej
+            clipPath: "inset(0 0% 0 0)",
+            ease: "none",
             scrollTrigger: {
-                trigger: ".paint-section",
-                start: "top top", // Animacja startuje, gdy sekcja dotknie góry ekranu
-                end: "bottom bottom", // Kończy się na dole tej dużej sekcji
-                scrub: 1, // '1' daje lekkie opóźnienie, tworząc płynne "maźnięcie"
-                pin: false // Pinning załatwiliśmy przez CSS: position sticky
-            }
-        });
-
-        // 1. Rozciągnij szerokość pomalowanego tła od 0 do 100vw (cały ekran)
-        paintTl.to(".paint-reveal", {
-            width: "100vw",
-            ease: "none"
-        }, 0); 
-
-        // 2. Przesuń ikonę wałka równo z krawędzią rozszerzającego się tła
-        paintTl.to(".roller", {
-            left: "100vw",
-            ease: "none"
-        }, 0);
-
-        // Płynne przejście kolorów tła body przy przewijaniu
-        gsap.to("body", {
-            backgroundColor: "#fff",
-            scrollTrigger: {
-                trigger: ".manual-section",
-                start: "top center", 
-                end: "bottom center",
-                scrub: 1,
-                toggleActions: "play reverse play reverse"
+                trigger: ".paint-visual-container",
+                start: "top 80%", // Animacja rusza, gdy górna krawędź zdjęcia jest na 80% wys. ekranu
+                end: "bottom 50%", // Kończy się, gdy dół zdjęcia dochodzi do połowy ekranu
+                scrub: 1 // Wiąże postęp animacji bezpośrednio z pozycją scrolla użytkownika
             }
         });
     </script>
-
 </body>
 </html>
