@@ -30,7 +30,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Ujednolicenie potężnego fontu dla nagłówków */
         h1, h2, h3, .logo, .huge-text { 
             font-family: 'Outfit', sans-serif; 
             text-transform: uppercase;
@@ -64,16 +63,13 @@
             transition: all 0.3s;
         }
 
-        .btn-outline:hover {
-            background-color: var(--text-color);
-            color: var(--white);
-        }
+        .btn-outline:hover { background-color: var(--text-color); color: var(--white); }
 
         /* --- HERO --- */
         .hero { padding: 15vh 0 10vh; }
         .hero h1 {
-            font-size: clamp(3rem, 7vw, 6.5rem); /* Zwiększony rozmiar */
-            font-weight: 900; /* Gruby font */
+            font-size: clamp(3rem, 7vw, 6.5rem);
+            font-weight: 900;
             line-height: 0.95;
             letter-spacing: -2px;
             margin-bottom: 2rem;
@@ -81,206 +77,137 @@
             color: var(--black);
         }
         .hero p {
-            font-size: 1.25rem;
-            color: var(--muted);
-            max-width: 600px;
-            margin-bottom: 3rem;
+            font-size: 1.25rem; color: var(--muted); max-width: 600px; margin-bottom: 3rem;
         }
 
-        /* --- SEKCJA INSTRUKCJI (EFEKT KARTEK) --- */
+        /* --- SEKCJA INSTRUKCJI (KARTEK) --- */
         .manual-section {
-            padding: 8rem 0;
-            background-color: var(--white);
-            border-top: 1px solid var(--border);
-            overflow: hidden;
+            padding: 8rem 0; background-color: var(--white); border-top: 1px solid var(--border); overflow: hidden;
         }
-
-        .papers-wrapper {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-            /* Perspektywa dla lepszego efektu głębi przy animacji */
-            perspective: 1000px; 
-        }
-
-        /* Tło - rozsypane kartki */
+        .papers-wrapper { position: relative; max-width: 1200px; margin: 0 auto; perspective: 1000px; }
         .paper-bg {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--white);
-            border: 2px solid var(--border);
-            z-index: 1;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.03);
-            opacity: 0; /* Ukryte na start */
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white);
+            border: 2px solid var(--border); z-index: 1; box-shadow: 5px 5px 15px rgba(0,0,0,0.03); opacity: 0;
         }
-
         .manual-container {
-            position: relative;
-            z-index: 5;
-            border: 3px solid var(--black);
-            background: var(--white);
-            padding: 4rem;
-            box-shadow: 15px 15px 0px rgba(0,0,0,0.05);
-            opacity: 0; /* Ukryte na start dla animacji */
-            transform: translateY(100px);
+            position: relative; z-index: 5; border: 3px solid var(--black); background: var(--white);
+            padding: 4rem; box-shadow: 15px 15px 0px rgba(0,0,0,0.05); opacity: 0; transform: translateY(100px);
         }
-
         .manual-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 3px solid var(--black);
-            padding-bottom: 2rem;
-            margin-bottom: 4rem;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            border-bottom: 3px solid var(--black); padding-bottom: 2rem; margin-bottom: 4rem;
         }
-
-        .manual-header h2 { 
-            font-size: clamp(2rem, 4vw, 3rem); 
-            font-weight: 900; 
-            line-height: 1; 
-        }
-        
-        .manual-header .tech-code { 
-            font-family: 'Space Mono', monospace; 
-            font-size: 1.2rem; 
-            font-weight: 700; 
-        }
-
-        .manual-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 4rem;
-        }
-
-        .manual-image-wrapper img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border: 2px solid var(--black);
-        }
-
-        .tech-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-family: 'Space Mono', monospace;
-        }
-
-        .tech-table th, .tech-table td {
-            border: 2px solid var(--black);
-            padding: 1.5rem;
-            text-align: left;
-        }
-
+        .manual-header h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; line-height: 1; }
+        .manual-header .tech-code { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; }
+        .manual-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; }
+        .manual-image-wrapper img { width: 100%; height: auto; display: block; border: 2px solid var(--black); }
+        .tech-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; }
+        .tech-table th, .tech-table td { border: 2px solid var(--black); padding: 1.5rem; text-align: left; }
         .tech-table th { background: #f0f0f0; font-weight: 700; text-transform: uppercase; }
-        
         .part-id {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px; height: 40px;
-            background: var(--black);
-            color: var(--white);
-            border-radius: 50%;
-            font-weight: 900;
-            font-size: 1.2rem;
-            font-family: 'Outfit', sans-serif;
+            display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+            background: var(--black); color: var(--white); border-radius: 50%; font-weight: 900;
+            font-size: 1.2rem; font-family: 'Outfit', sans-serif;
         }
-
-        .tech-desc { margin-bottom: 0.5rem; }
 
         /* --- SEKCJA BLOCK REVEAL (Malowanie) --- */
-        .reveal-section {
-            padding: 10rem 0;
-            background-color: var(--bg-color);
-            position: relative;
-        }
-
-        .reveal-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .text-reveal-container {
-            position: relative;
-            display: inline-block;
-            overflow: hidden;
-        }
-
+        .reveal-section { padding: 10rem 0; background-color: var(--bg-color); position: relative; }
+        .reveal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .text-reveal-container { position: relative; display: inline-block; overflow: hidden; }
         .huge-text {
-            font-size: clamp(4rem, 8vw, 7rem);
-            font-weight: 900;
-            line-height: 0.9;
-            letter-spacing: -2px;
-            color: var(--black);
-            white-space: nowrap;
+            font-size: clamp(4rem, 8vw, 7rem); font-weight: 900; line-height: 0.9;
+            letter-spacing: -2px; color: var(--black); white-space: nowrap;
         }
-
         .color-block {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: var(--accent-reveal);
-            transform-origin: right;
-            z-index: 2;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--accent-reveal); transform-origin: right; z-index: 2;
         }
-
         .reveal-description {
-            font-size: 1.25rem;
-            color: var(--muted);
-            max-width: 500px;
-            margin-top: 2rem;
-            opacity: 0;
-            transform: translateY(30px);
+            font-size: 1.25rem; color: var(--muted); max-width: 500px; margin-top: 2rem;
+            opacity: 0; transform: translateY(30px);
+        }
+        .paint-image {
+            width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 4px; opacity: 0; transform: scale(0.9);
         }
 
-        .paint-image {
-            width: 100%;
-            aspect-ratio: 4/5;
-            object-fit: cover;
-            border-radius: 4px;
-            opacity: 0;
-            transform: scale(0.9);
+        /* --- NOWA SEKCJA 3: Wiercenie i Półka (Ciemny motyw) --- */
+        .drilling-section {
+            padding: 10rem 0; background-color: var(--text-color); color: var(--white); overflow: hidden;
+        }
+        .drilling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .drilling-section .huge-text { color: var(--white); }
+        .drilling-section .reveal-description { color: #adb5bd; }
+        
+        .wall-visual {
+            position: relative; width: 100%; height: 300px; display: flex; align-items: center;
+        }
+        /* Półka rysowana od lewej */
+        .shelf-line {
+            position: absolute; left: 0; top: 50%; width: 100%; height: 6px;
+            background-color: var(--white); transform-origin: left; transform: scaleX(0); z-index: 1;
+        }
+        /* Wiertarka / Ołówek animowana */
+        .drill-icon {
+            position: absolute; left: 0; top: 40%; font-size: 2.5rem; z-index: 3;
+        }
+        /* Przedmioty na półce */
+        .shelf-items {
+            position: absolute; left: 20%; bottom: 50%; display: flex; gap: 10px; z-index: 2;
+        }
+        .book {
+            width: 20px; height: 60px; background-color: var(--accent-reveal); opacity: 0; transform: translateY(20px);
+        }
+        .book:nth-child(2) { height: 80px; background-color: #fff; }
+        .book:nth-child(3) { height: 50px; background-color: #adb5bd; transform: rotate(15deg); transform-origin: bottom right;}
+
+        /* --- NOWA SEKCJA 4: Lodówka (Poziomowanie) --- */
+        .leveling-section { padding: 10rem 0; background-color: var(--white); border-bottom: 1px solid var(--border); }
+        .leveling-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
+        
+        .fridge-visual {
+            position: relative; display: flex; justify-content: center; height: 400px;
+        }
+        .fridge-container { position: relative; }
+        /* CSSowa, minimalistyczna lodówka */
+        .fridge-body {
+            width: 160px; height: 300px; background-color: #f1f3f5; border: 4px solid var(--black);
+            border-radius: 8px; position: relative; display: flex; flex-direction: column;
+            transform-origin: bottom right; /* Będzie się przechylać względem dolnego prawego rogu */
+        }
+        /* Drzwi zamrażarki i chłodziarki */
+        .fridge-top { height: 30%; border-bottom: 4px solid var(--black); position: relative; }
+        .fridge-bottom { height: 70%; position: relative; }
+        /* Uchwyty */
+        .fridge-handle { position: absolute; left: 15px; width: 6px; background-color: var(--black); border-radius: 3px; }
+        .fridge-top .fridge-handle { bottom: 15px; height: 30px; }
+        .fridge-bottom .fridge-handle { top: 15px; height: 60px; }
+        /* Nóżka i klucz */
+        .fridge-foot {
+            position: absolute; bottom: -10px; left: 10px; width: 15px; height: 10px;
+            background-color: var(--black); border-radius: 2px;
+        }
+        .wrench-icon {
+            position: absolute; bottom: -20px; left: -20px; font-size: 2rem; opacity: 0;
+            transform-origin: center;
         }
 
         /* --- STOPKA --- */
-        footer {
-            background-color: var(--text-color);
-            color: var(--white);
-            padding: 6rem 0 3rem;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 4rem;
-            margin-bottom: 4rem;
-        }
-
+        footer { background-color: var(--text-color); color: var(--white); padding: 6rem 0 3rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
         .footer-grid h3 { font-size: 2.5rem; margin-bottom: 1rem; }
         .footer-grid p { color: #adb5bd; margin-bottom: 2rem; max-width: 400px;}
-        
         .footer-links h4 { font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--muted); }
         .footer-links ul { list-style: none; }
         .footer-links li { margin-bottom: 0.8rem; }
         .footer-links a { color: var(--white); text-decoration: none; transition: color 0.3s; }
         .footer-links a:hover { color: var(--accent-reveal); }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-            color: #adb5bd;
-            font-size: 0.9rem;
-        }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; justify-content: space-between; color: #adb5bd; font-size: 0.9rem; }
 
         @media (max-width: 992px) {
-            .manual-grid, .reveal-grid, .footer-grid { grid-template-columns: 1fr; }
+            .manual-grid, .reveal-grid, .drilling-grid, .leveling-grid, .footer-grid { grid-template-columns: 1fr; }
             .manual-container { padding: 2rem; }
-            .huge-text { white-space: normal; } /* Pozwala na łamanie tekstu na telefonie */
+            .huge-text { white-space: normal; }
+            .leveling-grid { display: flex; flex-direction: column-reverse; } /* Obrazek nad tekstem na mobile */
         }
     </style>
 </head>
@@ -303,41 +230,21 @@
             <div class="papers-wrapper">
                 <div class="paper-bg paper-1"></div>
                 <div class="paper-bg paper-2"></div>
-                
                 <div class="manual-container">
                     <div class="manual-header">
                         <h2>Zostaw schematy nam</h2>
                         <div class="tech-code">PO-Y00E05</div>
                     </div>
-                    
                     <div class="manual-grid">
                         <div class="manual-image-wrapper">
                             <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Schemat montażu">
                         </div>
-                        
                         <div class="manual-table-wrapper">
                             <table class="tech-table">
-                                <thead>
-                                    <tr>
-                                        <th>Część</th>
-                                        <th>Ilość i specyfikacja</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr><th>Część</th><th>Ilość i specyfikacja</th></tr></thead>
                                 <tbody>
-                                    <tr>
-                                        <td style="text-align: center;"><span class="part-id">A</span></td>
-                                        <td>
-                                            <div class="tech-desc">Darmowa wycena i konsultacja.</div>
-                                            <div class="tech-desc">Odbiór paczek (opcja).</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center;"><span class="part-id">E</span></td>
-                                        <td>
-                                            <div class="tech-desc">Dojazd w umówionym terminie.</div>
-                                            <div class="tech-desc">Zostawiamy porządek. </div>
-                                        </td>
-                                    </tr>
+                                    <tr><td style="text-align: center;"><span class="part-id">A</span></td><td><div class="tech-desc">Darmowa wycena i konsultacja.</div><div class="tech-desc">Odbiór paczek (opcja).</div></td></tr>
+                                    <tr><td style="text-align: center;"><span class="part-id">E</span></td><td><div class="tech-desc">Dojazd w umówionym terminie.</div><div class="tech-desc">Zostawiamy porządek. </div></td></tr>
                                 </tbody>
                             </table>
                             <p style="margin-top: 2rem; color: var(--muted); font-size: 1.1rem;">
@@ -357,14 +264,53 @@
                     <h2 class="huge-text">MALOWANIE <br>WNĘTRZ</h2>
                     <div class="color-block"></div>
                 </div>
-                
                 <p class="reveal-description">
                     Odpowiednie przygotowanie to podstawa. Zanim otworzymy puszkę z farbą, dokładnie maskujemy listwy i podłogi. Ty wybierasz kolor, my zajmujemy się idealnym kryciem bez smug.
                 </p>
             </div>
-            
             <div class="reveal-image-wrapper">
                 <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Malowanie pokoju" class="paint-image">
+            </div>
+        </div>
+    </section>
+
+    <section class="drilling-section">
+        <div class="container drilling-grid">
+            <div class="wall-visual">
+                <div class="shelf-line"></div>
+                <div class="drill-icon">✏️</div>
+                <div class="shelf-items">
+                    <div class="book"></div>
+                    <div class="book"></div>
+                    <div class="book"></div>
+                </div>
+            </div>
+            <div class="drilling-content">
+                <h2 class="huge-text">MONTAŻ <br>ŚCIENNY</h2>
+                <p class="reveal-description">
+                    Koniec z dziurawieniem ścian "na oko" i krzywymi karniszami. Używamy profesjonalnych detektorów kabli oraz poziomic laserowych. Telewizory, ciężkie lustra i szafki wiszące będą trzymać się idealnie poziomo, na mur-beton.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="leveling-section">
+        <div class="container leveling-grid">
+            <div class="leveling-content">
+                <h2 class="huge-text">PERFEKCYJNY <br>POZIOM</h2>
+                <p class="reveal-description" style="color: var(--muted);">
+                    Kiwająca się pralka czy lodówka to nie tylko irytujący dźwięk, ale ryzyko awarii sprzętu. Regulujemy nóżki, sprawdzamy poziom i gwarantujemy, że każdy sprzęt AGD czy szafka będzie stać twardo na ziemi. Drobiazgi robią wielką różnicę.
+                </p>
+            </div>
+            <div class="fridge-visual">
+                <div class="fridge-container">
+                    <div class="fridge-body">
+                        <div class="fridge-top"><div class="fridge-handle"></div></div>
+                        <div class="fridge-bottom"><div class="fridge-handle"></div></div>
+                        <div class="fridge-foot"></div>
+                    </div>
+                    <div class="wrench-icon">🔧</div>
+                </div>
             </div>
         </div>
     </section>
@@ -404,68 +350,50 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // --- ANIMACJA: ROZSYPANE KARTKI (Instrukcja) ---
+        // --- ANIMACJA 1: KARTEK (Instrukcja) ---
         const paperTl = gsap.timeline({
-            scrollTrigger: {
-                trigger: ".manual-section",
-                start: "top 70%", 
-                end: "center 50%",
-                toggleActions: "play none none reverse"
-            }
+            scrollTrigger: { trigger: ".manual-section", start: "top 70%", end: "center 50%", toggleActions: "play none none reverse" }
         });
+        paperTl.to([".paper-1", ".paper-2", ".manual-container"], { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", stagger: 0.1 })
+               .to(".paper-1", { rotation: -4, x: -20, y: 15, duration: 0.8, ease: "back.out(1.5)" }, "-=0.4")
+               .to(".paper-2", { rotation: 3, x: 25, y: -10, duration: 0.8, ease: "back.out(1.5)" }, "-=0.8");
 
-        // Krok 1: Pokazujemy wszystkie elementy na raz (wjeżdżają lekko z dołu)
-        paperTl.to([".paper-1", ".paper-2", ".manual-container"], {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: "power3.out",
-            stagger: 0.1 // minimalne opóźnienie między pojawianiem się
-        })
-        // Krok 2: Rozsunięcie kartek pod spodem (efekt rzuconych planów)
-        .to(".paper-1", {
-            rotation: -4,
-            x: -20,
-            y: 15,
-            duration: 0.8,
-            ease: "back.out(1.5)" // Lekkie "odbicie" na końcu
-        }, "-=0.4")
-        .to(".paper-2", {
-            rotation: 3,
-            x: 25,
-            y: -10,
-            duration: 0.8,
-            ease: "back.out(1.5)"
-        }, "-=0.8");
-
-
-        // --- ANIMACJA: BLOCK REVEAL (Malowanie) ---
+        // --- ANIMACJA 2: BLOCK REVEAL (Malowanie) ---
         const revealTl = gsap.timeline({
-            scrollTrigger: {
-                trigger: ".reveal-section",
-                start: "top 60%", 
-                end: "center 40%", 
-                toggleActions: "play none none reverse" 
-            }
+            scrollTrigger: { trigger: ".reveal-section", start: "top 60%", end: "center 40%", toggleActions: "play none none reverse" }
         });
+        revealTl.to(".color-block", { scaleX: 0, duration: 1.2, ease: "power3.inOut" })
+                .to(".paint-image", { opacity: 1, scale: 1, duration: 1, ease: "power2.out" }, "-=0.8")
+                .to(".reveal-description", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.6");
 
-        revealTl.to(".color-block", {
-            scaleX: 0,
-            duration: 1.2,
-            ease: "power3.inOut"
-        })
-        .to(".paint-image", {
-            opacity: 1,
-            scale: 1,
-            duration: 1,
-            ease: "power2.out"
-        }, "-=0.8")
-        .to(".reveal-description", {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out"
-        }, "-=0.6");
+        // --- ANIMACJA 3: WIERCENIE / PÓŁKA ---
+        const drillTl = gsap.timeline({
+            scrollTrigger: { trigger: ".drilling-section", start: "top 60%", toggleActions: "play none none reverse" }
+        });
+        // Wiertarka/Ołówek jedzie w prawo i jednocześnie rozwija się półka (scaleX)
+        drillTl.to(".drill-icon", { x: "100%", duration: 1.5, ease: "power2.inOut" })
+               .to(".shelf-line", { scaleX: 1, duration: 1.5, ease: "power2.inOut" }, "<")
+               // Zniknięcie ołówka po narysowaniu
+               .to(".drill-icon", { opacity: 0, duration: 0.2 })
+               // Pojawienie się książek/dekoracji
+               .to(".book", { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: "back.out(1.7)" });
+
+        // --- ANIMACJA 4: POZIOMOWANIE LODÓWKI ---
+        // Ustawienie początkowe - lodówka krzywo (12 stopni w prawo)
+        gsap.set(".fridge-body", { rotation: 12 });
+
+        const fridgeTl = gsap.timeline({
+            scrollTrigger: { trigger: ".leveling-section", start: "top 60%", toggleActions: "play none none reverse" }
+        });
+        // 1. Pojawia się klucz
+        fridgeTl.to(".wrench-icon", { opacity: 1, x: 10, y: -10, duration: 0.5, ease: "power2.out" })
+        // 2. Klucz kręci się (dokręca śrubkę)
+                .to(".wrench-icon", { rotation: -60, duration: 0.5, yoyo: true, repeat: 1 })
+        // 3. W tym samym czasie lodówka sprężyście wraca do pionu (0 stopni)
+                .to(".fridge-body", { rotation: 0, duration: 1.5, ease: "elastic.out(1, 0.4)" }, "-=0.5")
+        // 4. Klucz znika, bo robota zrobiona
+                .to(".wrench-icon", { opacity: 0, duration: 0.3, y: 20 }, "-=1");
+
     </script>
 </body>
 </html>
