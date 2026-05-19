@@ -3,18 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Montadeus | Mistrzowie Wnętrz</title>
-    <!-- Nowoczesne fonty: Syne do mocnych nagłówków, Manrope do czytelnego tekstu -->
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Syne:wght@600;800&display=swap" rel="stylesheet">
+    <title>Montadeus | Kreatywny Montaż</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
-        :root {
-            --bg-color: #050505;
-            --text-main: #f0f0f0;
-            --text-muted: #888888;
-            --accent: #FF4500; /* Agresywny, techniczny pomarańcz */
-            --surface: #121212;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -22,349 +14,286 @@
         }
 
         body {
-            font-family: 'Manrope', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Font zbliżony do IKEA */
+            background-color: #f9f9f9;
+            color: #111;
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3, .logo {
-            font-family: 'Syne', sans-serif;
-        }
-
-        img {
-            max-width: 100%;
-            display: block;
-        }
-
-        /* --- Globalne Animacje Scrolla --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --- Nawigacja --- */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 2rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            mix-blend-mode: difference;
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            background: transparent;
-            color: var(--text-main);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50px;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:hover {
-            background: var(--text-main);
-            color: var(--bg-color);
-        }
-
-        /* --- Hero Section --- */
-        .hero {
+        /* --- HEADER --- */
+        header {
             height: 100vh;
             display: flex;
-            align-items: flex-end;
-            padding: 5% 5% 10%;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: clamp(4rem, 10vw, 8rem);
-            line-height: 0.9;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            max-width: 500px;
-        }
-
-        /* Tło Hero - abstrakcyjne zdjęcie */
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.3;
-            z-index: 1;
-            filter: grayscale(100%) contrast(1.2);
-        }
-
-        /* --- Pasek Marquee (Biegnący tekst) --- */
-        .marquee {
-            background: var(--accent);
-            color: var(--bg-color);
-            padding: 1rem 0;
-            white-space: nowrap;
-            overflow: hidden;
-            display: flex;
-        }
-
-        .marquee-content {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            animation: scrollText 15s linear infinite;
-        }
-
-        @keyframes scrollText {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* --- Sekcja "Drabinka" (Asymetryczny Layout Usług) --- */
-        .services {
-            padding: 10% 5%;
-        }
-
-        .section-header {
-            font-size: clamp(2rem, 5vw, 4rem);
-            margin-bottom: 10%;
-            text-transform: uppercase;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 2rem;
-        }
-
-        .service-item {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5%;
-            margin-bottom: 10%;
             align-items: center;
-        }
-
-        /* Zmiana kolejności dla parzystych elementów (Drabinka) */
-        .service-item:nth-child(even) .service-text {
-            order: 2;
-        }
-        .service-item:nth-child(even) .service-image {
-            order: 1;
-        }
-
-        .service-text h3 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-        }
-
-        .service-text .number {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.5rem;
-            color: var(--accent);
-            display: block;
-            margin-bottom: 1rem;
-        }
-
-        .service-text p {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            line-height: 1.8;
-            max-width: 400px;
-        }
-
-        .service-image {
-            position: relative;
-            overflow: hidden;
-            border-radius: 4px;
-            aspect-ratio: 4/5;
-        }
-
-        .service-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(100%);
-            transition: filter 0.5s ease, transform 0.5s ease;
-        }
-
-        .service-item:hover .service-image img {
-            filter: grayscale(0%);
-            transform: scale(1.05);
-        }
-
-        /* --- Footer z ogromnym CTA --- */
-        footer {
-            padding: 10% 5% 2%;
-            background: var(--surface);
+            justify-content: center;
+            background: #111;
+            color: #fff;
             text-align: center;
         }
 
-        .huge-cta {
-            font-size: clamp(3rem, 12vw, 10rem);
-            font-family: 'Syne', sans-serif;
-            line-height: 1;
-            margin-bottom: 3rem;
-            cursor: pointer;
-            transition: color 0.3s;
+        header h1 {
+            font-size: 5rem;
+            text-transform: uppercase;
+            letter-spacing: -2px;
         }
 
-        .huge-cta:hover {
-            color: var(--accent);
+        .scroll-down {
+            position: absolute;
+            bottom: 50px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: bounce 2s infinite;
         }
 
-        .footer-bottom {
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        /* --- SEKCJA INSTRUKCJI (STYL IKEA) --- */
+        .ikea-section {
+            padding: 100px 20px;
+            background: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .ikea-manual {
+            max-width: 900px;
+            width: 100%;
+            border: 4px solid #000;
+            padding: 40px;
+            background: #fff;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+        }
+
+        .ikea-header {
             display: flex;
             justify-content: space-between;
-            margin-top: 10%;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-muted);
-            font-size: 0.9rem;
+            align-items: flex-end;
+            border-bottom: 4px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .service-item, .service-item:nth-child(even) {
-                grid-template-columns: 1fr;
-            }
-            .service-item:nth-child(even) .service-text { order: 1; }
-            .service-item:nth-child(even) .service-image { order: 2; margin-top: 2rem; }
-            .service-image { margin-top: 2rem; aspect-ratio: 16/9; }
+        .ikea-logo {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .ikea-code {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .ikea-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .ikea-step {
+            border: 2px solid #000;
+            padding: 20px;
+            position: relative;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .step-number {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 2rem;
+            font-weight: 900;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Prosty rysunek konturowy (zastępczy dla wektorów) */
+        .ikea-illustration {
+            font-size: 5rem;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+
+        /* --- SEKCJA WAŁKA MALARSKIEGO (GSAP) --- */
+        .paint-section {
+            height: 300vh; /* Duża wysokość, by scrollowanie trwało dłuższą chwilę */
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .paint-container {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        /* Ukryty, wyblakły tekst w tle */
+        .text-bg {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            color: #f0f0f0; /* Prawie niewidoczny na białym tle */
+            white-space: nowrap;
+            text-transform: uppercase;
+            position: absolute;
+            z-index: 1;
+        }
+
+        /* Warstwa "farby", która będzie się rozszerzać */
+        .paint-reveal {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%; /* Zaczynamy od 0 szerokości */
+            background-color: #FF4500; /* Kolor farby (pomarańczowy premium) */
+            z-index: 2;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Ten sam tekst, ale wycentrowany identycznie, w białym kolorze */
+        .text-fg {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            color: #fff;
+            white-space: nowrap;
+            text-transform: uppercase;
+            position: absolute;
+            left: 50vw; /* Środek ekranu */
+            transform: translateX(-50%);
+        }
+
+        /* Ikona wałka na krawędzi "farby" */
+        .roller {
+            position: absolute;
+            top: 50%;
+            left: 0; /* Będzie poruszany przez GSAP */
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            z-index: 3;
+            /* Można tu wstawić SVG wałka */
+        }
+
+        /* Sekcja końcowa */
+        .footer-spacer {
+            height: 100vh;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">Monta<span>deus</span></div>
-        <a href="#kontakt" class="btn">Zleć Prace</a>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="hero">
-        <!-- Zastępcze zdjęcie industrialne z Unsplash -->
-        <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Narzędzia" class="hero-bg">
-        
-        <div class="hero-content reveal">
-            <h1>Rzemiosło<br>bez wymówek.</h1>
-            <p>Nie odstawiamy fuszerki. Składamy meble, malujemy ściany i mocujemy sprzęt z zegarmistrzowską precyzją. Zostawiamy po sobie wyłącznie idealne wnętrze.</p>
-        </div>
+    <header>
+        <h1>Montadeus</h1>
+        <div class="scroll-down">Scrolluj w dół</div>
     </header>
 
-    <!-- Pasek Marquee -->
-    <div class="marquee">
-        <div class="marquee-content">
-            MONTAŻ MEBLI &nbsp;&nbsp;•&nbsp;&nbsp; MALOWANIE ŚCIAN &nbsp;&nbsp;•&nbsp;&nbsp; ODŚWIEŻANIE WNĘTRZ &nbsp;&nbsp;•&nbsp;&nbsp; BEZPIECZNY MONTAŻ ŚCIENNY &nbsp;&nbsp;•&nbsp;&nbsp; MONTAŻ MEBLI &nbsp;&nbsp;•&nbsp;&nbsp; MALOWANIE ŚCIAN &nbsp;&nbsp;•&nbsp;&nbsp; ODŚWIEŻANIE WNĘTRZ &nbsp;&nbsp;•&nbsp;&nbsp; BEZPIECZNY MONTAŻ ŚCIENNY &nbsp;&nbsp;•&nbsp;&nbsp;
+    <section class="ikea-section">
+        <div class="ikea-manual">
+            <div class="ikea-header">
+                <div class="ikea-logo">MONTADEUS</div>
+                <div class="ikea-code">AA-2026-1</div>
+            </div>
+            
+            <h2 style="margin-bottom: 30px; text-align: center; text-transform: uppercase;">1. Jak to robimy?</h2>
+            
+            <div class="ikea-grid">
+                <div class="ikea-step">
+                    <div class="step-number">1</div>
+                    <div class="ikea-illustration">📦</div>
+                    <p style="margin-top:20px; font-weight: bold;">Ty zamawiasz paczki</p>
+                </div>
+                <div class="ikea-step">
+                    <div class="step-number">2</div>
+                    <div class="ikea-illustration">☕</div>
+                    <p style="margin-top:20px; font-weight: bold;">Pijesz kawę</p>
+                </div>
+                <div class="ikea-step">
+                    <div class="step-number">3</div>
+                    <div class="ikea-illustration">🔧</div>
+                    <p style="margin-top:20px; font-weight: bold;">My składamy wszystko</p>
+                </div>
+                <div class="ikea-step">
+                    <div class="step-number">4</div>
+                    <div class="ikea-illustration">✨</div>
+                    <p style="margin-top:20px; font-weight: bold;">Gotowe. Brakujących śrubek: 0</p>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Główna zawartość - Drabinka Usług -->
-    <main class="services">
-        <h2 class="section-header reveal">Nasza Specjalność</h2>
+    <section class="paint-section">
+        <div class="paint-container">
+            
+            <div class="text-bg">Malowanie Wnętrz</div>
+            
+            <div class="paint-reveal">
+                <div class="text-fg">Malowanie Wnętrz</div>
+            </div>
 
-        <!-- Usługa 1 -->
-        <article class="service-item reveal">
-            <div class="service-text">
-                <span class="number">01.</span>
-                <h3>Montaż Mebli</h3>
-                <p>Niezależnie czy to prosta komoda z IKEI, czy skomplikowana szafa na wymiar od stolarza. Pracujemy cicho, szybko i dbamy o to, by każda śrubka znalazła się na swoim miejscu bez uszkadzania gwintów.</p>
-            </div>
-            <div class="service-image">
-                <img src="https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Montaż Mebli">
-            </div>
-        </article>
-
-        <!-- Usługa 2 -->
-        <article class="service-item reveal">
-            <div class="service-text">
-                <span class="number">02.</span>
-                <h3>Malowanie i Odświeżanie</h3>
-                <p>Zapomnij o zachlapanych podłogach i smugach na ścianach. Perfekcyjnie maskujemy, gruntujemy i kładziemy farbę. Szybkie odświeżenie pod wynajem lub precyzyjna praca w salonie.</p>
-            </div>
-            <div class="service-image">
-                <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Malowanie ścian">
-            </div>
-        </article>
-
-        <!-- Usługa 3 -->
-        <article class="service-item reveal">
-            <div class="service-text">
-                <span class="number">03.</span>
-                <h3>Mocowania Ścienne</h3>
-                <p>Telewizory, ciężkie lustra, karnisze, półki. Wykorzystujemy detektory kabli i dobieramy kotwy idealnie pod rodzaj Twojej ściany (żelbet, karton-gips czy cegła). Trzyma się na mur-beton.</p>
-            </div>
-            <div class="service-image">
-                <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wiercenie w ścianie">
-            </div>
-        </article>
-    </main>
-
-    <!-- Stopka -->
-    <footer id="kontakt">
-        <p style="color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">Rozpocznij projekt</p>
-        <div class="huge-cta reveal">NAPISZ.</div>
-        
-        <div class="footer-bottom">
-            <div>&copy; 2026 Montadeus. Wszelkie prawa zastrzeżone.</div>
-            <div>kontakt@montadeus.eu | +48 000 000 000</div>
+            <div class="roller">🖌️</div>
         </div>
-    </footer>
+    </section>
 
-    <!-- Skrypt dodający animacje przy przewijaniu -->
+    <section class="footer-spacer">
+        Jesteśmy gotowi do pracy.
+    </section>
+
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const reveals = document.querySelectorAll(".reveal");
+        gsap.registerPlugin(ScrollTrigger);
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("active");
-                    }
-                });
-            }, {
-                threshold: 0.15 // Element pojawi się, gdy 15% wejdzie na ekran
-            });
-
-            reveals.forEach(reveal => {
-                observer.observe(reveal);
-            });
+        // Animacja wałka i rozlewania farby
+        let tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".paint-section",
+                start: "top top", // Animacja startuje, gdy sekcja dotknie góry ekranu
+                end: "bottom bottom", // Kończy się na dole tej dużej sekcji
+                scrub: 1, // '1' daje lekkie opóźnienie, tworząc płynne "maźnięcie"
+                pin: false // Pinning załatwiliśmy przez CSS: position sticky
+            }
         });
+
+        // 1. Rozciągnij szerokość pomalowanego tła od 0 do 100vw (cały ekran)
+        tl.to(".paint-reveal", {
+            width: "100vw",
+            ease: "none"
+        }, 0); // Oznaczenie '0' sprawia, że animacje dzieją się równocześnie
+
+        // 2. Przesuń ikonę wałka równo z krawędzią rozszerzającego się tła
+        tl.to(".roller", {
+            left: "100vw",
+            ease: "none"
+        }, 0);
     </script>
+
 </body>
 </html>
