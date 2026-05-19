@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Montadeus | Profesjonalny Montaż i Odświeżanie Wnętrz</title>
-    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Montadeus | Mistrzowie Wnętrz</title>
+    <!-- Nowoczesne fonty: Syne do mocnych nagłówków, Manrope do czytelnego tekstu -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Syne:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0d0d0d;
-            --text-main: #f5f5f5;
-            --text-muted: #a3a3a3;
-            --accent: #d4af37; /* Złoty akcent premium */
-            --card-bg: #1a1a1a;
+            --bg-color: #050505;
+            --text-main: #f0f0f0;
+            --text-muted: #888888;
+            --accent: #FF4500; /* Agresywny, techniczny pomarańcz */
+            --surface: #121212;
         }
 
         * {
@@ -21,277 +22,349 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Manrope', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            line-height: 1.6;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3 {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 700;
+        h1, h2, h3, .logo {
+            font-family: 'Syne', sans-serif;
         }
 
-        a {
-            text-decoration: none;
-            color: var(--text-main);
+        img {
+            max-width: 100%;
+            display: block;
         }
 
-        /* Niezbędny kontener */
-        .container {
-            width: 90%;
-            max-width: 1400px;
-            margin: 0 auto;
+        /* --- Globalne Animacje Scrolla --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Nawigacja */
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Nawigacja --- */
         nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 100;
+            mix-blend-mode: difference;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 2px;
+            font-size: 2rem;
+            font-weight: 800;
             text-transform: uppercase;
+            letter-spacing: -1px;
         }
 
         .logo span {
             color: var(--accent);
         }
 
-        .contact-btn {
+        .btn {
+            padding: 1rem 2rem;
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
             background: var(--text-main);
             color: var(--bg-color);
-            padding: 0.8rem 1.5rem;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
         }
 
-        .contact-btn:hover {
-            background: var(--accent);
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        /* Hero Section */
+        /* --- Hero Section --- */
         .hero {
-            padding: 10vh 0;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 80vh;
+            align-items: flex-end;
+            padding: 5% 5% 10%;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 2;
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
+            font-size: clamp(4rem, 10vw, 8rem);
+            line-height: 0.9;
             text-transform: uppercase;
-        }
-
-        .hero h1 span {
-            display: block;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin-bottom: 3rem;
-        }
-
-        /* Sekcja Usług (Grid) */
-        .services {
-            padding: 5rem 0;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            text-align: center;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .service-card {
-            background-color: var(--card-bg);
-            padding: 3rem 2rem;
-            border-radius: 15px;
-            transition: transform 0.4s ease, background-color 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            background-color: #222;
-            border-color: var(--accent);
-        }
-
-        .service-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .service-card p {
-            color: var(--text-muted);
-        }
-
-        /* Sekcja "Dlaczego My" */
-        .features {
-            padding: 5rem 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .features-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 3rem;
-            justify-content: space-between;
-        }
-
-        .feature {
-            flex: 1 1 30%;
-        }
-
-        .feature h4 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            border-left: 3px solid var(--accent);
-            padding-left: 1rem;
-        }
-
-        /* Stopka / Kontakt */
-        footer {
-            background-color: var(--card-bg);
-            padding: 5rem 0 2rem;
-            margin-top: 5rem;
-            text-align: center;
-        }
-
-        .cta-text {
-            font-size: clamp(2rem, 5vw, 4rem);
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 700;
             margin-bottom: 2rem;
         }
 
-        .footer-info {
+        .hero p {
+            font-size: 1.5rem;
             color: var(--text-muted);
-            margin-top: 3rem;
-            font-size: 0.9rem;
+            max-width: 500px;
         }
 
-        .big-btn {
-            display: inline-block;
+        /* Tło Hero - abstrakcyjne zdjęcie */
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: 1;
+            filter: grayscale(100%) contrast(1.2);
+        }
+
+        /* --- Pasek Marquee (Biegnący tekst) --- */
+        .marquee {
             background: var(--accent);
-            color: #fff;
-            padding: 1.2rem 3rem;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
+            color: var(--bg-color);
+            padding: 1rem 0;
+            white-space: nowrap;
+            overflow: hidden;
+            display: flex;
         }
 
-        .big-btn:hover {
-            background: #fff;
-            color: var(--bg-color);
+        .marquee-content {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            animation: scrollText 15s linear infinite;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- Sekcja "Drabinka" (Asymetryczny Layout Usług) --- */
+        .services {
+            padding: 10% 5%;
+        }
+
+        .section-header {
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 10%;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 2rem;
+        }
+
+        .service-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5%;
+            margin-bottom: 10%;
+            align-items: center;
+        }
+
+        /* Zmiana kolejności dla parzystych elementów (Drabinka) */
+        .service-item:nth-child(even) .service-text {
+            order: 2;
+        }
+        .service-item:nth-child(even) .service-image {
+            order: 1;
+        }
+
+        .service-text h3 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .service-text .number {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .service-text p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 400px;
+        }
+
+        .service-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            aspect-ratio: 4/5;
+        }
+
+        .service-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter 0.5s ease, transform 0.5s ease;
+        }
+
+        .service-item:hover .service-image img {
+            filter: grayscale(0%);
             transform: scale(1.05);
         }
 
-        /* Responsywność */
+        /* --- Footer z ogromnym CTA --- */
+        footer {
+            padding: 10% 5% 2%;
+            background: var(--surface);
+            text-align: center;
+        }
+
+        .huge-cta {
+            font-size: clamp(3rem, 12vw, 10rem);
+            font-family: 'Syne', sans-serif;
+            line-height: 1;
+            margin-bottom: 3rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .huge-cta:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10%;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            nav { flex-direction: column; gap: 1rem; }
-            .features-wrap { flex-direction: column; }
+            .service-item, .service-item:nth-child(even) {
+                grid-template-columns: 1fr;
+            }
+            .service-item:nth-child(even) .service-text { order: 1; }
+            .service-item:nth-child(even) .service-image { order: 2; margin-top: 2rem; }
+            .service-image { margin-top: 2rem; aspect-ratio: 16/9; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Nawigacja -->
-        <nav>
-            <div class="logo">Monta<span>deus</span></div>
-            <a href="#kontakt" class="contact-btn">Darmowa Wycena</a>
-        </nav>
+    <nav>
+        <div class="logo">Monta<span>deus</span></div>
+        <a href="#kontakt" class="btn">Zleć Prace</a>
+    </nav>
 
-        <!-- Sekcja Główna -->
-        <section class="hero">
-            <h1>Precyzja. <span>W każdym detalu.</span></h1>
-            <p>Profesjonalny montaż mebli, bezstresowe odświeżanie mieszkań i bezpieczne mocowania ścienne. Ty odpoczywasz, my robimy resztę.</p>
-        </section>
+    <!-- Hero Section -->
+    <header class="hero">
+        <!-- Zastępcze zdjęcie industrialne z Unsplash -->
+        <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Narzędzia" class="hero-bg">
+        
+        <div class="hero-content reveal">
+            <h1>Rzemiosło<br>bez wymówek.</h1>
+            <p>Nie odstawiamy fuszerki. Składamy meble, malujemy ściany i mocujemy sprzęt z zegarmistrzowską precyzją. Zostawiamy po sobie wyłącznie idealne wnętrze.</p>
+        </div>
+    </header>
 
-        <!-- Usługi -->
-        <section class="services" id="uslugi">
-            <h2 class="section-title">W czym możemy Ci pomóc?</h2>
-            <div class="services-grid">
-                
-                <div class="service-card">
-                    <h3>Montaż Mebli</h3>
-                    <p>Składanie mebli z paczek (IKEA, BRW, Agata i inne). Złożymy Twoją szafę, łóżko czy komodę szybciej, niż zdążysz przeczytać instrukcję. Zero zgubionych śrubek.</p>
-                </div>
-
-                <div class="service-card">
-                    <h3>Malowanie i Odświeżanie</h3>
-                    <p>Szybkie odświeżenie mieszkania pod wynajem lub generalne malowanie salonu. Odpowiednie zabezpieczenie powierzchni i idealne krycie ścian bez smug.</p>
-                </div>
-
-                <div class="service-card">
-                    <h3>Montaż Ścienny</h3>
-                    <p>Bezpieczne zawieszenie telewizora, ciężkich półek, obrazów, czy karniszów. Używamy profesjonalnych detektorów i kołków dopasowanych do Twojej ściany.</p>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Dlaczego My -->
-        <section class="features">
-            <div class="features-wrap">
-                <div class="feature">
-                    <h4>Zostawiamy porządek</h4>
-                    <p>Po naszej pracy jedyne, co zauważysz, to piękne wnętrze. Zawsze sprzątamy po zakończonym montażu czy malowaniu.</p>
-                </div>
-                <div class="feature">
-                    <h4>Punktualność to podstawa</h4>
-                    <p>Szanujemy Twój czas. Umawiamy się na konkretną godzinę i zjawiamy się punktualnie ze wszystkimi niezbędnymi narzędziami.</p>
-                </div>
-                <div class="feature">
-                    <h4>Przejrzysta wycena</h4>
-                    <p>Brak ukrytych kosztów. Przed rozpoczęciem pracy wiesz dokładnie, ile zapłacisz za realizację zlecenia.</p>
-                </div>
-            </div>
-        </section>
+    <!-- Pasek Marquee -->
+    <div class="marquee">
+        <div class="marquee-content">
+            MONTAŻ MEBLI &nbsp;&nbsp;•&nbsp;&nbsp; MALOWANIE ŚCIAN &nbsp;&nbsp;•&nbsp;&nbsp; ODŚWIEŻANIE WNĘTRZ &nbsp;&nbsp;•&nbsp;&nbsp; BEZPIECZNY MONTAŻ ŚCIENNY &nbsp;&nbsp;•&nbsp;&nbsp; MONTAŻ MEBLI &nbsp;&nbsp;•&nbsp;&nbsp; MALOWANIE ŚCIAN &nbsp;&nbsp;•&nbsp;&nbsp; ODŚWIEŻANIE WNĘTRZ &nbsp;&nbsp;•&nbsp;&nbsp; BEZPIECZNY MONTAŻ ŚCIENNY &nbsp;&nbsp;•&nbsp;&nbsp;
+        </div>
     </div>
 
-    <!-- Stopka z Call to Action -->
-    <footer id="kontakt">
-        <div class="container">
-            <div class="cta-text">Zróbmy to razem.</div>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">Masz meble do złożenia lub ścianę do pomalowania? Zadzwoń lub napisz.</p>
-            <a href="mailto:kontakt@montadeus.eu" class="big-btn">Skontaktuj się z nami</a>
-            
-            <div class="footer-info">
-                <p>&copy; 2026 Montadeus.eu - Twój zaufany fachowiec.</p>
+    <!-- Główna zawartość - Drabinka Usług -->
+    <main class="services">
+        <h2 class="section-header reveal">Nasza Specjalność</h2>
+
+        <!-- Usługa 1 -->
+        <article class="service-item reveal">
+            <div class="service-text">
+                <span class="number">01.</span>
+                <h3>Montaż Mebli</h3>
+                <p>Niezależnie czy to prosta komoda z IKEI, czy skomplikowana szafa na wymiar od stolarza. Pracujemy cicho, szybko i dbamy o to, by każda śrubka znalazła się na swoim miejscu bez uszkadzania gwintów.</p>
             </div>
+            <div class="service-image">
+                <img src="https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Montaż Mebli">
+            </div>
+        </article>
+
+        <!-- Usługa 2 -->
+        <article class="service-item reveal">
+            <div class="service-text">
+                <span class="number">02.</span>
+                <h3>Malowanie i Odświeżanie</h3>
+                <p>Zapomnij o zachlapanych podłogach i smugach na ścianach. Perfekcyjnie maskujemy, gruntujemy i kładziemy farbę. Szybkie odświeżenie pod wynajem lub precyzyjna praca w salonie.</p>
+            </div>
+            <div class="service-image">
+                <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Malowanie ścian">
+            </div>
+        </article>
+
+        <!-- Usługa 3 -->
+        <article class="service-item reveal">
+            <div class="service-text">
+                <span class="number">03.</span>
+                <h3>Mocowania Ścienne</h3>
+                <p>Telewizory, ciężkie lustra, karnisze, półki. Wykorzystujemy detektory kabli i dobieramy kotwy idealnie pod rodzaj Twojej ściany (żelbet, karton-gips czy cegła). Trzyma się na mur-beton.</p>
+            </div>
+            <div class="service-image">
+                <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wiercenie w ścianie">
+            </div>
+        </article>
+    </main>
+
+    <!-- Stopka -->
+    <footer id="kontakt">
+        <p style="color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">Rozpocznij projekt</p>
+        <div class="huge-cta reveal">NAPISZ.</div>
+        
+        <div class="footer-bottom">
+            <div>&copy; 2026 Montadeus. Wszelkie prawa zastrzeżone.</div>
+            <div>kontakt@montadeus.eu | +48 000 000 000</div>
         </div>
     </footer>
 
+    <!-- Skrypt dodający animacje przy przewijaniu -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const reveals = document.querySelectorAll(".reveal");
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("active");
+                    }
+                });
+            }, {
+                threshold: 0.15 // Element pojawi się, gdy 15% wejdzie na ekran
+            });
+
+            reveals.forEach(reveal => {
+                observer.observe(reveal);
+            });
+        });
+    </script>
 </body>
 </html>
