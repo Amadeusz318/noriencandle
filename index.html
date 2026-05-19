@@ -26,7 +26,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            overflow-x: hidden; /* Chroni przed rozjeżdżaniem na mobile */
+            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -137,7 +137,7 @@
             width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 4px; opacity: 0; transform: scale(0.9);
         }
 
-        /* --- SEKCJA WIERCENIE I PÓŁKA --- */
+        /* --- SEKCJA WIERCENIE I PÓŁKA (Poprawa fizyki i wazonu) --- */
         .drilling-section { padding: 8rem 0; background-color: var(--text-color); color: var(--white); overflow: hidden; }
         .drilling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
         .drilling-section .huge-text { color: var(--white); }
@@ -150,7 +150,6 @@
         }
         .drill-icon { position: absolute; left: 0; top: 38%; font-size: 2.5rem; z-index: 3; }
         
-        /* Kontener na przedmioty – flex-end dociska je idealnie do dołu */
         .shelf-items {
             position: absolute; left: 10%; bottom: 50%; width: 80%; height: 150px; 
             display: flex; align-items: flex-end; gap: 4px; z-index: 2; padding-bottom: 3px;
@@ -160,15 +159,22 @@
         .book-2 { height: 85px; }
         .book-3 { height: 60px; background-color: #adb5bd; }
         .book-4 { height: 65px; }
-        .book-5 { height: 50px; background-color: var(--accent-reveal); transform-origin: bottom left; margin-left: 2px; }
         
-        /* Wazonik z kwiatuszkiem */
+        /* Poprawiona pochylona książka – teraz w lewo, nie nachodzi */
+        .book-5 { height: 50px; background-color: var(--accent-reveal); transform-origin: bottom center; margin-left: 2px; z-index: 1; }
+        
+        /* Poprawiony wazon – zdrowy sukulent */
         .vase-container { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; margin-left: 30px; opacity: 0; transform: translateY(-50px); }
-        .flower { width: 12px; height: 12px; background-color: var(--accent-reveal); border-radius: 50%; margin-bottom: 2px; }
-        .stem { width: 2px; height: 10px; background-color: #adb5bd; }
-        .vase { width: 24px; height: 30px; background-color: var(--white); border-radius: 0 0 10px 10px; }
+        
+        /* Pełniejsza roślina */
+        .plant-cluster { display: flex; gap: 1px; flex-wrap: wrap; justify-content: center; max-width: 30px; margin-bottom: 2px; }
+        .leaf { width: 8px; height: 12px; background-color: #79a667; /* Zdrowy zielony */ border-radius: 4px; }
+        .leaf:nth-child(2) { transform: rotate(15deg); }
+        .leaf:nth-child(3) { transform: rotate(-15deg); }
+        .stem { width: 2px; height: 8px; background-color: #adb5bd; margin-top: -2px;}
+        .vase { width: 24px; height: 30px; background-color: var(--white); border-radius: 0 0 10px 10px; border: 1px solid #dee2e6; }
 
-        /* --- SEKCJA LODÓWKA (Poziomowanie) --- */
+        /* --- SEKCJA LODÓWKA (Poprawa koloru nóżki) --- */
         .leveling-section { padding: 8rem 0; background-color: var(--white); border-bottom: 1px solid var(--border); }
         .leveling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
         
@@ -177,7 +183,7 @@
         .fridge-body {
             width: 140px; height: 260px; background-color: #f8f9fa; border: 4px solid var(--black);
             border-radius: 6px; position: relative; display: flex; flex-direction: column;
-            transform-origin: bottom left; /* Oś obrotu na lewej nodze */
+            transform-origin: bottom left;
         }
         .fridge-top { height: 30%; border-bottom: 4px solid var(--black); position: relative; }
         .fridge-bottom { height: 70%; position: relative; }
@@ -185,23 +191,22 @@
         .fridge-top .fridge-handle { bottom: 15px; height: 25px; }
         .fridge-bottom .fridge-handle { top: 15px; height: 50px; }
         
-        /* Dwie nóżki */
         .fridge-foot-left, .fridge-foot-right {
             position: absolute; bottom: -10px; width: 14px; height: 10px; background-color: var(--black); border-radius: 2px;
         }
         .fridge-foot-left { left: 15px; }
         .fridge-foot-right { right: 15px; }
         
-        /* Nakrętka (Triks z nakrętkami) */
+        /* Poprawiona nóżka – techniczny, ciemny kolor (nie pomarańczowy) */
         .nut {
             position: absolute; bottom: -14px; right: 12px; width: 20px; height: 6px;
-            background-color: var(--accent-reveal); border-radius: 2px; opacity: 0; z-index: -1;
+            background-color: #343a40; /* Techniczny ciemnoszary */ border-radius: 2px; opacity: 0; z-index: -1;
         }
 
         /* --- STOPKA --- */
         footer { background-color: var(--text-color); color: var(--white); padding: 5rem 0 2rem; }
         .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
-        .footer-grid h3 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 1rem; }
+        .footer-grid h3 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 1rem; text-transform: uppercase;}
         .footer-grid p { color: #adb5bd; margin-bottom: 2rem; max-width: 400px;}
         .footer-links h4 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--muted); }
         .footer-links ul { list-style: none; }
@@ -210,21 +215,19 @@
         .footer-links a:hover { color: var(--accent-reveal); }
         .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; color: #adb5bd; font-size: 0.85rem; }
 
-        /* --- RESPONSYWNOŚĆ (MOBILE & TABLET) --- */
+        /* --- RESPONSYWNOŚĆ --- */
         @media (max-width: 992px) {
             .manual-grid, .reveal-grid, .drilling-grid, .leveling-grid, .footer-grid { 
                 grid-template-columns: 1fr; 
                 gap: 2rem;
             }
             .manual-container { padding: 1.5rem; }
-            .huge-text { white-space: normal; } /* Tekst może zawijać się do nowej linii */
+            .huge-text { white-space: normal; } 
             
-            /* Poprawa układu – na mobile wizualizacje są nad tekstem lub odwrotnie, ale spójnie */
             .leveling-grid { display: flex; flex-direction: column-reverse; }
             .drilling-grid { display: flex; flex-direction: column-reverse; }
             .reveal-grid { display: flex; flex-direction: column-reverse; }
             
-            /* Uproszczenie efektu cienia pod instrukcją dla mniejszych ekranów */
             .papers-wrapper { perspective: none; }
             .paper-1, .paper-2 { display: none; }
         }
@@ -305,8 +308,12 @@
                     <div class="book book-3"></div>
                     <div class="book book-4"></div>
                     <div class="book book-5 fall-book"></div>
-                    <div class="vase-container">
-                        <div class="flower"></div>
+                    <div class="vase-container vase-reveal">
+                        <div class="plant-cluster">
+                            <div class="leaf"></div>
+                            <div class="leaf"></div>
+                            <div class="leaf"></div>
+                        </div>
                         <div class="stem"></div>
                         <div class="vase"></div>
                     </div>
@@ -345,7 +352,7 @@
         <div class="container">
             <div class="footer-grid">
                 <div>
-                    <h3 style="font-family: 'Outfit'; font-weight: 900; text-transform: uppercase;">Zróbmy to.</h3>
+                    <h3>Zróbmy to.</h3>
                     <p>Skontaktuj się z nami, opowiedz co masz do zrobienia, a my przygotujemy bezpłatną wycenę. Bez ukrytych kosztów.</p>
                     <a href="mailto:kontakt@montadeus.eu" class="btn-outline" style="border-color: #fff; color: #fff;">Napisz do nas</a>
                 </div>
@@ -376,7 +383,6 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // Zapobiega odpalaniu animacji kartek na mobile (gdzie są ukryte)
         const isDesktop = window.innerWidth > 992;
 
         if(isDesktop) {
@@ -387,7 +393,6 @@
                    .to(".paper-1", { rotation: -4, x: -20, y: 15, duration: 0.8, ease: "back.out(1.5)" }, "-=0.4")
                    .to(".paper-2", { rotation: 3, x: 25, y: -10, duration: 0.8, ease: "back.out(1.5)" }, "-=0.8");
         } else {
-            // Proste wejście na mobile
             gsap.to(".manual-container", {
                 y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
                 scrollTrigger: { trigger: ".manual-section", start: "top 80%" }
@@ -402,29 +407,25 @@
                 .to(".paint-image", { opacity: 1, scale: 1, duration: 1, ease: "power2.out" }, "-=0.8")
                 .to(".reveal-description", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.6");
 
-        // --- WIERCENIE I PÓŁKA (Fizyka przedmiotów) ---
+        // --- WIERCENIE I PÓŁKA (Fizyka przedmiotów i wazonu) ---
         const drillTl = gsap.timeline({
             scrollTrigger: { trigger: ".drilling-section", start: "top 60%", toggleActions: "play none none reverse" }
         });
         drillTl.to(".drill-icon", { x: "100%", duration: 1.2, ease: "power2.inOut" })
                .to(".shelf-line", { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, "<")
                .to(".drill-icon", { opacity: 0, duration: 0.2 })
-               // Książki i wazonik uderzają o dół (bounce.out daje fajny ciężar)
-               .to([".book", ".vase-container"], { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "bounce.out" })
-               // Ostatnia książka lekko się odchyla (opiera się o resztę)
-               .to(".fall-book", { rotation: 18, duration: 0.4, ease: "power2.out" }, "-=0.2");
+               .to([".book", ".vase-reveal"], { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "bounce.out" })
+               // Ostatnia książka przechyla się W LEWO, nie nachodzi
+               .to(".fall-book", { rotation: -18, duration: 0.4, ease: "power2.out" }, "-=0.2");
 
         // --- LODÓWKA (Triks z nakrętką) ---
-        // Punkt początkowy: Lodówka przechylona o 7 stopni w prawo
         gsap.set(".fridge-body", { rotation: 7 });
 
         const fridgeTl = gsap.timeline({
             scrollTrigger: { trigger: ".leveling-section", start: "top 60%", toggleActions: "play none none reverse" }
         });
-        // Nakrętka pojawia się z boku i zjeżdża w dół jako "dystans"
         fridgeTl.to(".nut", { opacity: 1, duration: 0.3 })
                 .to(".nut", { y: 12, duration: 0.5, ease: "power1.inOut" })
-                // Lodówka sprężyście odzyskuje pion
                 .to(".fridge-body", { rotation: 0, duration: 1.2, ease: "elastic.out(1, 0.5)" }, "-=0.2");
 
     </script>
