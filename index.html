@@ -12,8 +12,8 @@
             --bg-color: #f8f9fa;
             --text-color: #1a1b1e;
             --muted: #868e96;
-            --accent: #2c3e50; /* Elegancki granat */
-            --accent-reveal: #d97757; /* Zgaszony, ceglasty pomarańcz (bardzo premium) */
+            --accent: #2c3e50;
+            --accent-reveal: #d97757;
             --border: #dee2e6;
             --white: #ffffff;
             --black: #000000;
@@ -30,7 +30,11 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3, .logo { font-family: 'Outfit', sans-serif; }
+        /* Ujednolicenie potężnego fontu dla nagłówków */
+        h1, h2, h3, .logo, .huge-text { 
+            font-family: 'Outfit', sans-serif; 
+            text-transform: uppercase;
+        }
         
         .container {
             width: 90%;
@@ -47,7 +51,7 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
+        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; }
         .logo span { color: var(--muted); font-weight: 400; }
 
         .btn-outline {
@@ -68,10 +72,13 @@
         /* --- HERO --- */
         .hero { padding: 15vh 0 10vh; }
         .hero h1 {
-            font-size: clamp(3rem, 6vw, 5.5rem);
-            line-height: 1.05;
+            font-size: clamp(3rem, 7vw, 6.5rem); /* Zwiększony rozmiar */
+            font-weight: 900; /* Gruby font */
+            line-height: 0.95;
+            letter-spacing: -2px;
             margin-bottom: 2rem;
-            max-width: 900px;
+            max-width: 1000px;
+            color: var(--black);
         }
         .hero p {
             font-size: 1.25rem;
@@ -80,20 +87,43 @@
             margin-bottom: 3rem;
         }
 
-        /* --- SEKCJA INSTRUKCJI (Powrót do technicznego stylu) --- */
+        /* --- SEKCJA INSTRUKCJI (EFEKT KARTEK) --- */
         .manual-section {
             padding: 8rem 0;
             background-color: var(--white);
             border-top: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .papers-wrapper {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            /* Perspektywa dla lepszego efektu głębi przy animacji */
+            perspective: 1000px; 
+        }
+
+        /* Tło - rozsypane kartki */
+        .paper-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--white);
+            border: 2px solid var(--border);
+            z-index: 1;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.03);
+            opacity: 0; /* Ukryte na start */
         }
 
         .manual-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            position: relative;
+            z-index: 5;
             border: 3px solid var(--black);
             background: var(--white);
             padding: 4rem;
             box-shadow: 15px 15px 0px rgba(0,0,0,0.05);
+            opacity: 0; /* Ukryte na start dla animacji */
+            transform: translateY(100px);
         }
 
         .manual-header {
@@ -105,8 +135,17 @@
             margin-bottom: 4rem;
         }
 
-        .manual-header h2 { font-size: 3rem; text-transform: uppercase; line-height: 1; }
-        .manual-header .tech-code { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; }
+        .manual-header h2 { 
+            font-size: clamp(2rem, 4vw, 3rem); 
+            font-weight: 900; 
+            line-height: 1; 
+        }
+        
+        .manual-header .tech-code { 
+            font-family: 'Space Mono', monospace; 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+        }
 
         .manual-grid {
             display: grid;
@@ -114,11 +153,6 @@
             gap: 4rem;
         }
 
-        .manual-image-wrapper {
-            position: relative;
-        }
-        
-        /* Miejsce na Twoje zdjęcie ze schematem */
         .manual-image-wrapper img {
             width: 100%;
             height: auto;
@@ -126,7 +160,6 @@
             border: 2px solid var(--black);
         }
 
-        /* Tabela techniczna inspirowana zdjęciem */
         .tech-table {
             width: 100%;
             border-collapse: collapse;
@@ -149,14 +182,14 @@
             background: var(--black);
             color: var(--white);
             border-radius: 50%;
-            font-weight: 700;
+            font-weight: 900;
             font-size: 1.2rem;
             font-family: 'Outfit', sans-serif;
         }
 
         .tech-desc { margin-bottom: 0.5rem; }
 
-        /* --- SEKCJA BLOCK REVEAL (Malowanie Wnętrz) --- */
+        /* --- SEKCJA BLOCK REVEAL (Malowanie) --- */
         .reveal-section {
             padding: 10rem 0;
             background-color: var(--bg-color);
@@ -170,31 +203,27 @@
             align-items: center;
         }
 
-        /* Kontener ukrywający napis */
         .text-reveal-container {
             position: relative;
             display: inline-block;
-            overflow: hidden; /* Przycina wszystko, co wychodzi poza kontener */
+            overflow: hidden;
         }
 
         .huge-text {
             font-size: clamp(4rem, 8vw, 7rem);
-            line-height: 1;
-            text-transform: uppercase;
             font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -2px;
             color: var(--black);
             white-space: nowrap;
         }
 
-        /* Kolorowy blok zasłaniający napis */
         .color-block {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--accent-reveal); /* Stylowy pomarańcz */
-            transform-origin: right; /* Zwijanie do prawej strony */
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--accent-reveal);
+            transform-origin: right;
             z-index: 2;
         }
 
@@ -203,7 +232,7 @@
             color: var(--muted);
             max-width: 500px;
             margin-top: 2rem;
-            opacity: 0; /* Animowane z GSAP */
+            opacity: 0;
             transform: translateY(30px);
         }
 
@@ -212,7 +241,7 @@
             aspect-ratio: 4/5;
             object-fit: cover;
             border-radius: 4px;
-            opacity: 0; /* Animowane z GSAP */
+            opacity: 0;
             transform: scale(0.9);
         }
 
@@ -251,6 +280,7 @@
         @media (max-width: 992px) {
             .manual-grid, .reveal-grid, .footer-grid { grid-template-columns: 1fr; }
             .manual-container { padding: 2rem; }
+            .huge-text { white-space: normal; } /* Pozwala na łamanie tekstu na telefonie */
         }
     </style>
 </head>
@@ -270,46 +300,50 @@
 
     <section class="manual-section">
         <div class="container">
-            <div class="manual-container">
-                <div class="manual-header">
-                    <h2>Jak to robimy? <br>Precyzja to klucz.</h2>
-                    <div class="tech-code">PO-Y00E05</div>
-                </div>
+            <div class="papers-wrapper">
+                <div class="paper-bg paper-1"></div>
+                <div class="paper-bg paper-2"></div>
                 
-                <div class="manual-grid">
-                    <div class="manual-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Schemat montażu">
+                <div class="manual-container">
+                    <div class="manual-header">
+                        <h2>Zostaw schematy nam</h2>
+                        <div class="tech-code">PO-Y00E05</div>
                     </div>
                     
-                    <div class="manual-table-wrapper">
-                        <table class="tech-table">
-                            <thead>
-                                <tr>
-                                    <th>Część</th>
-                                    <th>Ilość i specyfikacja</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="text-align: center;"><span class="part-id">A</span></td>
-                                    <td>
-                                        <div class="tech-desc">Darmowa wycena i konsultacja.</div>
-                                        <div class="tech-desc">Odbiór paczek (opcja).</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center;"><span class="part-id">E</span></td>
-                                    <td>
-                                        <div class="tech-desc">Dojazd w umówionym terminie.</div>
-                                        <div class="tech-desc">Zostawiamy porządek. </div>
-                                        <div class="tech-desc">Zero brakujących śrubek.</div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p style="margin-top: 2rem; color: var(--muted); font-size: 1.1rem;">
-                            Paczki z meblami to dla wielu stres. Zostaw schematy nam. Posiadamy odpowiednie narzędzia, dbamy o regulację zawiasów i zawsze zabieramy puste kartony.
-                        </p>
+                    <div class="manual-grid">
+                        <div class="manual-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Schemat montażu">
+                        </div>
+                        
+                        <div class="manual-table-wrapper">
+                            <table class="tech-table">
+                                <thead>
+                                    <tr>
+                                        <th>Część</th>
+                                        <th>Ilość i specyfikacja</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: center;"><span class="part-id">A</span></td>
+                                        <td>
+                                            <div class="tech-desc">Darmowa wycena i konsultacja.</div>
+                                            <div class="tech-desc">Odbiór paczek (opcja).</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center;"><span class="part-id">E</span></td>
+                                        <td>
+                                            <div class="tech-desc">Dojazd w umówionym terminie.</div>
+                                            <div class="tech-desc">Zostawiamy porządek. </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p style="margin-top: 2rem; color: var(--muted); font-size: 1.1rem;">
+                                Paczki z meblami to dla wielu stres. Posiadamy odpowiednie narzędzia, dbamy o regulację zawiasów i zawsze zabieramy puste kartony. Zero brakujących śrubek.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -343,7 +377,6 @@
                     <p>Skontaktuj się z nami, opowiedz co masz do zrobienia, a my przygotujemy bezpłatną wycenę. Bez ukrytych kosztów.</p>
                     <a href="mailto:kontakt@montadeus.eu" class="btn-outline" style="border-color: #fff; color: #fff;">Napisz do nas</a>
                 </div>
-                
                 <div class="footer-links">
                     <h4>Nasze Usługi</h4>
                     <ul>
@@ -352,7 +385,6 @@
                         <li><a href="#">Montaże Ścienne (TV, półki)</a></li>
                     </ul>
                 </div>
-
                 <div class="footer-links">
                     <h4>Kontakt</h4>
                     <ul>
@@ -362,7 +394,6 @@
                     </ul>
                 </div>
             </div>
-
             <div class="footer-bottom">
                 <div>&copy; 2026 Montadeus. Wszystkie prawa zastrzeżone.</div>
                 <div>Precyzja w detalu.</div>
@@ -373,31 +404,62 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // --- ANIMACJA BLOCK REVEAL ---
-        const tl = gsap.timeline({
+        // --- ANIMACJA: ROZSYPANE KARTKI (Instrukcja) ---
+        const paperTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".manual-section",
+                start: "top 70%", 
+                end: "center 50%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Krok 1: Pokazujemy wszystkie elementy na raz (wjeżdżają lekko z dołu)
+        paperTl.to([".paper-1", ".paper-2", ".manual-container"], {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.1 // minimalne opóźnienie między pojawianiem się
+        })
+        // Krok 2: Rozsunięcie kartek pod spodem (efekt rzuconych planów)
+        .to(".paper-1", {
+            rotation: -4,
+            x: -20,
+            y: 15,
+            duration: 0.8,
+            ease: "back.out(1.5)" // Lekkie "odbicie" na końcu
+        }, "-=0.4")
+        .to(".paper-2", {
+            rotation: 3,
+            x: 25,
+            y: -10,
+            duration: 0.8,
+            ease: "back.out(1.5)"
+        }, "-=0.8");
+
+
+        // --- ANIMACJA: BLOCK REVEAL (Malowanie) ---
+        const revealTl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".reveal-section",
-                start: "top 60%", // Start animacji, gdy sekcja dojdzie do 60% ekranu
+                start: "top 60%", 
                 end: "center 40%", 
-                scrub: false, // Scrub=false oznacza, że animacja zagra się sama do końca (płynniej w tym wypadku)
                 toggleActions: "play none none reverse" 
             }
         });
 
-        // 1. Kolorowy blok zwija się w prawo, odsłaniając tekst (scaleX z 1 do 0)
-        tl.to(".color-block", {
+        revealTl.to(".color-block", {
             scaleX: 0,
             duration: 1.2,
             ease: "power3.inOut"
         })
-        // 2. Zdjęcie pojawia się obok (opacity i delikatny zoom-in)
         .to(".paint-image", {
             opacity: 1,
             scale: 1,
             duration: 1,
             ease: "power2.out"
-        }, "-=0.8") // Zaczyna się 0.8s przed końcem poprzedniej animacji
-        // 3. Tekst opisu wjeżdża z dołu
+        }, "-=0.8")
         .to(".reveal-description", {
             opacity: 1,
             y: 0,
