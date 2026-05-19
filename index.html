@@ -53,19 +53,6 @@
         .logo { font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 900; letter-spacing: -1px; }
         .logo span { color: var(--muted); font-weight: 400; }
 
-        .btn-outline {
-            padding: 0.6rem 1.2rem;
-            border: 2px solid var(--text-color);
-            border-radius: 4px;
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .btn-outline:hover { background-color: var(--text-color); color: var(--white); }
-
         /* --- HERO --- */
         .hero { padding: 10vh 0; }
         .hero h1 {
@@ -229,6 +216,71 @@
         .footer-links a:hover { color: var(--accent-reveal); }
         .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; color: #adb5bd; font-size: 0.85rem; }
 
+        /* --- STICKY CONTACT (Wysuwana Kartka) --- */
+        .sticky-contact {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%) translateX(220px); /* Ukryty panel danych */
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            transition: transform 0.4s ease;
+        }
+        
+        /* Styl "kartki" kontaktu (zinstrukcyjny) */
+        .contact-tab {
+            width: 45px;
+            height: 140px;
+            background-color: var(--white);
+            border: 2px solid var(--black);
+            border-right: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px 0 0 8px;
+            box-shadow: -5px 5px 15px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+        .contact-text {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            writing-mode: vertical-rl; /* Pionowy tekst */
+            transform: rotate(180deg);
+            color: var(--black);
+            font-size: 0.9rem;
+        }
+        
+        /* Panel danych (ciemny) */
+        .contact-details {
+            width: 220px;
+            background-color: var(--black);
+            color: var(--white);
+            padding: 2rem;
+            border-radius: 0 0 0 8px; /* Tylko lewy dolny róg, bo jest przyklejony */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            font-size: 0.95rem;
+        }
+        .details-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .details-info a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .details-info a:hover { color: var(--accent-reveal); }
+
         /* --- RESPONSYWNOŚĆ --- */
         @media (max-width: 992px) {
             .manual-grid, .reveal-grid, .drilling-grid, .leveling-grid, .footer-grid { 
@@ -244,6 +296,9 @@
             
             .papers-wrapper { perspective: none; }
             .paper-1, .paper-2 { display: none; }
+            
+            /* Uproszczenie kontaktu na mobile */
+            .sticky-contact { display: none; }
         }
     </style>
 </head>
@@ -252,8 +307,7 @@
     <div class="container">
         <nav>
             <div class="logo">Monta<span>deus</span></div>
-            <a href="#kontakt" class="btn-outline">Wycena</a>
-        </nav>
+            </nav>
 
         <section class="hero">
             <h1>Solidne rzemiosło.<br>Spokojna głowa.</h1>
@@ -367,7 +421,6 @@
                 <div>
                     <h3>Zróbmy to.</h3>
                     <p>Skontaktuj się z nami, opowiedz co masz do zrobienia, a my przygotujemy bezpłatną wycenę. Bez ukrytych kosztów.</p>
-                    <a href="mailto:kontakt@montadeus.eu" class="btn-outline" style="border-color: #fff; color: #fff;">Napisz do nas</a>
                 </div>
                 <div class="footer-links">
                     <h4>Usługi</h4>
@@ -392,6 +445,22 @@
             </div>
         </div>
     </footer>
+
+    <div class="sticky-contact" id="stickyContact">
+        <div class="contact-tab">
+            <div class="contact-text">Kontakt</div>
+        </div>
+        <div class="contact-details">
+            <div>
+                <div class="details-title">Mail</div>
+                <div class="details-info"><a href="mailto:kontakt@montadeus.eu">kontakt@montadeus.eu</a></div>
+            </div>
+            <div>
+                <div class="details-title">Telefon</div>
+                <div class="details-info"><a href="tel:+48000000000">+48 000 000 000</a></div>
+            </div>
+        </div>
+    </div>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
@@ -428,7 +497,7 @@
                .to(".shelf-line", { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, "<")
                .to(".drill-icon", { opacity: 0, duration: 0.2 })
                .to([".book", ".vase-reveal"], { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "bounce.out" })
-               // Książka leci w prawo i opiera się o dolny róg, bez wchodzenia na mebel
+               // Książka leci w prawo i opiera się o dolny róg, bez nachodzenia na mebel
                .to(".fall-book", { rotation: 25, duration: 0.5, ease: "bounce.out" }, "-=0.2");
 
         // --- LODÓWKA (Poprawiona animacja śruby i poziomowania) ---
@@ -444,6 +513,21 @@
                 .to(".fridge-body", { rotation: 0, duration: 1, ease: "elastic.out(1, 0.6)" }, "-=0.2")
                 // Śruba w tym samym momencie resetuje pozycję Y względem samej lodówki, bo kręci się do góry względem "podłogi"
                 .to(".nut", { y: 0, duration: 1, ease: "elastic.out(1, 0.6)" }, "<");
+
+        // --- ANIMACJA STICKY CONTACT (Hover i Scroll) ---
+        if(isDesktop) {
+            const contactBlock = document.getElementById('stickyContact');
+            
+            // Hover: Wysuń panel danych
+            contactBlock.addEventListener('mouseenter', () => {
+                gsap.to(contactBlock, { translateX: 0, duration: 0.4, ease: "power2.out" });
+            });
+            
+            // Mouseleave: Wsuń panel danych
+            contactBlock.addEventListener('mouseleave', () => {
+                gsap.to(contactBlock, { translateX: 220, duration: 0.4, ease: "power2.in" });
+            });
+        }
 
     </script>
 </body>
