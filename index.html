@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Montadeus | Profesjonalne Wykończenia</title>
+    <title>Montadeus | Solidne Rzemiosło</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f8f9fa;
             --text-color: #1a1b1e;
             --muted: #868e96;
-            --accent: #2c3e50; /* Klasyczny, głęboki granat zamiast neonów */
+            --accent: #2c3e50; /* Elegancki granat */
+            --accent-reveal: #d97757; /* Zgaszony, ceglasty pomarańcz (bardzo premium) */
             --border: #dee2e6;
             --white: #ffffff;
+            --black: #000000;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -45,7 +47,7 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; }
+        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
         .logo span { color: var(--muted); font-weight: 400; }
 
         .btn-outline {
@@ -78,108 +80,140 @@
             margin-bottom: 3rem;
         }
 
-        /* --- O NAS (Struktura i Tożsamość) --- */
-        .about {
-            padding: 5rem 0;
+        /* --- SEKCJA INSTRUKCJI (Powrót do technicznego stylu) --- */
+        .manual-section {
+            padding: 8rem 0;
             background-color: var(--white);
             border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
         }
-        
-        .about-grid {
+
+        .manual-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 3px solid var(--black);
+            background: var(--white);
+            padding: 4rem;
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.05);
+        }
+
+        .manual-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 3px solid var(--black);
+            padding-bottom: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .manual-header h2 { font-size: 3rem; text-transform: uppercase; line-height: 1; }
+        .manual-header .tech-code { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; }
+
+        .manual-grid {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 1fr 1.2fr;
             gap: 4rem;
         }
 
-        .about h2 { font-size: 2.5rem; }
-        .about-text { font-size: 1.1rem; color: var(--text-color); column-count: 2; column-gap: 3rem; }
+        .manual-image-wrapper {
+            position: relative;
+        }
+        
+        /* Miejsce na Twoje zdjęcie ze schematem */
+        .manual-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 2px solid var(--black);
+        }
 
-        /* --- SEKCJA MONTAŻU (Instrukcja) --- */
-        .assembly { padding: 8rem 0; }
-        .assembly-grid {
+        /* Tabela techniczna inspirowana zdjęciem */
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .tech-table th, .tech-table td {
+            border: 2px solid var(--black);
+            padding: 1.5rem;
+            text-align: left;
+        }
+
+        .tech-table th { background: #f0f0f0; font-weight: 700; text-transform: uppercase; }
+        
+        .part-id {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; height: 40px;
+            background: var(--black);
+            color: var(--white);
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .tech-desc { margin-bottom: 0.5rem; }
+
+        /* --- SEKCJA BLOCK REVEAL (Malowanie Wnętrz) --- */
+        .reveal-section {
+            padding: 10rem 0;
+            background-color: var(--bg-color);
+            position: relative;
+        }
+
+        .reveal-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
             align-items: center;
         }
 
-        /* Ramka na Twój schemat */
-        .manual-image-wrapper {
-            background: var(--white);
-            padding: 2rem;
-            border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-            border-radius: 8px;
-        }
-
-        .manual-image-wrapper img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border: 1px solid #eee; /* Delikatna ramka na sam obrazek */
-        }
-
-        .assembly-content h2 { font-size: 3rem; margin-bottom: 1.5rem; }
-        .assembly-content p { font-size: 1.1rem; color: var(--muted); margin-bottom: 2rem; }
-
-        .service-features { list-style: none; }
-        .service-features li {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-        }
-        .service-features li::before {
-            content: '✓';
-            margin-right: 1rem;
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        /* --- SEKCJA MALOWANIA (Color Reveal) --- */
-        .painting {
-            padding: 8rem 0;
-            background-color: var(--white);
-        }
-
-        .painting-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .painting-text h2 { font-size: 3rem; margin-bottom: 1.5rem; }
-        .painting-text p { font-size: 1.1rem; color: var(--muted); margin-bottom: 1.5rem; }
-
-        /* Magia nakładania zdjęć */
-        .paint-visual-container {
+        /* Kontener ukrywający napis */
+        .text-reveal-container {
             position: relative;
-            width: 100%;
-            aspect-ratio: 4/3;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: inline-block;
+            overflow: hidden; /* Przycina wszystko, co wychodzi poza kontener */
         }
 
-        .paint-visual-container img {
+        .huge-text {
+            font-size: clamp(4rem, 8vw, 7rem);
+            line-height: 1;
+            text-transform: uppercase;
+            font-weight: 900;
+            color: var(--black);
+            white-space: nowrap;
+        }
+
+        /* Kolorowy blok zasłaniający napis */
+        .color-block {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-        }
-
-        .img-bw {
-            filter: grayscale(100%);
-            z-index: 1;
-        }
-
-        .img-color {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--accent-reveal); /* Stylowy pomarańcz */
+            transform-origin: right; /* Zwijanie do prawej strony */
             z-index: 2;
-            /* Na start ukrywamy kolorowe zdjęcie (przesłaniamy od prawej) */
-            clip-path: inset(0 100% 0 0); 
+        }
+
+        .reveal-description {
+            font-size: 1.25rem;
+            color: var(--muted);
+            max-width: 500px;
+            margin-top: 2rem;
+            opacity: 0; /* Animowane z GSAP */
+            transform: translateY(30px);
+        }
+
+        .paint-image {
+            width: 100%;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+            border-radius: 4px;
+            opacity: 0; /* Animowane z GSAP */
+            transform: scale(0.9);
         }
 
         /* --- STOPKA --- */
@@ -203,7 +237,7 @@
         .footer-links ul { list-style: none; }
         .footer-links li { margin-bottom: 0.8rem; }
         .footer-links a { color: var(--white); text-decoration: none; transition: color 0.3s; }
-        .footer-links a:hover { color: var(--muted); }
+        .footer-links a:hover { color: var(--accent-reveal); }
 
         .footer-bottom {
             border-top: 1px solid rgba(255,255,255,0.1);
@@ -214,11 +248,9 @@
             font-size: 0.9rem;
         }
 
-        /* Responsywność */
         @media (max-width: 992px) {
-            .about-grid, .assembly-grid, .painting-grid, .footer-grid { grid-template-columns: 1fr; }
-            .about-text { column-count: 1; }
-            .painting-grid { display: flex; flex-direction: column-reverse; }
+            .manual-grid, .reveal-grid, .footer-grid { grid-template-columns: 1fr; }
+            .manual-container { padding: 2rem; }
         }
     </style>
 </head>
@@ -232,52 +264,73 @@
 
         <section class="hero">
             <h1>Solidne rzemiosło. Spokojna głowa.</h1>
-            <p>Jesteśmy ekipą, dla której liczy się precyzja i porządek. Od składania skomplikowanych mebli po idealnie gładkie ściany – przejmujemy Twoje obowiązki remontowe, żebyś Ty nie musiał.</p>
+            <p>Jesteśmy ekipą, dla której liczy się precyzja i porządek. Przejmujemy Twoje obowiązki remontowe i montażowe, żebyś Ty nie musiał się denerwować.</p>
         </section>
     </div>
 
-    <section class="about">
-        <div class="container about-grid">
-            <h2>Krótko o nas.</h2>
-            <div class="about-text">
-                <p>Nie jesteśmy z przypadku. Używamy profesjonalnych narzędzi, sprawdzamy ściany detektorami przed wierceniem i zawsze zabezpieczamy podłogi przed malowaniem. Wiemy, że wpuszczasz nas do swojego domu, dlatego naszą wizytówką jest nie tylko dobrze wykonana praca, ale też czystość, którą po sobie zostawiamy.</p>
-                <br>
-                <p>Niezależnie od tego, czy przyjeżdżamy zamontować szafę z sieciówki, czy odświeżyć salon przed świętami – do każdego zlecenia podchodzimy z takim samym, rzemieślniczym szacunkiem.</p>
+    <section class="manual-section">
+        <div class="container">
+            <div class="manual-container">
+                <div class="manual-header">
+                    <h2>Jak to robimy? <br>Precyzja to klucz.</h2>
+                    <div class="tech-code">PO-Y00E05</div>
+                </div>
+                
+                <div class="manual-grid">
+                    <div class="manual-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Schemat montażu">
+                    </div>
+                    
+                    <div class="manual-table-wrapper">
+                        <table class="tech-table">
+                            <thead>
+                                <tr>
+                                    <th>Część</th>
+                                    <th>Ilość i specyfikacja</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center;"><span class="part-id">A</span></td>
+                                    <td>
+                                        <div class="tech-desc">Darmowa wycena i konsultacja.</div>
+                                        <div class="tech-desc">Odbiór paczek (opcja).</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;"><span class="part-id">E</span></td>
+                                    <td>
+                                        <div class="tech-desc">Dojazd w umówionym terminie.</div>
+                                        <div class="tech-desc">Zostawiamy porządek. </div>
+                                        <div class="tech-desc">Zero brakujących śrubek.</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 2rem; color: var(--muted); font-size: 1.1rem;">
+                            Paczki z meblami to dla wielu stres. Zostaw schematy nam. Posiadamy odpowiednie narzędzia, dbamy o regulację zawiasów i zawsze zabieramy puste kartony.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="assembly">
-        <div class="container assembly-grid">
-            <div class="manual-image-wrapper">
-                <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Instrukcja montażu szafy">
+    <section class="reveal-section">
+        <div class="container reveal-grid">
+            <div class="reveal-content">
+                <div class="text-reveal-container">
+                    <h2 class="huge-text">MALOWANIE <br>WNĘTRZ</h2>
+                    <div class="color-block"></div>
+                </div>
+                
+                <p class="reveal-description">
+                    Odpowiednie przygotowanie to podstawa. Zanim otworzymy puszkę z farbą, dokładnie maskujemy listwy i podłogi. Ty wybierasz kolor, my zajmujemy się idealnym kryciem bez smug.
+                </p>
             </div>
             
-            <div class="assembly-content">
-                <h2>Zostaw te schematy nam.</h2>
-                <p>Paczki z meblami to dla wielu stres i stracony weekend. Dla nas to codzienność. Składamy szafy, łóżka i komody szybciej i pewniej. Zero przekręconych gwintów, zero brakujących elementów.</p>
-                
-                <ul class="service-features">
-                    <li>Czytamy każdą instrukcję (nawet tę napisaną drobnym drukiem)</li>
-                    <li>Posiadamy odpowiednie elektronarzędzia</li>
-                    <li>Dbamy o regulację zawiasów i poziomowanie</li>
-                    <li>Zabieramy ze sobą puste kartony i folie</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <section class="painting">
-        <div class="container painting-grid">
-            <div class="painting-text">
-                <h2>Nowy kolor. <br>Bez śladów.</h2>
-                <p>Odpowiednie przygotowanie to 80% sukcesu przy malowaniu. Zanim otworzymy puszkę z farbą, dokładnie maskujemy listwy, gniazdka i podłogi.</p>
-                <p>Używamy wałków dobranych do struktury ściany, co gwarantuje równe krycie bez smug i prześwitów. Ty wybierasz kolor, my zajmujemy się resztą – szybko, sprawnie i bez niespodzianek.</p>
-            </div>
-
-            <div class="paint-visual-container">
-                <img src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Pokój przed" class="img-bw">
-                <img src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Pokój pomalowany" class="img-color">
+            <div class="reveal-image-wrapper">
+                <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Malowanie pokoju" class="paint-image">
             </div>
         </div>
     </section>
@@ -296,7 +349,6 @@
                     <ul>
                         <li><a href="#">Montaż Mebli</a></li>
                         <li><a href="#">Malowanie Wnętrz</a></li>
-                        <li><a href="#">Odświeżanie pod Wynajem</a></li>
                         <li><a href="#">Montaże Ścienne (TV, półki)</a></li>
                     </ul>
                 </div>
@@ -306,14 +358,14 @@
                     <ul>
                         <li>+48 000 000 000</li>
                         <li>kontakt@montadeus.eu</li>
-                        <li>Działamy na terenie Warszawy i okolic</li>
+                        <li>Warszawa i okolic</li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
                 <div>&copy; 2026 Montadeus. Wszystkie prawa zastrzeżone.</div>
-                <div>Stworzone dla profesjonalistów.</div>
+                <div>Precyzja w detalu.</div>
             </div>
         </div>
     </footer>
@@ -321,22 +373,37 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // Znajdujemy kolorowe zdjęcie
-        const colorImg = document.querySelector('.img-color');
-
-        // Animacja odkrywania koloru
-        gsap.to(colorImg, {
-            // clipPath płynnie zmienia wartość z "inset(0 100% 0 0)" na "inset(0 0% 0 0)"
-            // co działa jak odsłanianie kurtyny od lewej do prawej
-            clipPath: "inset(0 0% 0 0)",
-            ease: "none",
+        // --- ANIMACJA BLOCK REVEAL ---
+        const tl = gsap.timeline({
             scrollTrigger: {
-                trigger: ".paint-visual-container",
-                start: "top 80%", // Animacja rusza, gdy górna krawędź zdjęcia jest na 80% wys. ekranu
-                end: "bottom 50%", // Kończy się, gdy dół zdjęcia dochodzi do połowy ekranu
-                scrub: 1 // Wiąże postęp animacji bezpośrednio z pozycją scrolla użytkownika
+                trigger: ".reveal-section",
+                start: "top 60%", // Start animacji, gdy sekcja dojdzie do 60% ekranu
+                end: "center 40%", 
+                scrub: false, // Scrub=false oznacza, że animacja zagra się sama do końca (płynniej w tym wypadku)
+                toggleActions: "play none none reverse" 
             }
         });
+
+        // 1. Kolorowy blok zwija się w prawo, odsłaniając tekst (scaleX z 1 do 0)
+        tl.to(".color-block", {
+            scaleX: 0,
+            duration: 1.2,
+            ease: "power3.inOut"
+        })
+        // 2. Zdjęcie pojawia się obok (opacity i delikatny zoom-in)
+        .to(".paint-image", {
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            ease: "power2.out"
+        }, "-=0.8") // Zaczyna się 0.8s przed końcem poprzedniej animacji
+        // 3. Tekst opisu wjeżdża z dołu
+        .to(".reveal-description", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        }, "-=0.6");
     </script>
 </body>
 </html>
