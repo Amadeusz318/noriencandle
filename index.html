@@ -1,715 +1,1918 @@
 <!DOCTYPE html>
+
 <html lang="pl">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Montadeus | Solidne Rzemiosło</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
+
         :root {
+
             --bg-color: #f8f9fa;
+
             --text-color: #1a1b1e;
+
             --muted: #868e96;
+
             --accent: #2c3e50;
+
             --accent-reveal: #d97757;
+
             --border: #dee2e6;
+
             --white: #ffffff;
-            --black: #0c0c0c; /* Nieco głębsza, szlachetniejsza czerń */
+
+            --black: #000000;
+
         }
+
+
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+
+
         body {
+
             font-family: 'Inter', sans-serif;
+
             background-color: var(--bg-color);
+
             color: var(--text-color);
+
             line-height: 1.6;
+
             overflow-x: hidden;
+
             -webkit-font-smoothing: antialiased;
-            position: relative;
+
         }
 
-        /* Subtelne ziarno (film grain) dla efektu premium rzemiosła */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 9999;
-        }
+
 
         h1, h2, h3, .logo, .huge-text { 
+
             font-family: 'Outfit', sans-serif; 
+
             text-transform: uppercase;
+
         }
+
         
+
         .container {
+
             width: 90%;
+
             max-width: 1400px;
+
             margin: 0 auto;
+
         }
 
-        /* --- PREMIUM HEADER --- */
+
+
+        /* --- HEADER / NAWIGACJA PREMIUM --- */
+
         .site-header {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1010; /* Najwyższy index, nad menu */
-            background: rgba(248, 249, 250, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+            z-index: 900;
+            background: rgba(248, 249, 250, 0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(222, 226, 230, 0.9);
+            transition: transform 0.45s ease, background 0.35s ease, box-shadow 0.35s ease;
         }
 
-        /* Stan gdy menu jest otwarte - header staje się niewidzialny, by elementy pływały nad czarnym tłem */
-        .site-header.is-active {
-            background: transparent;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            border-color: transparent;
+        .site-header.is-scrolled {
+            background: rgba(248, 249, 250, 0.94);
+            box-shadow: 0 16px 45px rgba(26, 27, 30, 0.06);
         }
 
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 80px;
+        .site-header.is-hidden {
+            transform: translateY(-110%);
         }
 
-        .logo { 
-            font-size: clamp(1.2rem, 4vw, 1.8rem); 
-            font-weight: 900; 
-            letter-spacing: -1px; 
-            position: relative;
-            z-index: 1012;
-            transition: color 0.4s ease;
-        }
-        .logo span { color: var(--muted); font-weight: 400; transition: color 0.4s ease;}
-
-        /* Zmiana koloru logo po otwarciu menu */
-        .site-header.is-active .logo { color: var(--white); }
-        .site-header.is-active .logo span { color: rgba(255, 255, 255, 0.6); }
-
-        .header-controls {
-            display: flex;
+        .nav-shell {
+            min-height: 82px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
             align-items: center;
             gap: 1.5rem;
-            z-index: 1012;
         }
 
-        /* Płynnie wysuwany przełącznik języków */
-        .lang-switcher {
-            position: relative;
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            color: var(--black);
+            text-decoration: none;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-weight: 900;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .logo span { color: var(--muted); font-weight: 400; }
+
+        .nav-links {
+            justify-self: center;
             display: flex;
             align-items: center;
-            height: 44px;
-            padding: 0 16px;
+            gap: 0.35rem;
+            list-style: none;
+        }
+
+        .nav-item { position: relative; }
+
+        .nav-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.8rem 0.95rem;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 999px;
+            transition: color 0.25s ease, background 0.25s ease;
+        }
+
+        .nav-link::after {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-reveal);
+            transform: scale(0);
+            transform-origin: center;
+            transition: transform 0.25s ease;
+        }
+
+        .nav-item:hover .nav-link,
+        .nav-item:focus-within .nav-link {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .nav-item:hover .nav-link::after,
+        .nav-item:focus-within .nav-link::after {
+            transform: scale(1);
+        }
+
+        .nav-panel {
+            position: absolute;
+            left: 50%;
+            top: calc(100% + 14px);
+            width: min(320px, 80vw);
+            padding: 1rem;
             background: var(--white);
             border: 2px solid var(--black);
-            border-radius: 30px;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.06);
+            transform: translate(-50%, 14px) rotate(-1deg);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+        }
+
+        .nav-item:nth-child(even) .nav-panel {
+            transform: translate(-50%, 14px) rotate(1deg);
+        }
+
+        .nav-item:hover .nav-panel,
+        .nav-item:focus-within .nav-panel {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translate(-50%, 0) rotate(0deg);
+        }
+
+        .nav-panel::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            width: 14px;
+            height: 14px;
+            background: var(--white);
+            border-left: 2px solid var(--black);
+            border-top: 2px solid var(--black);
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .panel-kicker {
+            display: block;
+            margin-bottom: 0.35rem;
             font-family: 'Space Mono', monospace;
-            font-size: 0.85rem;
+            color: var(--accent-reveal);
+            font-size: 0.72rem;
             font-weight: 700;
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.85, 0, 0.15, 1);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .panel-title {
+            margin-bottom: 0.35rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .panel-text {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .nav-actions {
+            justify-self: end;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .lang-switch {
+            position: relative;
         }
 
         .lang-current {
-            position: relative;
-            z-index: 2;
-            transition: color 0.3s;
-        }
-
-        .lang-options {
-            display: flex;
-            gap: 12px;
-            width: 0;
-            opacity: 0;
-            transform: translateX(20px);
-            transition: all 0.4s cubic-bezier(0.85, 0, 0.15, 1);
-        }
-
-        .lang-switcher:hover {
-            background: var(--black);
-            color: var(--white);
-            padding: 0 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .lang-switcher:hover .lang-options {
-            width: auto;
-            opacity: 1;
-            margin-left: 12px;
-            transform: translateX(0);
-        }
-
-        .lang-options span {
-            color: var(--muted);
-            transition: color 0.3s;
-        }
-        .lang-options span:hover { color: var(--white); }
-
-        /* Przycisk Menu (Hamburger -> X) */
-        .menu-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            display: inline-flex;
             align-items: center;
-            gap: 6px;
-            z-index: 1012;
-            position: relative;
-            padding: 5px; /* powiększenie pola kliknięcia */
+            gap: 0.45rem;
+            height: 42px;
+            padding: 0 0.9rem;
+            background: var(--white);
+            color: var(--black);
+            border: 2px solid var(--black);
+            border-radius: 999px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        .menu-toggle .line {
-            display: block;
-            width: 30px;
-            height: 2px;
-            background-color: var(--black);
-            transition: transform 0.4s cubic-bezier(0.85, 0, 0.15, 1), width 0.3s, background-color 0.4s;
-            transform-origin: center;
+        .lang-current:hover,
+        .lang-current:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.08);
+            outline: none;
         }
 
-        .menu-toggle:hover .line:nth-child(1) { width: 20px; }
-        .menu-toggle:hover .line:nth-child(2) { width: 30px; }
+        .lang-current svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.25s ease;
+        }
 
-        /* Stan aktywny przycisku po otwarciu menu */
-        .site-header.is-active .menu-toggle .line { background-color: var(--white); width: 30px; }
-        .site-header.is-active .menu-toggle.is-active .line:nth-child(1) { transform: translateY(4px) rotate(45deg); }
-        .site-header.is-active .menu-toggle.is-active .line:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
+        .lang-switch:hover .lang-current svg,
+        .lang-switch:focus-within .lang-current svg {
+            transform: rotate(180deg);
+        }
 
-        /* Ciemny Overlay tła (zamknięcie po kliknięciu) */
-        .menu-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
+        .lang-menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 12px);
+            min-width: 190px;
+            padding: 0.45rem;
+            background: var(--black);
+            border: 2px solid var(--black);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.08);
+            list-style: none;
+            transform: translateY(12px);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.5s ease;
-            cursor: pointer;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
         }
-        .menu-overlay.is-active {
+
+        .lang-switch:hover .lang-menu,
+        .lang-switch:focus-within .lang-menu {
             opacity: 1;
             visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0);
         }
 
-        /* Wysuwane Menu boczne */
-        .slide-menu {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 100%;
-            max-width: 500px;
-            height: 100vh;
-            background-color: var(--black);
-            color: var(--white);
-            z-index: 1005;
+        .lang-menu a,
+        .lang-menu span {
             display: flex;
-            flex-direction: column;
-            padding: 140px 4rem 4rem;
-            transform: translateX(100%);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.2);
-        }
-
-        .slide-menu-links { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; }
-        .slide-menu-links li { overflow: hidden; }
-        .slide-menu-links a {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 900;
-            text-transform: uppercase;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.75rem 0.8rem;
             color: var(--white);
             text-decoration: none;
-            line-height: 1;
-            display: inline-block;
-            transform: translateY(110%);
-            transition: color 0.3s, transform 0.3s;
-        }
-        .slide-menu-links a:hover { color: var(--accent-reveal); transform: translateX(15px); }
-
-        .slide-menu-footer {
-            margin-top: auto;
-            opacity: 0;
-            transform: translateY(20px);
             font-family: 'Space Mono', monospace;
-            color: var(--muted);
-            font-size: 0.9rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            font-size: 0.82rem;
+            border-radius: 6px;
         }
-        .slide-menu-footer a { color: var(--white); text-decoration: none; transition: color 0.3s;}
-        .slide-menu-footer a:hover { color: var(--accent-reveal); }
+
+        .lang-menu .is-active {
+            background: var(--accent-reveal);
+            color: var(--black);
+            font-weight: 700;
+        }
+
+        .lang-menu a:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        .header-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 42px;
+            padding: 0 1.1rem;
+            background: var(--black);
+            color: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 999px;
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .header-cta:hover {
+            background: var(--accent-reveal);
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.08);
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 46px;
+            height: 46px;
+            border: 2px solid var(--black);
+            border-radius: 50%;
+            background: var(--white);
+            cursor: pointer;
+            place-items: center;
+        }
+
+        .nav-toggle-lines,
+        .nav-toggle-lines::before,
+        .nav-toggle-lines::after {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: var(--black);
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        .nav-toggle-lines {
+            position: relative;
+        }
+
+        .nav-toggle-lines::before,
+        .nav-toggle-lines::after {
+            content: "";
+            position: absolute;
+            left: 0;
+        }
+
+        .nav-toggle-lines::before { transform: translateY(-6px); }
+        .nav-toggle-lines::after { transform: translateY(6px); }
+
+        body.menu-open { overflow: hidden; }
+
+        body.menu-open .nav-toggle-lines { background: transparent; }
+        body.menu-open .nav-toggle-lines::before { transform: rotate(45deg); }
+        body.menu-open .nav-toggle-lines::after { transform: rotate(-45deg); }
+
+        .mobile-menu {
+            display: none;
+        }
+
+
 
         /* --- HERO --- */
-        .hero { padding: 22vh 0 10vh; }
+
+        .hero { padding: 10vh 0; }
+
         .hero h1 {
+
             font-size: clamp(2.5rem, 8vw, 6.5rem);
+
             font-weight: 900;
+
             line-height: 0.95;
+
             letter-spacing: -2px;
+
             margin-bottom: 1.5rem;
+
             max-width: 1000px;
+
             color: var(--black);
+
         }
+
         .hero p {
+
             font-size: clamp(1rem, 3vw, 1.25rem); color: var(--muted); max-width: 600px; margin-bottom: 2rem;
+
         }
+
+
 
         /* --- WSPÓLNY STYL POTĘŻNYCH NAGŁÓWKÓW --- */
+
         .huge-text {
+
             font-size: clamp(3rem, 10vw, 7rem); 
+
             font-weight: 900; 
+
             line-height: 0.9;
+
             letter-spacing: -2px; 
+
             color: var(--black); 
+
             margin-bottom: 1rem;
+
         }
 
-        /* --- SEKCJE GŁÓWNE --- */
-        /* (Styl reszty strony - bez zmian w układzie, poprawione jedynie odstępy dla mobilnych) */
-        .manual-section { padding: 5rem 0 8rem; background-color: var(--white); border-top: 1px solid var(--border); overflow: hidden; }
-        .papers-wrapper { position: relative; max-width: 1200px; margin: 0 auto; perspective: 1000px; }
-        .paper-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); border: 2px solid var(--border); z-index: 1; box-shadow: 5px 5px 15px rgba(0,0,0,0.03); opacity: 0; }
-        .manual-container { position: relative; z-index: 5; border: 3px solid var(--black); background: var(--white); padding: 3rem; box-shadow: 15px 15px 0px rgba(0,0,0,0.05); opacity: 0; transform: translateY(100px); }
-        .manual-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid var(--black); padding-bottom: 1.5rem; margin-bottom: 3rem; }
+
+
+        /* --- SEKCJA INSTRUKCJI (KARTEK) --- */
+
+        .manual-section {
+
+            padding: 5rem 0 8rem; background: linear-gradient(180deg, var(--white) 0%, #fbfbfb 100%); border-top: 1px solid var(--border); overflow: hidden; position: relative;
+
+        }
+
+        .manual-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 34px 34px;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .manual-section > .container { position: relative; z-index: 2; }
+
+        .manual-section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .manual-meta-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1rem;
+            border: 2px solid var(--black);
+            background: var(--white);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.04);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+        }
+
+        .manual-meta-tag strong { color: var(--accent-reveal); }
+
+        .papers-wrapper { position: relative; max-width: 1260px; margin: 0 auto; perspective: 1400px; transform-style: preserve-3d; }
+
+        .paper-bg {
+
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white);
+
+            border: 2px solid var(--border); z-index: 1; box-shadow: 5px 5px 15px rgba(0,0,0,0.03); opacity: 0;
+
+        }
+
+        .paper-1 { transform: rotate(-1.5deg) translateY(22px); }
+        .paper-2 { transform: rotate(1.2deg) translateY(22px); }
+
+        .manual-container {
+
+            position: relative; z-index: 5; border: 3px solid var(--black); background: rgba(255,255,255,0.98);
+
+            padding: 3rem; box-shadow: 18px 18px 0px rgba(0,0,0,0.05); opacity: 0; transform: translateY(90px) rotateX(8deg); transform-origin: center top;
+
+        }
+
+        .manual-container::before {
+            content: "";
+            position: absolute;
+            top: 1.1rem;
+            right: 1.1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-reveal);
+            box-shadow: 0 0 0 7px rgba(217, 119, 87, 0.18);
+        }
+
+        .manual-header {
+
+            display: flex; justify-content: space-between; align-items: flex-end;
+
+            border-bottom: 3px solid var(--black); padding-bottom: 1.5rem; margin-bottom: 1.5rem;
+
+        }
+
+        .manual-header h3 {
+            max-width: 10ch;
+            line-height: 0.95;
+        }
+
         .manual-header .tech-code { font-family: 'Space Mono', monospace; font-size: clamp(0.9rem, 2vw, 1.2rem); font-weight: 700; }
-        .manual-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; }
-        .manual-image-wrapper img { width: 100%; height: auto; display: block; border: 2px solid var(--black); }
-        .tech-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 0.9rem; }
+
+        .manual-progress {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .manual-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0.95rem;
+            border: 2px solid var(--black);
+            background: var(--white);
+            min-width: 180px;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .manual-pill strong {
+            display: inline-grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .manual-pill span {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .manual-pill b {
+            display: block;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .manual-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 3rem; align-items: start; }
+
+        .manual-image-wrapper {
+            position: relative;
+            min-height: 350px;
+            overflow: hidden;
+            border: 2px solid var(--black);
+            background: #dfe3e6;
+            opacity: 0;
+            clip-path: inset(0 100% 0 0);
+        }
+
+        .manual-image-wrapper img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            transform: scale(1.12);
+            filter: saturate(0.9) contrast(1.03);
+        }
+
+        .manual-image-shine {
+            position: absolute;
+            inset: -10%;
+            background: linear-gradient(115deg, transparent 36%, rgba(255,255,255,0.85) 50%, transparent 64%);
+            transform: translateX(-130%) rotate(10deg);
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .manual-hotspot {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            opacity: 0;
+            transform: scale(0.75);
+        }
+
+        .manual-hotspot.top-left { top: 1rem; left: 1rem; }
+        .manual-hotspot.bottom-right { right: 1rem; bottom: 3.8rem; }
+
+        .manual-pin {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--black);
+            color: var(--white);
+            display: grid;
+            place-items: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            border: 2px solid var(--white);
+            box-shadow: 0 0 0 2px var(--black);
+        }
+
+        .manual-label {
+            padding: 0.45rem 0.65rem;
+            background: rgba(255,255,255,0.92);
+            border: 2px solid var(--black);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.74rem;
+            line-height: 1.25;
+            text-transform: uppercase;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.05);
+        }
+
+        .manual-measure {
+            position: absolute;
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .manual-measure-line {
+            flex: 1;
+            height: 6px;
+            border-top: 2px solid rgba(255,255,255,0.95);
+            border-bottom: 2px solid transparent;
+            background: repeating-linear-gradient(90deg, rgba(255,255,255,0.95) 0 10px, transparent 10px 16px);
+        }
+
+        .manual-measure-label {
+            padding: 0.45rem 0.75rem;
+            background: rgba(0,0,0,0.78);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.7);
+            border-radius: 999px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.74rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .manual-table-wrapper { position: relative; }
+
+        .tech-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 0.9rem; background: var(--white); }
         .tech-table th, .tech-table td { border: 2px solid var(--black); padding: 1rem; text-align: left; }
         .tech-table th { background: #f0f0f0; font-weight: 700; text-transform: uppercase; }
-        .part-id { display: inline-flex; align-items: center; justify-content: center; width: 35px; height: 35px; background: var(--black); color: var(--white); border-radius: 50%; font-weight: 900; font-family: 'Outfit', sans-serif; }
+        .tech-table tbody tr { opacity: 0; transform: translateX(24px); }
+        .tech-table td div + div { margin-top: 0.3rem; }
+
+        .part-id {
+
+            display: inline-flex; align-items: center; justify-content: center; width: 35px; height: 35px;
+
+            background: var(--black); color: var(--white); border-radius: 50%; font-weight: 900;
+
+            font-family: 'Outfit', sans-serif;
+
+        }
+
+        .manual-note {
+            margin-top: 1.5rem;
+            padding: 1.2rem 1.35rem;
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent-reveal);
+            color: #5f6770;
+            font-size: clamp(0.98rem, 2vw, 1.08rem);
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .manual-note strong { color: var(--black); }
+
+        .manual-assembly-line {
+            position: absolute;
+            left: 2.1rem;
+            bottom: 1.15rem;
+            width: 250px;
+            height: 82px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .manual-route-path {
+            fill: none;
+            stroke: rgba(0,0,0,0.2);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-dasharray: 420;
+            stroke-dashoffset: 420;
+        }
+
+        .manual-route-dot {
+            fill: var(--accent-reveal);
+            stroke: var(--black);
+            stroke-width: 2;
+        }
+
+        .manual-stamp {
+            position: absolute;
+            right: 1rem;
+            bottom: -0.3rem;
+            padding: 0.7rem 1rem;
+            border: 2px solid var(--accent-reveal);
+            color: var(--accent-reveal);
+            background: rgba(255,255,255,0.92);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transform: rotate(-10deg) scale(0.75);
+            opacity: 0;
+        }
+
+        /* --- SEKCJA BLOCK REVEAL (Malowanie) --- */
 
         .reveal-section { padding: 8rem 0; background-color: var(--bg-color); position: relative; }
-        .reveal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
-        .text-reveal-container { position: relative; display: inline-block; overflow: hidden; padding-right: 10px; }
-        .color-block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--accent-reveal); transform-origin: right; z-index: 2; }
-        .reveal-description { font-size: clamp(1rem, 2vw, 1.1rem); color: var(--muted); max-width: 500px; margin-top: 1.5rem; opacity: 0; transform: translateY(30px); }
-        .paint-image { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 4px; opacity: 0; transform: scale(0.9); }
 
-        .drilling-section { padding: 8rem 0; background-color: var(--black); color: var(--white); overflow: hidden; }
+        .reveal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+
+        .text-reveal-container { position: relative; display: inline-block; overflow: hidden; padding-right: 10px; }
+
+        .color-block {
+
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+
+            background-color: var(--accent-reveal); transform-origin: right; z-index: 2;
+
+        }
+
+        .reveal-description {
+
+            font-size: clamp(1rem, 2vw, 1.1rem); color: var(--muted); max-width: 500px; margin-top: 1.5rem;
+
+            opacity: 0; transform: translateY(30px);
+
+        }
+
+        .paint-image {
+
+            width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 4px; opacity: 0; transform: scale(0.9);
+
+        }
+
+
+
+        /* --- SEKCJA WIERCENIE I PÓŁKA (Fizyka i Sukulent) --- */
+
+        .drilling-section { padding: 8rem 0; background-color: var(--text-color); color: var(--white); overflow: hidden; }
+
         .drilling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+
         .drilling-section .huge-text { color: var(--white); }
+
         .drilling-section .reveal-description { color: #adb5bd; }
+
         
+
         .wall-visual { position: relative; width: 100%; height: 300px; display: flex; align-items: center; }
-        .shelf-line { position: absolute; left: 0; top: 50%; width: 100%; height: 6px; background-color: var(--white); transform-origin: left; transform: scaleX(0); z-index: 1; border-radius: 3px; }
+
+        .shelf-line {
+
+            position: absolute; left: 0; top: 50%; width: 100%; height: 6px;
+
+            background-color: var(--white); transform-origin: left; transform: scaleX(0); z-index: 1; border-radius: 3px;
+
+        }
+
         .drill-icon { position: absolute; left: 0; top: 38%; font-size: 2.5rem; z-index: 3; }
-        .shelf-items { position: absolute; left: 10%; bottom: 50%; width: 80%; height: 150px; display: flex; align-items: flex-end; gap: 4px; z-index: 2; padding-bottom: 3px; }
+
         
-        .book { width: 22px; background-color: var(--white); opacity: 0; transform: translateY(-50px); border-radius: 2px 2px 0 0; border: 2px solid var(--black); border-bottom: none; }
+
+        .shelf-items {
+
+            position: absolute; left: 10%; bottom: 50%; width: 80%; height: 150px; 
+
+            display: flex; align-items: flex-end; gap: 4px; z-index: 2; padding-bottom: 3px;
+
+        }
+
+        
+
+        /* Książki z obrysem */
+
+        .book { 
+
+            width: 22px; background-color: var(--white); opacity: 0; transform: translateY(-50px); 
+
+            border-radius: 2px 2px 0 0; border: 2px solid var(--black); border-bottom: none;
+
+        }
+
         .book-1 { height: 70px; background-color: var(--accent-reveal); }
+
         .book-2 { height: 85px; }
+
         .book-3 { height: 60px; background-color: #adb5bd; }
+
         .book-4 { height: 65px; }
-        .book-5 { height: 50px; background-color: var(--accent-reveal); transform-origin: bottom right; margin-left: 2px; }
+
         
-        .vase-container { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; margin-left: 40px; opacity: 0; transform: translateY(-50px); }
-        .plant-cluster { display: flex; align-items: flex-end; justify-content: center; margin-bottom: -4px; z-index: 1; }
-        .leaf { width: 10px; border-radius: 10px; background-color: #4ade80; border: 2px solid var(--black); }
+
+        /* Książka spadająca - pivot w prawym dolnym rogu, pochylenie w prawą (pustą) stronę */
+
+        .book-5 { height: 50px; background-color: var(--accent-reveal); transform-origin: bottom right; margin-left: 2px; }
+
+        
+
+        /* Nowy sukulent w doniczce */
+
+        .vase-container { 
+
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end; 
+
+            margin-left: 40px; opacity: 0; transform: translateY(-50px); 
+
+        }
+
+        .plant-cluster { 
+
+            display: flex; align-items: flex-end; justify-content: center; margin-bottom: -4px; z-index: 1; 
+
+        }
+
+        .leaf { 
+
+            width: 10px; border-radius: 10px; background-color: #4ade80; border: 2px solid var(--black); 
+
+        }
+
         .leaf-1 { height: 16px; transform: rotate(-25deg); margin-right: -4px; }
+
         .leaf-2 { height: 24px; z-index: 2; }
+
         .leaf-3 { height: 14px; transform: rotate(25deg); margin-left: -4px; }
-        .vase { width: 28px; height: 26px; background-color: var(--white); border-radius: 4px 4px 12px 12px; border: 2px solid var(--black); z-index: 2; }
+
+        .vase { 
+
+            width: 28px; height: 26px; background-color: var(--white); 
+
+            border-radius: 4px 4px 12px 12px; border: 2px solid var(--black); z-index: 2; 
+
+        }
+
+
+
+        /* --- SEKCJA LODÓWKA (Poprawiona śruba poziomująca) --- */
 
         .leveling-section { padding: 8rem 0; background-color: var(--white); border-bottom: 1px solid var(--border); }
-        .leveling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
-        .fridge-visual { position: relative; display: flex; justify-content: center; align-items: center; height: 350px; }
-        .fridge-body { width: 140px; height: 260px; background-color: #f8f9fa; border: 4px solid var(--black); border-radius: 6px; position: relative; display: flex; flex-direction: column; transform-origin: bottom left; }
-        .fridge-top { height: 30%; border-bottom: 4px solid var(--black); position: relative; }
-        .fridge-bottom { height: 70%; position: relative; }
-        .fridge-handle { position: absolute; left: 12px; width: 5px; background-color: var(--black); border-radius: 3px; }
-        .fridge-top .fridge-handle { bottom: 15px; height: 25px; }
-        .fridge-bottom .fridge-handle { top: 15px; height: 50px; }
-        .fridge-foot-left, .fridge-foot-right { position: absolute; bottom: -10px; width: 16px; height: 10px; background-color: var(--black); border-radius: 2px; }
-        .fridge-foot-left { left: 15px; }
-        .fridge-foot-right { right: 15px; }
-        .nut { position: absolute; bottom: -10px; right: 15px; width: 16px; height: 8px; background-color: #adb5bd; border: 2px solid var(--black); border-radius: 2px; opacity: 0; z-index: -1; }
 
-        footer { background-color: var(--black); color: var(--white); padding: 5rem 0 2rem; }
+        .leveling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+
+        
+
+        .fridge-visual { position: relative; display: flex; justify-content: center; align-items: center; height: 350px; }
+
+        
+
+        .fridge-body {
+
+            width: 140px; height: 260px; background-color: #f8f9fa; border: 4px solid var(--black);
+
+            border-radius: 6px; position: relative; display: flex; flex-direction: column;
+
+            transform-origin: bottom left; /* Lewa noga stoi, prawa wisi */
+
+        }
+
+        .fridge-top { height: 30%; border-bottom: 4px solid var(--black); position: relative; }
+
+        .fridge-bottom { height: 70%; position: relative; }
+
+        .fridge-handle { position: absolute; left: 12px; width: 5px; background-color: var(--black); border-radius: 3px; }
+
+        .fridge-top .fridge-handle { bottom: 15px; height: 25px; }
+
+        .fridge-bottom .fridge-handle { top: 15px; height: 50px; }
+
+        
+
+        .fridge-foot-left, .fridge-foot-right {
+
+            position: absolute; bottom: -10px; width: 16px; height: 10px; background-color: var(--black); border-radius: 2px;
+
+        }
+
+        .fridge-foot-left { left: 15px; }
+
+        .fridge-foot-right { right: 15px; }
+
+        
+
+        /* Śruba kontrująca - techniczna szarość, czarna ramka */
+
+        .nut {
+
+            position: absolute; bottom: -10px; right: 15px; width: 16px; height: 8px;
+
+            background-color: #adb5bd; border: 2px solid var(--black); 
+
+            border-radius: 2px; opacity: 0; z-index: -1;
+
+        }
+
+
+
+        /* --- STOPKA --- */
+
+        footer { background-color: var(--text-color); color: var(--white); padding: 5rem 0 2rem; }
+
         .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+
         .footer-grid h3 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 1rem; text-transform: uppercase;}
+
         .footer-grid p { color: #adb5bd; margin-bottom: 2rem; max-width: 400px;}
+
         .footer-links h4 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--muted); }
+
         .footer-links ul { list-style: none; }
+
         .footer-links li { margin-bottom: 0.6rem; font-size: 0.9rem; }
+
         .footer-links a { color: var(--white); text-decoration: none; transition: color 0.3s; }
+
         .footer-links a:hover { color: var(--accent-reveal); }
+
         .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; color: #adb5bd; font-size: 0.85rem; }
 
-        /* --- STICKY CONTACT --- */
+
+
+        /* --- STICKY CONTACT (Wysuwana Kartka) --- */
+
         .sticky-contact {
-            position: fixed; top: 50%; right: 0; transform: translateY(-50%) translateX(220px);
-            display: flex; align-items: center; z-index: 900; transition: transform 0.4s cubic-bezier(0.85, 0, 0.15, 1);
+
+            position: fixed;
+
+            top: 50%;
+
+            right: 0;
+
+            transform: translateY(-50%) translateX(220px); /* Ukryty panel danych */
+
+            display: flex;
+
+            align-items: center;
+
+            z-index: 1000;
+
+            transition: transform 0.4s ease;
+
         }
+
+        
+
+        /* Styl "kartki" kontaktu (zinstrukcyjny) */
+
         .contact-tab {
-            width: 45px; height: 140px; background-color: var(--white); border: 2px solid var(--black); border-right: none;
-            display: flex; align-items: center; justify-content: center; border-radius: 8px 0 0 8px;
-            box-shadow: -5px 5px 15px rgba(0,0,0,0.05); cursor: pointer;
+
+            width: 45px;
+
+            height: 140px;
+
+            background-color: var(--white);
+
+            border: 2px solid var(--black);
+
+            border-right: none;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 8px 0 0 8px;
+
+            box-shadow: -5px 5px 15px rgba(0,0,0,0.05);
+
+            cursor: pointer;
+
         }
-        .contact-text { font-family: 'Space Mono', monospace; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; writing-mode: vertical-rl; transform: rotate(180deg); color: var(--black); font-size: 0.9rem; }
-        .contact-details { width: 220px; background-color: var(--black); color: var(--white); padding: 2rem; border-radius: 0 0 0 8px; display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem; }
-        .details-title { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; }
-        .details-info a { color: var(--white); text-decoration: none; font-weight: 600; transition: color 0.3s; }
+
+        .contact-text {
+
+            font-family: 'Space Mono', monospace;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            writing-mode: vertical-rl; /* Pionowy tekst */
+
+            transform: rotate(180deg);
+
+            color: var(--black);
+
+            font-size: 0.9rem;
+
+        }
+
+        
+
+        /* Panel danych (ciemny) */
+
+        .contact-details {
+
+            width: 220px;
+
+            background-color: var(--black);
+
+            color: var(--white);
+
+            padding: 2rem;
+
+            border-radius: 0 0 0 8px; /* Tylko lewy dolny róg, bo jest przyklejony */
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 1rem;
+
+            font-size: 0.95rem;
+
+        }
+
+        .details-title {
+
+            font-family: 'Space Mono', monospace;
+
+            font-size: 0.8rem;
+
+            color: var(--muted);
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 0.5rem;
+
+        }
+
+        .details-info a {
+
+            color: var(--white);
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            transition: color 0.3s;
+
+        }
+
         .details-info a:hover { color: var(--accent-reveal); }
 
+
+
+        /* --- RESPONSYWNOŚĆ --- */
+
         @media (max-width: 992px) {
-            .manual-grid, .reveal-grid, .drilling-grid, .leveling-grid, .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+
+            .manual-grid, .reveal-grid, .drilling-grid, .leveling-grid, .footer-grid { 
+
+                grid-template-columns: 1fr; 
+
+                gap: 2rem;
+
+            }
+
             .manual-container { padding: 1.5rem; }
+
             .huge-text { white-space: normal; } 
-            .leveling-grid, .drilling-grid, .reveal-grid { display: flex; flex-direction: column-reverse; }
+
+            
+
+            .leveling-grid { display: flex; flex-direction: column-reverse; }
+
+            .drilling-grid { display: flex; flex-direction: column-reverse; }
+
+            .reveal-grid { display: flex; flex-direction: column-reverse; }
+
+            
+
             .papers-wrapper { perspective: none; }
+
             .paper-1, .paper-2 { display: none; }
+
+            
+
+            .site-header {
+                background: rgba(248, 249, 250, 0.96);
+            }
+
+            .nav-shell {
+                min-height: 72px;
+                grid-template-columns: auto auto;
+            }
+
+            .nav-links,
+            .header-cta {
+                display: none;
+            }
+
+            .nav-actions {
+                gap: 0.55rem;
+            }
+
+            .lang-current {
+                height: 40px;
+                padding: 0 0.75rem;
+            }
+
+            .lang-menu {
+                right: -54px;
+            }
+
+            .nav-toggle {
+                display: grid;
+            }
+
+            .mobile-menu {
+                position: fixed;
+                inset: 72px 0 auto 0;
+                z-index: 880;
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                padding: 1rem 5% 1.4rem;
+                background: var(--black);
+                border-bottom: 2px solid var(--black);
+                transform: translateY(-120%);
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            body.menu-open .mobile-menu {
+                pointer-events: auto;
+            }
+
+            .mobile-menu a,
+            .mobile-lang {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.1rem 0;
+                color: var(--white);
+                text-decoration: none;
+                border-bottom: 1px solid rgba(255,255,255,0.14);
+                font-family: 'Outfit', sans-serif;
+                font-size: clamp(1.5rem, 8vw, 2.7rem);
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: -0.04em;
+            }
+
+            .mobile-menu span,
+            .mobile-lang strong,
+            .mobile-lang a {
+                width: auto;
+                border: 0;
+                padding: 0;
+                color: var(--accent-reveal);
+                font-family: 'Space Mono', monospace;
+                font-size: 0.85rem;
+                letter-spacing: 0;
+            }
+
+            .mobile-lang {
+                gap: 1rem;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .mobile-lang span {
+                margin-right: auto;
+                color: var(--muted);
+            }
+
+            /* Uproszczenie kontaktu na mobile */
+
             .sticky-contact { display: none; }
-            .slide-menu { padding: 100px 2rem 2rem; max-width: 100%; }
+
         }
+
     </style>
+
 </head>
+
 <body>
 
-    <div class="menu-overlay" id="menuOverlay"></div>
 
-    <header class="site-header" id="siteHeader">
-        <div class="container header-container">
-            <div class="logo">Monta<span>deus</span></div>
-            
-            <div class="header-controls">
-                <div class="lang-switcher" id="langSwitcher">
-                    <span class="lang-current" id="currentLang">PL</span>
-                    <div class="lang-options" id="langOptions">
-                        <span data-lang="en">EN</span>
-                        <span data-lang="de">DE</span>
+
+    <header class="site-header" data-header>
+        <div class="container">
+            <nav class="nav-shell" aria-label="Główna nawigacja">
+                <a href="#" class="logo" aria-label="Montadeus — strona główna">Monta<span>deus</span></a>
+
+                <ul class="nav-links" aria-label="Sekcje strony">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#uslugi">Usługi</a>
+                        <div class="nav-panel" aria-hidden="true">
+                            <span class="panel-kicker">01 / Zakres</span>
+                            <div class="panel-title">Montaż, malowanie, ściany</div>
+                            <p class="panel-text">Krótka droga od problemu do zrobionej roboty: meble, AGD, półki, TV i odświeżanie wnętrz.</p>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#jak-pracujemy">Jak pracujemy</a>
+                        <div class="nav-panel" aria-hidden="true">
+                            <span class="panel-kicker">02 / Standard</span>
+                            <div class="panel-title">Czysto, punktualnie, dokładnie</div>
+                            <p class="panel-text">Najpierw zabezpieczenie przestrzeni, potem precyzja wykonania i zostawiony porządek.</p>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#kontakt">Kontakt</a>
+                        <div class="nav-panel" aria-hidden="true">
+                            <span class="panel-kicker">03 / Wycena</span>
+                            <div class="panel-title">Opisz temat, my oddzwonimy</div>
+                            <p class="panel-text">Podeślij zdjęcia, listę prac albo link do mebli. Przygotujemy prostą, bezpłatną wycenę.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="nav-actions">
+                    <div class="lang-switch">
+                        <button class="lang-current" type="button" aria-label="Wybierz język" aria-haspopup="true" aria-expanded="false">
+                            PL
+                            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </button>
+                        <ul class="lang-menu" aria-label="Języki">
+                            <li><span class="is-active">Polski <strong>PL</strong></span></li>
+                            <li><a href="#" data-lang="de">Deutsch <strong>DE</strong></a></li>
+                            <li><a href="#" data-lang="en">English <strong>EN</strong></a></li>
+                        </ul>
                     </div>
+                    <a class="header-cta" href="#kontakt">Wycena</a>
+                    <button class="nav-toggle" type="button" aria-label="Otwórz menu" aria-expanded="false">
+                        <span class="nav-toggle-lines"></span>
+                    </button>
                 </div>
-                
-                <button class="menu-toggle" id="menuToggle" aria-label="Otwórz menu">
-                    <span class="line"></span>
-                    <span class="line"></span>
-                </button>
+            </nav>
+        </div>
+
+        <div class="mobile-menu" data-mobile-menu>
+            <a href="#uslugi">Usługi <span>01</span></a>
+            <a href="#jak-pracujemy">Jak pracujemy <span>02</span></a>
+            <a href="#kontakt">Kontakt <span>03</span></a>
+            <div class="mobile-lang">
+                <span>Język</span>
+                <strong>PL</strong>
+                <a href="#" data-lang="de">DE</a>
+                <a href="#" data-lang="en">EN</a>
             </div>
         </div>
     </header>
 
-    <aside class="slide-menu" id="slideMenu">
-        <ul class="slide-menu-links">
-            <li><a href="#" data-i18n="menu_services">Usługi</a></li>
-            <li><a href="#" data-i18n="menu_about">O nas</a></li>
-            <li><a href="#" data-i18n="menu_portfolio">Realizacje</a></li>
-            <li><a href="#" data-i18n="menu_contact">Kontakt</a></li>
-        </ul>
-        <div class="slide-menu-footer">
-            <p data-i18n="menu_footer_text">Skontaktuj się z nami</p>
-            <a href="mailto:kontakt@montadeus.eu">kontakt@montadeus.eu</a>
-            <a href="tel:+48000000000">+48 000 000 000</a>
-        </div>
-    </aside>
-
     <div class="container">
-        <section class="hero">
-            <h1 data-i18n="hero_h1">Solidne rzemiosło.<br>Spokojna głowa.</h1>
-            <p data-i18n="hero_p">Jesteśmy ekipą, dla której liczy się precyzja i porządek. Przejmujemy Twoje obowiązki remontowe i montażowe, żebyś Ty nie musiał się denerwować.</p>
+
+        <section class="hero" id="start">
+
+            <h1>Solidne rzemiosło.<br>Spokojna głowa.</h1>
+
+            <p>Jesteśmy ekipą, dla której liczy się precyzja i porządek. Przejmujemy Twoje obowiązki remontowe i montażowe, żebyś Ty nie musiał się denerwować.</p>
+
         </section>
+
     </div>
 
-    <section class="manual-section">
+
+
+    <section class="manual-section" id="uslugi">
+
         <div class="container">
-            <h2 class="huge-text" style="margin-bottom: 2rem;" data-i18n="sec1_h2">MONTAŻ <br>MEBLI</h2>
-            <div class="papers-wrapper">
-                <div class="paper-bg paper-1"></div>
-                <div class="paper-bg paper-2"></div>
-                <div class="manual-container">
-                    <div class="manual-header">
-                        <h3 style="font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 900;" data-i18n="sec1_h3">Zostaw schematy nam</h3>
-                        <div class="tech-code">PO-Y00E05</div>
-                    </div>
-                    <div class="manual-grid">
-                        <div class="manual-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Schemat montażu">
-                        </div>
-                        <div class="manual-table-wrapper">
-                            <table class="tech-table">
-                                <thead><tr><th data-i18n="table_th1">Część</th><th data-i18n="table_th2">Ilość i specyfikacja</th></tr></thead>
-                                <tbody>
-                                    <tr><td style="text-align: center;"><span class="part-id">A</span></td><td data-i18n="table_td1"><div>Darmowa wycena i konsultacja.</div><div>Odbiór paczek (opcja).</div></td></tr>
-                                    <tr><td style="text-align: center;"><span class="part-id">E</span></td><td data-i18n="table_td2"><div>Dojazd w terminie.</div><div>Zostawiamy porządek.</div></td></tr>
-                                </tbody>
-                            </table>
-                            <p class="reveal-description" style="margin-top: 1.5rem; opacity: 1; transform: none;" data-i18n="sec1_p">
-                                Paczki z meblami to dla wielu stres. Posiadamy odpowiednie narzędzia, dbamy o regulację zawiasów i zawsze zabieramy puste kartony. Zero brakujących śrubek.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="manual-section-heading">
+                <h2 class="huge-text" style="margin-bottom: 0;">MONTAŻ <br>MEBLI</h2>
+                <div class="manual-meta-tag"><strong>01</strong> Precyzyjny proces / zero chaosu</div>
             </div>
+
+            <div class="papers-wrapper">
+
+                <div class="paper-bg paper-1"></div>
+
+                <div class="paper-bg paper-2"></div>
+
+                <div class="manual-container">
+
+                    <div class="manual-header">
+
+                        <h3 style="font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900;">Zostaw schematy nam</h3>
+
+                        <div class="tech-code">PO-Y00E05</div>
+
+                    </div>
+
+                    <div class="manual-progress" aria-label="Etapy usługi">
+                        <div class="manual-pill">
+                            <strong>01</strong>
+                            <div><b>Plan</b><span>Wycena i szybkie ustalenia</span></div>
+                        </div>
+                        <div class="manual-pill">
+                            <strong>02</strong>
+                            <div><b>Montaż</b><span>Narzędzia, regulacja, precyzja</span></div>
+                        </div>
+                        <div class="manual-pill">
+                            <strong>03</strong>
+                            <div><b>Porządek</b><span>Pakowanie kartonów i finał bez bałaganu</span></div>
+                        </div>
+                    </div>
+
+                    <div class="manual-grid">
+
+                        <div class="manual-image-wrapper">
+
+                            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Schemat montażu">
+                            <div class="manual-image-shine"></div>
+                            <div class="manual-hotspot top-left">
+                                <span class="manual-pin">A</span>
+                                <div class="manual-label">Szybka wycena<br>i konsultacja</div>
+                            </div>
+                            <div class="manual-hotspot bottom-right">
+                                <span class="manual-pin">E</span>
+                                <div class="manual-label">Dojazd w terminie<br>i porządek po pracy</div>
+                            </div>
+                            <div class="manual-measure">
+                                <div class="manual-measure-line"></div>
+                                <div class="manual-measure-label">Ready / Fit / Align</div>
+                            </div>
+
+                        </div>
+
+                        <div class="manual-table-wrapper">
+
+                            <table class="tech-table">
+
+                                <thead><tr><th>Część</th><th>Ilość i specyfikacja</th></tr></thead>
+
+                                <tbody>
+
+                                    <tr><td style="text-align: center;"><span class="part-id">A</span></td><td><div>Darmowa wycena i konsultacja.</div><div>Odbiór paczek (opcja).</div></td></tr>
+
+                                    <tr><td style="text-align: center;"><span class="part-id">E</span></td><td><div>Dojazd w terminie.</div><div>Zostawiamy porządek.</div></td></tr>
+
+                                </tbody>
+
+                            </table>
+
+                            <div class="manual-note">
+                                <strong>Paczki z meblami nie muszą być stresem.</strong> Mamy odpowiednie narzędzia, dbamy o regulację zawiasów, pilnujemy detalu i na końcu zabieramy puste kartony. Zero brakujących śrubek, zero chaosu.
+                            </div>
+
+                            <svg class="manual-assembly-line" viewBox="0 0 250 82" aria-hidden="true">
+                                <path class="manual-route-path" d="M8 52 C 42 14, 78 18, 104 42 S 162 74, 196 48 S 228 18, 242 24" />
+                                <circle class="manual-route-dot" cx="8" cy="52" r="5" />
+                                <circle class="manual-route-dot" cx="242" cy="24" r="5" />
+                            </svg>
+
+                            <div class="manual-stamp">Process approved</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
+
     </section>
 
-    <section class="reveal-section">
-        <div class="container reveal-grid">
-            <div class="reveal-content">
-                <div class="text-reveal-container">
-                    <h2 class="huge-text" data-i18n="sec2_h2">MALOWANIE <br>WNĘTRZ</h2>
-                    <div class="color-block"></div>
-                </div>
-                <p class="reveal-description" data-i18n="sec2_p">
-                    Odpowiednie przygotowanie to podstawa. Zanim otworzymy puszkę z farbą, dokładnie maskujemy listwy i podłogi. Ty wybierasz kolor, my zajmujemy się idealnym kryciem bez smug.
-                </p>
-            </div>
-            <div class="reveal-image-wrapper">
-                <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Malowanie pokoju" class="paint-image">
-            </div>
-        </div>
+
+
     </section>
+
+
+
+    <section class="reveal-section" id="jak-pracujemy">
+
+        <div class="container reveal-grid">
+
+            <div class="reveal-content">
+
+                <div class="text-reveal-container">
+
+                    <h2 class="huge-text">MALOWANIE <br>WNĘTRZ</h2>
+
+                    <div class="color-block"></div>
+
+                </div>
+
+                <p class="reveal-description">
+
+                    Odpowiednie przygotowanie to podstawa. Zanim otworzymy puszkę z farbą, dokładnie maskujemy listwy i podłogi. Ty wybierasz kolor, my zajmujemy się idealnym kryciem bez smug.
+
+                </p>
+
+            </div>
+
+            <div class="reveal-image-wrapper">
+
+                <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Malowanie pokoju" class="paint-image">
+
+            </div>
+
+        </div>
+
+    </section>
+
+
 
     <section class="drilling-section">
+
         <div class="container drilling-grid">
+
             <div class="wall-visual">
+
                 <div class="shelf-line"></div>
+
                 <div class="drill-icon">✏️</div>
+
                 <div class="shelf-items">
+
                     <div class="book book-1"></div>
+
                     <div class="book book-2"></div>
+
                     <div class="book book-3"></div>
+
                     <div class="book book-4"></div>
+
                     <div class="book book-5 fall-book"></div>
+
                     <div class="vase-container vase-reveal">
-                        <div class="plant-cluster"><div class="leaf leaf-1"></div><div class="leaf leaf-2"></div><div class="leaf leaf-3"></div></div>
+
+                        <div class="plant-cluster">
+
+                            <div class="leaf leaf-1"></div>
+
+                            <div class="leaf leaf-2"></div>
+
+                            <div class="leaf leaf-3"></div>
+
+                        </div>
+
                         <div class="vase"></div>
+
                     </div>
+
                 </div>
+
             </div>
+
             <div class="drilling-content">
-                <h2 class="huge-text" data-i18n="sec3_h2">MONTAŻ <br>ŚCIENNY</h2>
-                <p class="reveal-description" data-i18n="sec3_p">
+
+                <h2 class="huge-text">MONTAŻ <br>ŚCIENNY</h2>
+
+                <p class="reveal-description">
+
                     Koniec z dziurawieniem ścian "na oko". Używamy profesjonalnych detektorów kabli. Telewizory, ciężkie lustra i gęsto zastawione szafki wiszące będą trzymać się idealnie na mur-beton.
+
                 </p>
+
             </div>
+
         </div>
+
     </section>
+
+
 
     <section class="leveling-section">
+
         <div class="container leveling-grid">
+
             <div class="leveling-content">
-                <h2 class="huge-text" data-i18n="sec4_h2">PERFEKCYJNY <br>POZIOM</h2>
-                <p class="reveal-description" style="color: var(--muted);" data-i18n="sec4_p">
+
+                <h2 class="huge-text">PERFEKCYJNY <br>POZIOM</h2>
+
+                <p class="reveal-description" style="color: var(--muted);">
+
                     Kiwająca się pralka czy lodówka to irytujący dźwięk i ryzyko awarii. Używamy prostych trików kalibracyjnych. Regulujemy nakrętki kontrujące, gwarantując, że każdy sprzęt AGD będzie stać twardo na ziemi.
+
                 </p>
+
             </div>
+
             <div class="fridge-visual">
+
                 <div class="fridge-body">
+
                     <div class="fridge-top"><div class="fridge-handle"></div></div>
+
                     <div class="fridge-bottom"><div class="fridge-handle"></div></div>
+
                     <div class="fridge-foot-left"></div>
+
                     <div class="fridge-foot-right"></div>
+
                     <div class="nut"></div>
+
                 </div>
+
             </div>
+
         </div>
+
     </section>
 
+
+
     <footer id="kontakt">
+
         <div class="container">
+
             <div class="footer-grid">
+
                 <div>
-                    <h3 data-i18n="footer_h3">Zróbmy to.</h3>
-                    <p data-i18n="footer_p">Skontaktuj się z nami, opowiedz co masz do zrobienia, a my przygotujemy bezpłatną wycenę. Bez ukrytych kosztów.</p>
+
+                    <h3>Zróbmy to.</h3>
+
+                    <p>Skontaktuj się z nami, opowiedz co masz do zrobienia, a my przygotujemy bezpłatną wycenę. Bez ukrytych kosztów.</p>
+
                 </div>
+
                 <div class="footer-links">
-                    <h4 data-i18n="footer_serv">Usługi</h4>
+
+                    <h4>Usługi</h4>
+
                     <ul>
-                        <li><a href="#" data-i18n="f_link1">Montaż Mebli</a></li>
-                        <li><a href="#" data-i18n="f_link2">Malowanie Wnętrz</a></li>
-                        <li><a href="#" data-i18n="f_link3">Montaże Ścienne</a></li>
+
+                        <li><a href="#">Montaż Mebli</a></li>
+
+                        <li><a href="#">Malowanie Wnętrz</a></li>
+
+                        <li><a href="#">Montaże Ścienne</a></li>
+
                     </ul>
+
                 </div>
+
                 <div class="footer-links">
-                    <h4 data-i18n="footer_cont">Kontakt</h4>
+
+                    <h4>Kontakt</h4>
+
                     <ul>
+
                         <li>+48 000 000 000</li>
+
                         <li>kontakt@montadeus.eu</li>
-                        <li data-i18n="footer_loc">Warszawa i okolice</li>
+
+                        <li>Warszawa i okolice</li>
+
                     </ul>
+
                 </div>
+
             </div>
+
             <div class="footer-bottom">
-                <div data-i18n="footer_copy">&copy; 2026 Montadeus. Wszystkie prawa zastrzeżone.</div>
-                <div data-i18n="footer_slogan">Precyzja w detalu.</div>
+
+                <div>&copy; 2026 Montadeus. Wszystkie prawa zastrzeżone.</div>
+
+                <div>Precyzja w detalu.</div>
+
             </div>
+
         </div>
+
     </footer>
 
+
+
     <div class="sticky-contact" id="stickyContact">
+
         <div class="contact-tab">
-            <div class="contact-text" data-i18n="sticky_tab">Kontakt</div>
+
+            <div class="contact-text">Kontakt</div>
+
         </div>
+
         <div class="contact-details">
+
             <div>
+
                 <div class="details-title">Mail</div>
+
                 <div class="details-info"><a href="mailto:kontakt@montadeus.eu">kontakt@montadeus.eu</a></div>
+
             </div>
+
             <div>
-                <div class="details-title" data-i18n="sticky_tel">Telefon</div>
+
+                <div class="details-title">Telefon</div>
+
                 <div class="details-info"><a href="tel:+48000000000">+48 000 000 000</a></div>
+
             </div>
+
         </div>
+
     </div>
 
-    <script>
-        gsap.registerPlugin(ScrollTrigger);
-        const isDesktop = window.innerWidth > 992;
 
-        /* --- SŁOWNIK TŁUMACZEŃ (JSON) --- */
-        const translations = {
-            "pl": {
-                "menu_services": "Usługi", "menu_about": "O nas", "menu_portfolio": "Realizacje", "menu_contact": "Kontakt", "menu_footer_text": "Skontaktuj się z nami",
-                "hero_h1": "Solidne rzemiosło.<br>Spokojna głowa.", "hero_p": "Jesteśmy ekipą, dla której liczy się precyzja i porządek. Przejmujemy Twoje obowiązki remontowe i montażowe, żebyś Ty nie musiał się denerwować.",
-                "sec1_h2": "MONTAŻ <br>MEBLI", "sec1_h3": "Zostaw schematy nam", "table_th1": "Część", "table_th2": "Ilość i specyfikacja", "table_td1": "<div>Darmowa wycena i konsultacja.</div><div>Odbiór paczek (opcja).</div>", "table_td2": "<div>Dojazd w terminie.</div><div>Zostawiamy porządek.</div>", "sec1_p": "Paczki z meblami to dla wielu stres. Posiadamy odpowiednie narzędzia, dbamy o regulację zawiasów i zawsze zabieramy puste kartony. Zero brakujących śrubek.",
-                "sec2_h2": "MALOWANIE <br>WNĘTRZ", "sec2_p": "Odpowiednie przygotowanie to podstawa. Zanim otworzymy puszkę z farbą, dokładnie maskujemy listwy i podłogi. Ty wybierasz kolor, my zajmujemy się idealnym kryciem bez smug.",
-                "sec3_h2": "MONTAŻ <br>ŚCIENNY", "sec3_p": "Koniec z dziurawieniem ścian \"na oko\". Używamy profesjonalnych detektorów kabli. Telewizory, ciężkie lustra i gęsto zastawione szafki wiszące będą trzymać się idealnie na mur-beton.",
-                "sec4_h2": "PERFEKCYJNY <br>POZIOM", "sec4_p": "Kiwająca się pralka czy lodówka to irytujący dźwięk i ryzyko awarii. Używamy prostych trików kalibracyjnych. Regulujemy nakrętki kontrujące, gwarantując, że każdy sprzęt AGD będzie stać twardo na ziemi.",
-                "footer_h3": "Zróbmy to.", "footer_p": "Skontaktuj się z nami, opowiedz co masz do zrobienia, a my przygotujemy bezpłatną wycenę. Bez ukrytych kosztów.", "footer_serv": "Usługi", "f_link1": "Montaż Mebli", "f_link2": "Malowanie Wnętrz", "f_link3": "Montaże Ścienne", "footer_cont": "Kontakt", "footer_loc": "Warszawa i okolice", "footer_copy": "&copy; 2026 Montadeus. Wszystkie prawa zastrzeżone.", "footer_slogan": "Precyzja w detalu.", "sticky_tab": "Kontakt", "sticky_tel": "Telefon"
-            },
-            "en": {
-                "menu_services": "Services", "menu_about": "About", "menu_portfolio": "Projects", "menu_contact": "Contact", "menu_footer_text": "Get in touch with us",
-                "hero_h1": "Solid craft.<br>Peace of mind.", "hero_p": "We are a crew that values precision and order. We take over your renovation and assembly tasks so you don't have to stress.",
-                "sec1_h2": "FURNITURE <br>ASSEMBLY", "sec1_h3": "Leave the manuals to us", "table_th1": "Part", "table_th2": "Specs & Details", "table_td1": "<div>Free quote & consultation.</div><div>Package pickup (optional).</div>", "table_td2": "<div>On-time arrival.</div><div>We leave it perfectly clean.</div>", "sec1_p": "Furniture boxes are stressful for many. We have the right tools, care about hinge adjustments, and always take empty boxes with us. Zero missing screws.",
-                "sec2_h2": "INTERIOR <br>PAINTING", "sec2_p": "Proper preparation is key. Before opening a paint can, we carefully mask baseboards and floors. You choose the color, we provide flawless coverage without streaks.",
-                "sec3_h2": "WALL <br>MOUNTING", "sec3_p": "No more drilling blind. We use professional cable detectors. TVs, heavy mirrors, and densely packed hanging cabinets will hold perfectly on the wall.",
-                "sec4_h2": "PERFECT <br>LEVELING", "sec4_p": "A wobbling washing machine is annoying and risky. We use simple calibration tricks. We adjust locknuts, ensuring every appliance stands firmly on the ground.",
-                "footer_h3": "Let's do this.", "footer_p": "Contact us, tell us what needs to be done, and we will prepare a free quote. No hidden costs.", "footer_serv": "Services", "f_link1": "Furniture Assembly", "f_link2": "Interior Painting", "f_link3": "Wall Mounting", "footer_cont": "Contact", "footer_loc": "Warsaw area", "footer_copy": "&copy; 2026 Montadeus. All rights reserved.", "footer_slogan": "Precision in detail.", "sticky_tab": "Contact", "sticky_tel": "Phone"
-            },
-            "de": {
-                "menu_services": "Dienstleistungen", "menu_about": "Über uns", "menu_portfolio": "Projekte", "menu_contact": "Kontakt", "menu_footer_text": "Nehmen Sie Kontakt auf",
-                "hero_h1": "Solides Handwerk.<br>Sorgenfrei.", "hero_p": "Wir sind ein Team, dem Präzision und Ordnung wichtig sind. Wir übernehmen Ihre Renovierungsaufgaben, damit Sie sich entspannen können.",
-                "sec1_h2": "MÖBEL <br>MONTAGE", "sec1_h3": "Überlassen Sie uns die Pläne", "table_th1": "Teil", "table_th2": "Spezifikation", "table_td1": "<div>Kostenloses Angebot.</div><div>Paketabholung (optional).</div>", "table_td2": "<div>Pünktliche Anreise.</div><div>Wir hinterlassen alles sauber.</div>", "sec1_p": "Möbelkartons bedeuten für viele Stress. Wir haben die richtigen Werkzeuge und nehmen leere Kartons immer mit. Keine fehlenden Schrauben.",
-                "sec2_h2": "INNEN <br>MALEREI", "sec2_p": "Gute Vorbereitung ist alles. Bevor wir den Lack öffnen, kleben wir Fußleisten ab. Sie wählen die Farbe, wir sorgen für eine streifenfreie Deckung.",
-                "sec3_h2": "WAND <br>MONTAGE", "sec3_p": "Schluss mit blindem Bohren. Wir nutzen professionelle Kabeldetektoren. Fernseher und schwere Spiegel halten perfekt an der Wand.",
-                "sec4_h2": "PERFEKTE <br>NIVELLIERUNG", "sec4_p": "Eine wackelnde Waschmaschine ist nervig. Wir stellen Kontermuttern ein und garantieren, dass jedes Haushaltsgerät fest auf dem Boden steht.",
-                "footer_h3": "Lass uns das machen.", "footer_p": "Kontaktieren Sie uns und wir erstellen ein kostenloses Angebot. Keine versteckten Kosten.", "footer_serv": "Dienstleistungen", "f_link1": "Möbelmontage", "f_link2": "Innenmalerei", "f_link3": "Wandmontage", "footer_cont": "Kontakt", "footer_loc": "Großraum Warschau", "footer_copy": "&copy; 2026 Montadeus. Alle Rechte vorbehalten.", "footer_slogan": "Präzision im Detail.", "sticky_tab": "Kontakt", "sticky_tel": "Telefon"
+
+    <script>
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- HEADER PREMIUM: wejście, sticky hide/reveal, mobile drawer ---
+        const header = document.querySelector('[data-header]');
+        const navToggle = document.querySelector('.nav-toggle');
+        const mobileMenu = document.querySelector('[data-mobile-menu]');
+        const langButton = document.querySelector('.lang-current');
+        let lastScrollY = window.scrollY;
+
+        gsap.from(".site-header", { y: -90, opacity: 0, duration: 0.8, ease: "power3.out" });
+        gsap.from(".nav-link, .lang-switch, .header-cta", {
+            y: -12,
+            opacity: 0,
+            duration: 0.55,
+            stagger: 0.06,
+            ease: "power2.out",
+            delay: 0.2
+        });
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            header.classList.toggle('is-scrolled', currentScroll > 18);
+
+            if (currentScroll > 220 && currentScroll > lastScrollY && !document.body.classList.contains('menu-open')) {
+                header.classList.add('is-hidden');
+            } else {
+                header.classList.remove('is-hidden');
             }
+
+            lastScrollY = currentScroll;
+        }, { passive: true });
+
+        const closeMobileMenu = () => {
+            document.body.classList.remove('menu-open');
+            navToggle?.setAttribute('aria-expanded', 'false');
+            gsap.to(mobileMenu, { y: "-120%", opacity: 0, duration: 0.35, ease: "power2.in" });
         };
 
-        /* --- LOGIKA TŁUMACZENIA I ZMIANY JĘZYKA --- */
-        const langOptionsContainer = document.getElementById('langOptions');
-        const currentLangDisplay = document.getElementById('currentLang');
-        const availableLangs = ['pl', 'en', 'de'];
-        let currentLang = 'pl';
+        navToggle?.addEventListener('click', () => {
+            const isOpen = document.body.classList.toggle('menu-open');
+            navToggle.setAttribute('aria-expanded', String(isOpen));
 
-        function changeLanguage(newLang) {
-            currentLang = newLang;
-            currentLangDisplay.innerText = newLang.toUpperCase();
-            
-            // Przebuduj dropdown, żeby zawierał tylko NIEaktywne języki
-            langOptionsContainer.innerHTML = '';
-            availableLangs.forEach(lang => {
-                if(lang !== currentLang) {
-                    const span = document.createElement('span');
-                    span.innerText = lang.toUpperCase();
-                    span.setAttribute('data-lang', lang);
-                    span.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Żeby kliknięcie nie wyzwalało eventów niżej
-                        changeLanguage(lang);
-                    });
-                    langOptionsContainer.appendChild(span);
-                }
+            gsap.to(mobileMenu, {
+                y: isOpen ? "0%" : "-120%",
+                opacity: isOpen ? 1 : 0,
+                duration: 0.45,
+                ease: isOpen ? "power3.out" : "power2.in"
             });
 
-            // Podmień teksty na stronie na podstawie atrybutów data-i18n
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if(translations[currentLang][key]) {
-                    element.innerHTML = translations[currentLang][key];
-                }
-            });
-        }
-        // Inicjalizacja opcji językowych przy starcie
-        changeLanguage('pl');
-
-
-        /* --- NOWA ANIMACJA MENU BOCZNEGO --- */
-        const menuToggle = document.getElementById('menuToggle');
-        const siteHeader = document.getElementById('siteHeader');
-        const menuOverlay = document.getElementById('menuOverlay');
-        
-        const menuTl = gsap.timeline({ paused: true, reversed: true });
-        menuTl.to('#slideMenu', { x: '0%', duration: 0.8, ease: "power4.inOut" })
-              .to('.slide-menu-links a', { y: '0%', duration: 0.6, stagger: 0.1, ease: "power3.out" }, "-=0.4")
-              .to('.slide-menu-footer', { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, "-=0.3");
-
-        function toggleMenu() {
-            const isOpening = menuTl.reversed();
-            menuToggle.classList.toggle('is-active');
-            siteHeader.classList.toggle('is-active'); // To sprawia że nagłówek znika, a logo/X stają się białe
-            menuOverlay.classList.toggle('is-active');
-            
-            if (isOpening) {
-                menuTl.play();
-                document.body.style.overflow = "hidden";
-            } else {
-                menuTl.reverse();
-                document.body.style.overflow = "";
+            if (isOpen) {
+                gsap.fromTo(".mobile-menu a, .mobile-lang",
+                    { x: -18, opacity: 0 },
+                    { x: 0, opacity: 1, duration: 0.45, stagger: 0.06, ease: "power2.out", delay: 0.08 }
+                );
             }
-        }
+        });
 
-        // Eventy otwarcia / zamknięcia
-        menuToggle.addEventListener('click', toggleMenu);
-        menuOverlay.addEventListener('click', toggleMenu); // Kliknięcie w ciemne tło zamyka menu!
+        document.querySelectorAll('.mobile-menu a[href^="#"], .nav-link[href^="#"], .header-cta[href^="#"]').forEach(link => {
+            link.addEventListener('click', () => {
+                if (document.body.classList.contains('menu-open')) closeMobileMenu();
+            });
+        });
+
+        document.querySelectorAll('[data-lang]').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const lang = link.dataset.lang.toUpperCase();
+                langButton?.animate(
+                    [{ transform: 'translateY(0)' }, { transform: 'translateY(-3px)' }, { transform: 'translateY(0)' }],
+                    { duration: 260, easing: 'ease-out' }
+                );
+                alert(`Wersja ${lang} będzie podpięta w kolejnym kroku. Teraz domyślny język to PL.`);
+            });
+        });
 
 
-        /* --- ORYGINALNE ANIMACJE SEKCJI --- */
+
+        const isDesktop = window.innerWidth > 992;
+
+
+
+        const papersWrapper = document.querySelector('.papers-wrapper');
+        const manualContainer = document.querySelector('.manual-container');
+
         if(isDesktop) {
+
             const paperTl = gsap.timeline({
-                scrollTrigger: { trigger: ".manual-section", start: "top 70%", toggleActions: "play none none reverse" }
+
+                scrollTrigger: { trigger: ".manual-section", start: "top 68%", toggleActions: "play none none reverse" }
+
             });
-            paperTl.to([".paper-1", ".paper-2", ".manual-container"], { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", stagger: 0.1 })
-                   .to(".paper-1", { rotation: -4, x: -20, y: 15, duration: 0.8, ease: "back.out(1.5)" }, "-=0.4")
-                   .to(".paper-2", { rotation: 3, x: 25, y: -10, duration: 0.8, ease: "back.out(1.5)" }, "-=0.8");
+
+            paperTl
+                   .to([".paper-1", ".paper-2"], { opacity: 1, duration: 0.35, stagger: 0.08 })
+                   .to(".manual-container", { y: 0, opacity: 1, rotateX: 0, duration: 0.95, ease: "power3.out" }, "<")
+                   .to(".paper-1", { rotation: -5, x: -34, y: 18, duration: 0.9, ease: "back.out(1.4)" }, "-=0.5")
+                   .to(".paper-2", { rotation: 4, x: 32, y: -16, duration: 0.9, ease: "back.out(1.4)" }, "<0.06")
+                   .from(".manual-header h3, .manual-header .tech-code", { y: 22, opacity: 0, duration: 0.55, stagger: 0.1, ease: "power2.out" }, "-=0.42")
+                   .to(".manual-pill", { opacity: 1, y: 0, duration: 0.42, stagger: 0.08, ease: "back.out(1.7)" }, "-=0.18")
+                   .to(".manual-image-wrapper", { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power3.inOut" }, "-=0.18")
+                   .to(".manual-image-wrapper img", { scale: 1, duration: 1.05, ease: "power3.out" }, "<")
+                   .to(".manual-image-shine", { x: "165%", duration: 1.1, ease: "power2.out" }, "-=0.55")
+                   .to(".manual-hotspot", { opacity: 1, scale: 1, duration: 0.42, stagger: 0.12, ease: "back.out(2)" }, "-=0.65")
+                   .to(".manual-measure", { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, "-=0.45")
+                   .to(".tech-table tbody tr", { opacity: 1, x: 0, duration: 0.45, stagger: 0.12, ease: "power2.out" }, "-=0.35")
+                   .to(".manual-note", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.2")
+                   .to(".manual-assembly-line", { opacity: 1, duration: 0.2 }, "-=0.35")
+                   .to(".manual-route-path", { strokeDashoffset: 0, duration: 1.15, ease: "power1.inOut" }, "<")
+                   .to(".manual-stamp", { opacity: 1, scale: 1, rotation: -10, duration: 0.45, ease: "back.out(1.8)" }, "-=0.7");
+
+            if (papersWrapper && manualContainer) {
+                papersWrapper.addEventListener('mousemove', (event) => {
+                    const rect = papersWrapper.getBoundingClientRect();
+                    const rotateY = ((event.clientX - rect.left) / rect.width - 0.5) * 4;
+                    const rotateX = ((event.clientY - rect.top) / rect.height - 0.5) * -2.5;
+
+                    gsap.to(manualContainer, { rotateY, rotateX, duration: 0.4, ease: "power2.out" });
+                });
+
+                papersWrapper.addEventListener('mouseleave', () => {
+                    gsap.to(manualContainer, { rotateY: 0, rotateX: 0, duration: 0.6, ease: "power3.out" });
+                });
+            }
+
+            gsap.to(".paper-1", { y: "+=6", duration: 2.6, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.2 });
+            gsap.to(".paper-2", { y: "-=5", duration: 2.9, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.2 });
+            gsap.to(".manual-hotspot", { y: -4, duration: 1.8, repeat: -1, yoyo: true, ease: "sine.inOut", stagger: 0.16, delay: 1.8 });
+
         } else {
-            gsap.to(".manual-container", {
-                y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
-                scrollTrigger: { trigger: ".manual-section", start: "top 80%" }
+
+            const manualMobileTl = gsap.timeline({
+                scrollTrigger: { trigger: ".manual-section", start: "top 80%", toggleActions: "play none none reverse" }
             });
+
+            manualMobileTl
+                .to(".manual-container", { y: 0, opacity: 1, rotateX: 0, duration: 0.75, ease: "power3.out" })
+                .from(".manual-header h3, .manual-header .tech-code", { y: 18, opacity: 0, duration: 0.45, stagger: 0.1, ease: "power2.out" }, "-=0.3")
+                .to(".manual-pill", { opacity: 1, y: 0, duration: 0.35, stagger: 0.06, ease: "power2.out" }, "-=0.18")
+                .to(".manual-image-wrapper", { opacity: 1, clipPath: "inset(0 0 0 0)", duration: 0.7, ease: "power3.out" }, "-=0.15")
+                .to(".manual-image-wrapper img", { scale: 1, duration: 0.9, ease: "power2.out" }, "<")
+                .to([".manual-hotspot", ".manual-measure"], { opacity: 1, scale: 1, y: 0, duration: 0.35, stagger: 0.08, ease: "power2.out" }, "-=0.2")
+                .to(".tech-table tbody tr", { opacity: 1, x: 0, duration: 0.35, stagger: 0.1, ease: "power2.out" }, "-=0.1")
+                .to(".manual-note", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, "-=0.1")
+                .to(".manual-stamp", { opacity: 1, scale: 1, rotation: -8, duration: 0.4, ease: "back.out(1.6)" }, "-=0.2");
+
         }
 
-        const revealTl = gsap.timeline({ scrollTrigger: { trigger: ".reveal-section", start: "top 60%", toggleActions: "play none none reverse" } });
+
+
+        // --- BLOCK REVEAL ---
+
+        const revealTl = gsap.timeline({
+
+            scrollTrigger: { trigger: ".reveal-section", start: "top 60%", toggleActions: "play none none reverse" }
+
+        });
+
         revealTl.to(".color-block", { scaleX: 0, duration: 1.2, ease: "power3.inOut" })
+
                 .to(".paint-image", { opacity: 1, scale: 1, duration: 1, ease: "power2.out" }, "-=0.8")
+
                 .to(".reveal-description", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.6");
 
-        const drillTl = gsap.timeline({ scrollTrigger: { trigger: ".drilling-section", start: "top 60%", toggleActions: "play none none reverse" } });
+
+
+        // --- WIERCENIE I PÓŁKA (Fizyka i nowy sukulent) ---
+
+        const drillTl = gsap.timeline({
+
+            scrollTrigger: { trigger: ".drilling-section", start: "top 60%", toggleActions: "play none none reverse" }
+
+        });
+
         drillTl.to(".drill-icon", { x: "100%", duration: 1.2, ease: "power2.inOut" })
+
                .to(".shelf-line", { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, "<")
+
                .to(".drill-icon", { opacity: 0, duration: 0.2 })
+
                .to([".book", ".vase-reveal"], { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "bounce.out" })
+
+               // Książka leci w prawo i opiera się o dolny róg, bez nachodzenia na mebel
+
                .to(".fall-book", { rotation: 25, duration: 0.5, ease: "bounce.out" }, "-=0.2");
 
+
+
+        // --- LODÓWKA (Poprawiona animacja śruby i poziomowania) ---
+
         gsap.set(".fridge-body", { rotation: 6 });
-        const fridgeTl = gsap.timeline({ scrollTrigger: { trigger: ".leveling-section", start: "top 60%", toggleActions: "play none none reverse" } });
+
+
+
+        const fridgeTl = gsap.timeline({
+
+            scrollTrigger: { trigger: ".leveling-section", start: "top 60%", toggleActions: "play none none reverse" }
+
+        });
+
         fridgeTl.to(".nut", { opacity: 1, duration: 0.2 })
+
+                // Śruba wysuwa się o 18px w dół (w stronę podłogi)
+
                 .to(".nut", { y: 18, duration: 0.6, ease: "power2.inOut" })
+
+                // Lodówka podnosi się na śrubie (wraca do pionu 0 deg)
+
                 .to(".fridge-body", { rotation: 0, duration: 1, ease: "elastic.out(1, 0.6)" }, "-=0.2")
+
+                // Śruba w tym samym momencie resetuje pozycję Y względem samej lodówki, bo kręci się do góry względem "podłogi"
+
                 .to(".nut", { y: 0, duration: 1, ease: "elastic.out(1, 0.6)" }, "<");
 
-        /* --- STICKY CONTACT --- */
+
+
+        // --- ANIMACJA STICKY CONTACT (Hover i Scroll) ---
+
         if(isDesktop) {
+
             const contactBlock = document.getElementById('stickyContact');
-            contactBlock.addEventListener('mouseenter', () => gsap.to(contactBlock, { translateX: 0, duration: 0.4, ease: "power2.out" }));
-            contactBlock.addEventListener('mouseleave', () => gsap.to(contactBlock, { translateX: 220, duration: 0.4, ease: "power2.in" }));
+
+            
+
+            // Hover: Wysuń panel danych
+
+            contactBlock.addEventListener('mouseenter', () => {
+
+                gsap.to(contactBlock, { translateX: 0, duration: 0.4, ease: "power2.out" });
+
+            });
+
+            
+
+            // Mouseleave: Wsuń panel danych
+
+            contactBlock.addEventListener('mouseleave', () => {
+
+                gsap.to(contactBlock, { translateX: 220, duration: 0.4, ease: "power2.in" });
+
+            });
+
         }
+
+
+
     </script>
+
 </body>
+
 </html>
